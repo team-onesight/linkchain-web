@@ -1,0 +1,32 @@
+[
+  {
+    "id": "1",
+    "name": "Devin",
+    "bio": "Frontend Developer | React Enthusiast"
+  },
+  {
+    "id": "2",
+    "name": "Sarah",
+    "bio": "UX/UI Designer"
+  },
+  {
+    "id": "3",
+    "name": "Alex",
+    "bio": "AI Researcher"
+  },
+  {
+    "id": "4",
+    "name": "Maria",
+    "bio": "Marketing Professional"
+  },
+  {
+    "id": "5",
+    "name": "Tom",
+    "bio": "Full-stack Developer"
+  },
+  {
+    "id": "6",
+    "name": "Chloe",
+    "bio": "Web3 Developer"
+  }
+]

@@ -1,0 +1,63 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useScrollDirection } from "@/hooks/use-scroll-direction";
+import { cn } from "@/lib/utils";
+import { useUiStore } from "@/store/ui-store";
+import { Link2 } from "lucide-react";
+import { toast } from "sonner";
+
+export const StickyAddLinkForm = () => {
+  const scrollDir = useScrollDirection();
+  const { isInputFocused, setInputFocused, setInputBlurred } = useUiStore();
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const url = formData.get("url");
+    if (!url) return;
+
+    toast("Link added", {
+      description: "Your link has been successfully added.",
+      position: "top-center",
+      action: {
+        label: "Undo",
+
+        onClick: () => console.log("Undo"),
+      },
+    });
+
+    e.currentTarget.reset();
+  };
+
+  return (
+    <div
+      className={cn(
+        "fixed left-1/2 -translate-x-1/2 z-10 w-[calc(100%-2rem)] max-w-[500px] p-3 bg-white shadow-xl rounded-xl border border-gray-200 transition-all duration-300",
+        {
+          "translate-y-[150%]": scrollDir === "down" && !isInputFocused,
+          "translate-y-0": scrollDir === "up" || isInputFocused,
+          "bottom-0": isInputFocused,
+          "bottom-20": !isInputFocused,
+        }
+      )}
+    >
+      <form onSubmit={handleSubmit} className='flex items-center gap-2'>
+        <Link2 className='h-5 w-5 text-gray-400' />
+        <Input
+          name='url'
+          placeholder='https://...'
+          className='grow rounded-lg'
+          type='url'
+          required
+          onFocus={setInputFocused}
+          onBlur={setInputBlurred}
+        />
+        <Button type='submit' className='shrink-0 rounded-lg'>
+          Add Link
+        </Button>
+      </form>
+    </div>
+  );
+};

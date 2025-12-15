@@ -1,0 +1,8 @@
+html body :root {
+  font-family: 'SUITE-Variable';
+}
+
+@font-face {
+  font-family: 'SUITE-Variable';
+  src: url('/fonts/SUITE-Variable.ttf');
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "id": "1",
+    "name": "React"
+  },
+  {
+    "id": "2",
+    "name": "JavaScript"
+  },
+  {
+    "id": "3",
+    "name": "Official"
+  },
+  {
+    "id": "8",
+    "name": "TypeScript"
+  },
+  {
+    "id": "9",
+    "name": "Figma"
+  },
+  {
+    "id": "10",
+    "name": "Design"
+  },
+  {
+    "id": "11",
+    "name": "UI/UX"
+  }
+]

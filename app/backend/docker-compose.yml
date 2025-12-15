@@ -1,0 +1,16 @@
+services:
+  postgres_vector_db:
+    image: pgvector/pgvector:pg16
+    container_name: postgres_vector_db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: linkchain
+    volumes:
+      - pg_data_vol:/var/lib/postgresql/data
+
+volumes:
+  pg_data_vol:
