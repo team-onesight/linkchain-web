@@ -1,0 +1,35 @@
+name: Deploy on Server
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - app/backend/**
+
+jobs:
+  ssh-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH Remote Commands to Deploy Backend
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            
+            cd /home/ubuntu/linkchain-web/app/backend            
+            git pull origin main
+            sudo docker build -t linkchain-backend-image -f ./Dockerfile .
+
+            sudo docker stop fastapi-server || true
+            sudo docker rm fastapi-server || true
+
+            sudo docker run -d \
+              --name fastapi-server \
+              -p 80:80 \
+              --restart unless-stopped \
+              linkchain-backend-image
+            sudo docker image prune -f

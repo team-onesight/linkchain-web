@@ -1,3 +1,4 @@
+name: Frontend CD
 on:
   push:
     branches:
@@ -50,9 +51,9 @@ jobs:
           aws s3 sync \
             ./dist s3://$BUCKET_NAME/front
 
-#      - name: CloudFront Invalidation
-#        env:
-#          CLOUD_FRONT_ID: ${{ secrets.AWS_CLOUDFRONT_ID }}
-#        run: |
-#          aws cloudfront create-invalidation \
-#            --distribution-id $CLOUD_FRONT_ID --paths /*
+      - name: CloudFront Invalidation
+        env:
+          CLOUD_FRONT_ID: ${{ secrets.AWS_CLOUDFRONT_ID }}
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id $CLOUD_FRONT_ID --paths /*
