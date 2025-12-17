@@ -1,17 +1,17 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Bookmark, ExternalLink, X } from "lucide-react";
+import {useState} from "react";
+import {Button} from "@/components/ui/button";
+import {Badge} from "@/components/ui/badge";
+import {Bookmark, ExternalLink, X} from "lucide-react";
 import * as AspectRatio from "@radix-ui/react-aspect-ratio";
-import { Input } from "@/components/ui/input";
-import type { LinkItem } from "@/model/link/type";
-import { toast } from "sonner";
+import {Input} from "@/components/ui/input";
+import type {LinkItem} from "@/model/link/type";
+import {toast} from "sonner";
 
 interface LinkDetailViewProps {
   link: LinkItem;
 }
 
-export function LinkDetailView({ link }: LinkDetailViewProps) {
+export function LinkDetailView({link}: LinkDetailViewProps) {
   const [currentTags, setCurrentTags] = useState<string[]>(link.tags.map((tag) => tag.name));
 
   const handleBookmark = () => {
@@ -54,11 +54,11 @@ export function LinkDetailView({ link }: LinkDetailViewProps) {
         </a>
         <div className='flex items-center gap-2 ml-auto mr-1'>
           <Button variant='outline' size='icon' className='h-8 w-8' onClick={handleBookmark}>
-            <Bookmark className='h-4 w-4' />
+            <Bookmark className='h-4 w-4'/>
           </Button>
           <a href={link.url} target='_blank' rel='noopener noreferrer'>
             <Button variant='outline' size='icon' className='h-8 w-8'>
-              <ExternalLink className='h-4 w-4' />
+              <ExternalLink className='h-4 w-4'/>
             </Button>
           </a>
         </div>
@@ -76,14 +76,14 @@ export function LinkDetailView({ link }: LinkDetailViewProps) {
                 onClick={() => handleDeleteTag(tag)}
                 className='ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-muted-foreground/20 p-0.5'
               >
-                <X className='h-3 w-3' />
+                <X className='h-3 w-3'/>
                 <span className='sr-only'>Remove {tag}</span>
               </button>
             </Badge>
           ))}
         </div>
         <form onSubmit={handleAddTag} className='flex items-center gap-2'>
-          <Input name='newTag' placeholder='Add a new tag...' className='h-8' />
+          <Input name='newTag' placeholder='Add a new tag...' className='h-8'/>
           <Button type='submit' size='sm'>
             Add
           </Button>

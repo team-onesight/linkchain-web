@@ -1,4 +1,4 @@
-import type { User } from "./type";
+import type {User} from "./type";
 
 const fetchUsers = async (): Promise<User[]> => {
   const response = await fetch("/mocks/users.json");
@@ -17,4 +17,4 @@ const fetchUser = async (id: string): Promise<User | undefined> => {
   return users.find((user) => user.id === id);
 };
 
-export { fetchUsers, fetchUser };
+export {fetchUsers, fetchUser};

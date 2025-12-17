@@ -4,4 +4,4 @@ interface User {
   bio: string;
 }
 
-export type { User };
+export type {User};

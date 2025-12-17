@@ -1,21 +1,21 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useNavigate } from "react-router-dom";
-import type { LinkItem } from "@/model/link/type";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {useNavigate} from "react-router-dom";
+import type {LinkItem} from "@/model/link/type";
 import * as AspectRatio from "@radix-ui/react-aspect-ratio";
-import { LinkCardFooter } from "./CardFooter";
+import {LinkCardFooter} from "./CardFooter";
 
 interface LinkCardProps {
   link: LinkItem;
 }
 
-export function LinkCard({ link }: LinkCardProps) {
+export function LinkCard({link}: LinkCardProps) {
   const navigate = useNavigate();
 
   if (!link) {
     return null;
   }
 
-  const { id, title, description, imageUrl } = link;
+  const {id, title, description, imageUrl} = link;
 
   return (
     <Card
@@ -37,7 +37,7 @@ export function LinkCard({ link }: LinkCardProps) {
         </CardTitle>
         <CardDescription className='line-clamp-2 text-xs'>{description}</CardDescription>
       </CardContent>
-      <LinkCardFooter link={link} />
+      <LinkCardFooter link={link}/>
     </Card>
   );
 }

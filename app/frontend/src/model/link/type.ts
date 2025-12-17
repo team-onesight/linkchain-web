@@ -1,4 +1,4 @@
-import type { Tag } from "../tag/type";
+import type {Tag} from "../tag/type";
 
 type LinkType = "News" | "Blog" | "Video" | "Default";
 
@@ -20,4 +20,4 @@ interface LinkItem {
   linkType: LinkType;
 }
 
-export type { LinkItem, LinkType, LinksGroup };
+export type {LinkItem, LinkType, LinksGroup};

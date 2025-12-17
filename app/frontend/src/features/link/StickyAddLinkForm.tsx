@@ -1,16 +1,16 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useScrollDirection } from "@/hooks/use-scroll-direction";
-import { cn } from "@/lib/utils";
-import { useUiStore } from "@/store/ui-store";
-import { Link2 } from "lucide-react";
-import { toast } from "sonner";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {useScrollDirection} from "@/hooks/use-scroll-direction";
+import {cn} from "@/lib/utils";
+import {useUiStore} from "@/store/ui-store";
+import {Link2} from "lucide-react";
+import {toast} from "sonner";
 
 export const StickyAddLinkForm = () => {
   const scrollDir = useScrollDirection();
-  const { isInputFocused, setInputFocused, setInputBlurred } = useUiStore();
+  const {isInputFocused, setInputFocused, setInputBlurred} = useUiStore();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -44,7 +44,7 @@ export const StickyAddLinkForm = () => {
       )}
     >
       <form onSubmit={handleSubmit} className='flex items-center gap-2'>
-        <Link2 className='h-5 w-5 text-gray-400' />
+        <Link2 className='h-5 w-5 text-gray-400'/>
         <Input
           name='url'
           placeholder='https://...'

@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button';
-import { useUiStore } from '@/store/ui-store';
-import { Search } from 'lucide-react';
+import {Button} from '@/components/ui/button';
+import {useUiStore} from '@/store/ui-store';
+import {Search} from 'lucide-react';
 
 export function Header() {
   const openSearch = useUiStore((state) => state.openSearch);
@@ -13,7 +13,7 @@ export function Header() {
           className="w-full justify-start text-muted-foreground"
           onClick={openSearch}
         >
-          <Search className="mr-2 h-4 w-4" />
+          <Search className="mr-2 h-4 w-4"/>
           <span>Search links...</span>
         </Button>
       </div>
