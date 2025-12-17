@@ -1,7 +1,6 @@
 from typing import Union
 
-from api import link
-from api import join
+from api import join, link
 from db.base import Base
 from db.session import engine
 from fastapi import FastAPI

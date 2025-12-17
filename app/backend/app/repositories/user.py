@@ -1,7 +1,6 @@
-from sqlalchemy.orm import Session
-from sqlalchemy.exc import IntegrityError
-
 from models.user import User
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session
 
 
 class UserRepository:
@@ -9,6 +8,7 @@ class UserRepository:
     UserRepository
     user_info 테이블의 데이터를 조작하기 위해 필요한 메소드 정의
     """
+
     def __init__(self, db: Session):
         self.db = db
 
@@ -24,5 +24,5 @@ class UserRepository:
         except IntegrityError as e:
             self.db.rollback()
             raise e
-        
+
         return new_user

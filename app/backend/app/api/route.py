@@ -1,7 +1,6 @@
 from fastapi import APIRouter
 
-from api import link
-from api import join
+from api import join, link
 
 endpoint_router = APIRouter()
 

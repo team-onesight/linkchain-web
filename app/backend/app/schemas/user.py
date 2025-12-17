@@ -1,10 +1,11 @@
 from pydantic import BaseModel
-from typing import Optional
+
 
 class UserRequest(BaseModel):
     """
     user 요청값  정의
     """
+
     username: str
     password: str
 
@@ -14,8 +15,9 @@ class UserRequest(BaseModel):
 
 class UserResponse(BaseModel):
     """
-    user에게 응답값 정의 
+    user에게 응답값 정의
     """
+
     user_id: int
     username: str
 

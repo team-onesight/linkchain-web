@@ -1,13 +1,13 @@
-from sqlalchemy import Column, String, Integer, DateTime, func
-from utils.vector import VECTOR
-
 from db.base import Base
+from sqlalchemy import Column, DateTime, Integer, String, func
+from utils.vector import VECTOR
 
 
 class User(Base):
     """
     user_info 테이블 모델
     """
+
     __table_args__ = {"schema": "public"}
     __tablename__ = "user_info"
 
