@@ -1,6 +1,7 @@
 from typing import Union
 
 from api import link
+from api import join
 from db.base import Base
 from db.session import engine
 from fastapi import FastAPI
@@ -10,8 +11,10 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 app.include_router(link.router, prefix="/api/v1", tags=["v1"])
+app.include_router(join.router, prefix="/api/v1", tags=["v1"])
 
 
+# 라우팅 정의 후 삭제 예정
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
