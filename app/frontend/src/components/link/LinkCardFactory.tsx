@@ -1,7 +1,7 @@
-import type { LinkType, LinkItem } from "@/model/link/type";
-import { LinkCard } from "./card/LinkCard";
-import { NewsLinkCard } from "./card/NewsLinkCard";
-import { YouTubeLinkCard } from "./card/YouTubeLinkCard";
+import type {LinkItem, LinkType} from "@/model/link/type";
+import {LinkCard} from "./card/LinkCard";
+import {NewsLinkCard} from "./card/NewsLinkCard";
+import {YouTubeLinkCard} from "./card/YouTubeLinkCard";
 import React from "react";
 
 interface LinkCardComponentProps {

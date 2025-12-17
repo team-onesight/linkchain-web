@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import {Button} from "@/components/ui/button";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {Field, FieldDescription, FieldGroup, FieldLabel} from "@/components/ui/field";
+import {Input} from "@/components/ui/input";
 
-export const SignupForm = ({ ...props }: React.ComponentProps<typeof Card>) => {
+export const SignupForm = ({...props}: React.ComponentProps<typeof Card>) => {
   return (
     <Card {...props}>
       <CardHeader>
@@ -15,23 +15,23 @@ export const SignupForm = ({ ...props }: React.ComponentProps<typeof Card>) => {
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor='name'>Full Name</FieldLabel>
-              <Input id='name' type='text' placeholder='John Doe' required />
+              <Input id='name' type='text' placeholder='John Doe' required/>
             </Field>
             <Field>
               <FieldLabel htmlFor='email'>Email</FieldLabel>
-              <Input id='email' type='email' placeholder='m@example.com' required />
+              <Input id='email' type='email' placeholder='m@example.com' required/>
               <FieldDescription>
                 We&apos;ll use this to contact you. We will not share your email with anyone else.
               </FieldDescription>
             </Field>
             <Field>
               <FieldLabel htmlFor='password'>Password</FieldLabel>
-              <Input id='password' type='password' required />
+              <Input id='password' type='password' required/>
               <FieldDescription>Must be at least 8 characters long.</FieldDescription>
             </Field>
             <Field>
               <FieldLabel htmlFor='confirm-password'>Confirm Password</FieldLabel>
-              <Input id='confirm-password' type='password' required />
+              <Input id='confirm-password' type='password' required/>
               <FieldDescription>Please confirm your password.</FieldDescription>
             </Field>
             <FieldGroup>

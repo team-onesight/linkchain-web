@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import { fetchLink, fetchLinksV2 } from "@/model/link/api";
+import {useQuery} from "@tanstack/react-query";
+import {fetchLink, fetchLinksV2} from "@/model/link/api";
 
 interface UseLinksParams {
   q?: string | null;
@@ -20,11 +20,11 @@ export const useLink = (id: string | undefined) => {
   });
 };
 
-export const useLinks = ({ q, tag, linkId, userId, groupName, groupBy }: UseLinksParams = {}) => {
-  console.log("useLinksV2 params:", { q, tag, linkId, userId, groupName, groupBy });
+export const useLinks = ({q, tag, linkId, userId, groupName, groupBy}: UseLinksParams = {}) => {
+  console.log("useLinksV2 params:", {q, tag, linkId, userId, groupName, groupBy});
   const query = useQuery({
-    queryKey: ["linksV2", { q, tag, userId, groupBy }],
-    queryFn: () => fetchLinksV2({ q, tag, userId, groupBy }),
+    queryKey: ["linksV2", {q, tag, userId, groupBy}],
+    queryFn: () => fetchLinksV2({q, tag, userId, groupBy}),
     retry: 1,
     refetchOnWindowFocus: false,
   });

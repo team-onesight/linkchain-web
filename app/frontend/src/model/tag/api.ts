@@ -1,4 +1,4 @@
-import type { Tag } from "./type";
+import type {Tag} from "./type";
 
 const fetchTags = async (): Promise<Tag[]> => {
   const response = await fetch("/mocks/tags.json");
@@ -8,4 +8,4 @@ const fetchTags = async (): Promise<Tag[]> => {
   return response.json();
 };
 
-export { fetchTags };
+export {fetchTags};

@@ -7,19 +7,19 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { Link } from "react-router-dom";
-import { useMobile } from "@/hooks/use-mobile";
-import { useUiStore } from "@/store/ui-store";
-import { cn } from "@/lib/utils";
+import {Link} from "react-router-dom";
+import {useMobile} from "@/hooks/use-mobile";
+import {useUiStore} from "@/store/ui-store";
+import {cn} from "@/lib/utils";
 
 export function FooterNavigation() {
   const isMobile = useMobile();
-  const { isInputFocused } = useUiStore();
+  const {isInputFocused} = useUiStore();
 
   return (
     <NavigationMenu
       viewport={isMobile}
-      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      onClick={() => window.scrollTo({top: 0, behavior: "smooth"})}
       className={isInputFocused ? "display-none" : "z-30"}
     >
       <NavigationMenuList

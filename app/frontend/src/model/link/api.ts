@@ -1,13 +1,13 @@
-import type { LinkItem, LinksGroup } from "@/model/link/type";
+import type {LinkItem, LinksGroup} from "@/model/link/type";
 
 type GroupByType = "date" | "tag" | "trending";
 
 const fetchLinks = async ({
-  q,
-  tag,
-  userId,
-  groupBy,
-}: {
+                            q,
+                            tag,
+                            userId,
+                            groupBy,
+                          }: {
   q?: string | null;
   tag?: string | null;
   userId?: string | null;
@@ -39,4 +39,4 @@ const fetchLink = async (id: string): Promise<LinkItem | undefined> => {
   return undefined;
 };
 
-export { fetchLinks, fetchLink, fetchLinks as fetchLinksV2 };
+export {fetchLinks, fetchLink, fetchLinks as fetchLinksV2};
