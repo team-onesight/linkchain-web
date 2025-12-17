@@ -1,20 +1,20 @@
 "use client";
 
-import { useUiStore } from "@/store/ui-store";
-import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Link, useNavigate } from "react-router-dom";
-import { useTags } from "@/hooks/useTags";
-import { Skeleton } from "@/components/ui/skeleton";
+import {useUiStore} from "@/store/ui-store";
+import {AnimatePresence, motion} from "framer-motion";
+import {useEffect, useRef, useState} from "react";
+import {Input} from "@/components/ui/input";
+import {Badge} from "@/components/ui/badge";
+import {Link, useNavigate} from "react-router-dom";
+import {useTags} from "@/hooks/useTags";
+import {Skeleton} from "@/components/ui/skeleton";
 
 export const SearchOverlay = () => {
-  const { isSearchOpen, closeSearch } = useUiStore();
+  const {isSearchOpen, closeSearch} = useUiStore();
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-  const { data: trendingTags, isLoading: isLoadingTags } = useTags();
+  const {data: trendingTags, isLoading: isLoadingTags} = useTags();
 
   useEffect(() => {
     if (isSearchOpen) {
@@ -49,9 +49,9 @@ export const SearchOverlay = () => {
     <AnimatePresence>
       {isSearchOpen && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          initial={{opacity: 0}}
+          animate={{opacity: 1}}
+          exit={{opacity: 0}}
           className='fixed inset-0 z-50 bg-black/50 backdrop-blur-sm'
           onClick={closeSearch}
         >
@@ -87,10 +87,10 @@ export const SearchOverlay = () => {
                   )}
                   {isLoadingTags ? (
                     <>
-                      <Skeleton className='h-7 w-24 rounded-full' />
-                      <Skeleton className='h-7 w-16 rounded-full' />
-                      <Skeleton className='h-7 w-32 rounded-full' />
-                      <Skeleton className='h-7 w-20 rounded-full' />
+                      <Skeleton className='h-7 w-24 rounded-full'/>
+                      <Skeleton className='h-7 w-16 rounded-full'/>
+                      <Skeleton className='h-7 w-32 rounded-full'/>
+                      <Skeleton className='h-7 w-20 rounded-full'/>
                     </>
                   ) : (
                     trendingTags?.map((tag) => (

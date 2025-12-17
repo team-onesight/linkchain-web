@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import { fetchTags } from "@/model/tag/api";
+import {useQuery} from "@tanstack/react-query";
+import {fetchTags} from "@/model/tag/api";
 
 export const useTags = () => {
   return useQuery({

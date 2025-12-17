@@ -1,25 +1,25 @@
-import { getLinkCardComponent } from "@/components/link/LinkCardFactory";
-import { SectionContainer, SectionTitle } from "@/components/styled/layout";
-import { useLinks } from "@/hooks/useLinks";
-import { motion } from "framer-motion";
+import {getLinkCardComponent} from "@/components/link/LinkCardFactory";
+import {SectionContainer, SectionTitle} from "@/components/styled/layout";
+import {useLinks} from "@/hooks/useLinks";
+import {motion} from "framer-motion";
 
 // TODO: 명명 수정 필요
 export const MainLinkSection = () => {
-  const { query } = useLinks({
+  const {query} = useLinks({
     groupBy: "trending",
   });
 
   const containerVariants = {
-    hidden: { opacity: 0 },
+    hidden: {opacity: 0},
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.1, delayChildren: 0.2 },
+      transition: {staggerChildren: 0.1, delayChildren: 0.2},
     },
   };
 
   const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1 },
+    hidden: {y: 20, opacity: 0},
+    visible: {y: 0, opacity: 1},
   };
 
   {
@@ -33,13 +33,13 @@ export const MainLinkSection = () => {
               variants={containerVariants}
               initial='hidden'
               whileInView='visible'
-              viewport={{ once: true }}
+              viewport={{once: true}}
             >
               {group.links.map((link) => {
                 const CardComponent = getLinkCardComponent(link.linkType);
                 return (
                   <motion.div key={link.id} variants={itemVariants}>
-                    <CardComponent link={link} />
+                    <CardComponent link={link}/>
                   </motion.div>
                 );
               })}

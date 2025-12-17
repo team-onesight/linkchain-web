@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import {create} from 'zustand';
 
 interface UiState {
   isInputFocused: boolean;
@@ -11,9 +11,9 @@ interface UiState {
 
 export const useUiStore = create<UiState>((set) => ({
   isInputFocused: false,
-  setInputFocused: () => set({ isInputFocused: true }),
-  setInputBlurred: () => set({ isInputFocused: false }),
+  setInputFocused: () => set({isInputFocused: true}),
+  setInputBlurred: () => set({isInputFocused: false}),
   isSearchOpen: false,
-  openSearch: () => set({ isSearchOpen: true }),
-  closeSearch: () => set({ isSearchOpen: false }),
+  openSearch: () => set({isSearchOpen: true}),
+  closeSearch: () => set({isSearchOpen: false}),
 }));
