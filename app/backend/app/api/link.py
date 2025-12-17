@@ -1,4 +1,5 @@
 import logging
+from typing import Annotated
 
 from core.deps import get_di_link_service
 from fastapi import APIRouter, Depends, HTTPException
@@ -9,7 +10,9 @@ router = APIRouter()
 
 
 @router.get("/links/{link_id}", response_model=LinkResponse)
-def read_link(link_id: str, service: LinkService = Depends(get_di_link_service)):
+def read_link(
+    link_id: str, service: Annotated[LinkService, Depends(get_di_link_service)]
+):
     if not link_id:
         raise HTTPException(status_code=400, detail="Invalid link")
 
