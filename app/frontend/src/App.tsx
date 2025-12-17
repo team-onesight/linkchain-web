@@ -1,23 +1,21 @@
 import styled from "styled-components";
 import "./App.css";
-import {Outlet} from "react-router-dom";
-import {FooterNavigation} from "./components/layout/Footer";
-import {ScrollToTop} from "./components/common/ScrollToTop";
-import {SearchOverlay} from "./features/search/SearchOverlay";
-import {Toaster} from "sonner";
+import { Outlet } from "react-router-dom";
+import { FooterNavigation } from "./components/layout/Footer";
+import { ScrollToTop } from "./components/common/ScrollToTop";
+import { SearchOverlay } from "./features/search/SearchOverlay";
 
 function App() {
   return (
     <>
-      <Toaster/>
       <Container>
         <ContentWrapper>
-          <ScrollToTop/>
-          <Outlet/>
+          <ScrollToTop />
+          <Outlet />
         </ContentWrapper>
-        <FooterNavigation/>
+        <FooterNavigation />
       </Container>
-      <SearchOverlay/>
+      <SearchOverlay />
     </>
   );
 }
