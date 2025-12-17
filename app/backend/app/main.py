@@ -1,6 +1,6 @@
 from typing import Union
 
-from api import join, link
+from api import auth, link
 from db.base import Base
 from db.session import engine
 from fastapi import FastAPI
@@ -10,7 +10,7 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 app.include_router(link.router, prefix="/api/v1", tags=["v1"])
-app.include_router(join.router, prefix="/api/v1", tags=["v1"])
+app.include_router(auth.router, prefix="/api/v1", tags=["v1"])
 
 
 # 라우팅 정의 후 삭제 예정

@@ -22,7 +22,7 @@ class UserService:
         hashed_password = pwd_context.hash(password)
         try:
             new_user = self.repository.create_user(username, hashed_password)
-        except IntegrityError:
-            raise ValueError("user create fail")  # noqa: B904
+        except IntegrityError as e:
+            raise ValueError("user create fail") from e
 
         return new_user
