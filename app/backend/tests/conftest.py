@@ -1,30 +1,42 @@
-# 공용 fixture
+import os
+import sys
 
 import pytest
 from core.deps import get_di_user_service
 from db.session import TestingSessionLocal, engine
+from dotenv import load_dotenv
 from fastapi.testclient import TestClient
 from main import app
 from repositories.user import UserRepository
 from services.user import UserService
 
-# 실제 PostgreSQL DB 연결 -> db/session.py에서 TestingSessionLocal을 만들고 이를 import하여 사용
+current_dir = os.path.dirname(os.path.abspath(__file__))
+root_dir = os.path.dirname(current_dir)  # tests/의 상위 폴더인 backend/
+
+env_path = os.path.join(root_dir, ".env.local")
+
+if os.path.exists(env_path):
+    load_dotenv(env_path)
+else:
+    print(f"Warning: .env file not found at {env_path}")
+    os.environ.setdefault("DB_HOST", "localhost")
+    os.environ.setdefault("DB_PORT", "5432")
+    os.environ.setdefault("DB_NAME", "linkchain")
+    os.environ.setdefault("DB_USER", "postgres")
+    os.environ.setdefault("DB_PASSWORD", "postgres")
+
+
+if root_dir not in sys.path:
+    sys.path.append(root_dir)
 
 
 @pytest.fixture(scope="session")
 def db_engine():
-    # 필요 시 테이블 생성
-    # Base.metadata.create_all(bind=engine)
     yield engine
-    # 테스트 종료 후 테이블 삭제
-    # Base.metadata.drop_all(bind=engine)
 
 
 @pytest.fixture(scope="function")
 def db_session(db_engine):
-    """
-    각 테스트마다 트랜잭션 rollback
-    """
     connection = db_engine.connect()
     transaction = connection.begin()
     session = TestingSessionLocal(bind=connection)
@@ -36,10 +48,6 @@ def db_session(db_engine):
 
 @pytest.fixture()
 def client(db_session):
-    """
-    test용 실제 DB 세션 의존성 주입
-    """
-
     def override_get_di_user_service():
         repo = UserRepository(db_session)
         return UserService(repo)

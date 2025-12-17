@@ -1,8 +1,5 @@
-# repositories/user 테스트
-
-import pytest
 from repositories.user import UserRepository
-from models.user import User
+
 
 def test_create_and_get_user(db_session):
     repo = UserRepository(db_session)
