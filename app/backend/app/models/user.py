@@ -14,5 +14,5 @@ class User(Base):
     user_id = Column(Integer, primary_key=True, index=True)
     username = Column(String, nullable=False)
     password = Column(String, nullable=False)
-    user_embedding = Column(VECTOR(1536), nullable=True)  # 1536차원 vector
+    user_embedding = Column(VECTOR(768), nullable=True)  # 1536차원 vector
     created_at = Column(DateTime(timezone=True), server_default=func.now())
