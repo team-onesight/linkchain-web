@@ -11,6 +11,7 @@ services:
       POSTGRES_DB: linkchain
     volumes:
       - pg_data_vol:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
 volumes:
   pg_data_vol:

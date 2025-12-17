@@ -5,6 +5,8 @@
 ## Ignore backend modules
 app/backend/.venv/
 app/backend/.env.prod
+__pycache__/
+*.pyc
 
 
 ## Ignore frontend modules

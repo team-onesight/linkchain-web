@@ -26,8 +26,8 @@ const router = createBrowserRouter([
     element: <LazyComponent RenderElement={lazy(() => import("@pages/LoginPage.tsx"))}/>,
   },
   {
-    path: "/signup",
-    element: <LazyComponent RenderElement={lazy(() => import("@pages/SignupPage.tsx"))}/>,
+    path: "/join",
+    element: <LazyComponent RenderElement={lazy(() => import("@pages/JoinPage.tsx"))}/>,
   },
   {
     path: "/",
