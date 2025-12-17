@@ -1,6 +1,5 @@
-from sqlalchemy.orm import Session
-
 from models.link import Link
+from sqlalchemy.orm import Session
 
 
 class LinkRepository:

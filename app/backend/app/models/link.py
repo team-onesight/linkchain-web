@@ -1,10 +1,9 @@
-from sqlalchemy import Column, String, Integer, DateTime, func
-
 from db.base import Base
+from sqlalchemy import Column, DateTime, Integer, String, func
 
 
 class Link(Base):
-    __table_args__= {"schema": "public"}
+    __table_args__ = {"schema": "public"}
     __tablename__ = "link"
 
     link_id = Column(Integer, primary_key=True, index=True)

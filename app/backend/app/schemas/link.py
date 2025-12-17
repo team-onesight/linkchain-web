@@ -1,6 +1,7 @@
-from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
+
+from pydantic import BaseModel
 
 
 class LinkResponse(BaseModel):
@@ -14,3 +15,9 @@ class LinkResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class CreateLinkRequest(BaseModel):
+    url: str
+    title: Optional[str] = None
+    description: Optional[str] = None
