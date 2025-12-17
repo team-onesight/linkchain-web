@@ -1,8 +1,7 @@
-from sqlalchemy.orm import Session
-
 from db.session import SessionLocal
 from repositories.link import LinkRepository
 from services.link import LinkService
+from sqlalchemy.orm import Session
 
 
 def get_db() -> Session:
