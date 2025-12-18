@@ -19,10 +19,15 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
-            
             cd /home/ubuntu/linkchain-web/app/backend            
             git pull origin main
-            sudo docker build --no-cache -t linkchain-backend-image -f ./Dockerfile .
+            
+            COMMIT_HASH=$(git rev-parse --short HEAD)
+            
+            sudo docker build --no-cache \
+              -t linkchain-backend-image:$COMMIT_HASH \
+              -t linkchain-backend-image:latest \
+              -f ./Dockerfile .
 
             sudo docker stop fastapi-server || true
             sudo docker rm fastapi-server || true
@@ -31,4 +36,6 @@ jobs:
               --name fastapi-server \
               -p 8000:80 \
               --restart unless-stopped \
-              linkchain-backend-image
+              linkchain-backend-image:latest
+            
+            sudo docker image prune -f
