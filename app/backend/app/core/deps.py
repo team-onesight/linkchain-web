@@ -1,7 +1,8 @@
-from typing import Annotated
+import time
+from typing import Annotated, Callable
 
 from db.session import SessionLocal
-from fastapi import Depends
+from fastapi import Depends, Request
 from repositories.link import LinkRepository
 from repositories.user import UserRepository
 from services.link import LinkService
@@ -33,3 +34,23 @@ def get_di_user_service(db: Annotated[Session, Depends(get_db)]) -> UserService:
     """
     repository = UserRepository(db)
     return UserService(repository)
+
+
+def get_user_session(request: Request) -> Callable:
+    """
+    user session 의존성 주입 메소드
+    :param request: request
+    :type request: Request
+    :return: Callable
+    :rtype: Callable[..., Any]
+    """
+
+    def create_session(login_user):
+        request.session["user"] = {
+            "user_id": login_user.user_id,
+            "username": login_user.username,  # 오타 수정: usernmae -> username
+        }
+        now = int(time.time())
+        request.session["expired_time"] = now + (60 * 60)
+
+    return create_session
