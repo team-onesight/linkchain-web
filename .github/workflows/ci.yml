@@ -16,9 +16,6 @@ jobs:
   # ------------------------------------------------------------------
   backend-ci:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: app/backend
 
     env:
       DB_HOST: localhost
@@ -41,20 +38,24 @@ jobs:
 
       - name: Install uv
         uses: astral-sh/setup-uv@v4
+        continue-on-error: true
         with:
           enable-cache: true
-          cache-dependency-glob: "./uv.lock"
+          cache-dependency-glob: "app/backend/pyproject.toml"
 
       - name: Set up Python 3.12
         run: uv python install 3.12
 
       - name: Install Dependencies
+        working-directory: app/backend
         run: uv sync --frozen
 
       - name: Run Tests with Pytest
+        working-directory: app/backend
         run: uv run pytest ./tests --cov=./app --cov-report=xml
 
       - name: Stop Docker Compose
+        working-directory: app/backend
         if: always()
         run: docker compose down
 
@@ -63,10 +64,6 @@ jobs:
   # ------------------------------------------------------------------
   frontend-ci:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./app/frontend
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -76,11 +73,13 @@ jobs:
         with:
           node-version: "20"
           cache: "npm"
-          cache-dependency-path: ./package-lock.json
+          cache-dependency-path: app/frontend/package-lock.json
 
 
       - name: Install Dependencies
+        working-directory: app/frontend
         run: npm ci
 
       - name: Run Build
+        working-directory: app/frontend
         run: npm run build
