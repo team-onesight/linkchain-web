@@ -53,7 +53,7 @@ jobs:
 
       - name: Run Tests with Pytest
         working-directory: app/backend
-        run: uv run pytest ./tests --cov=./app --cov-report=xml
+        run: uv run pytest -v
 
       - name: Stop Docker Compose
         working-directory: app/backend
