@@ -73,4 +73,6 @@ def get_auth(request: Request):
     if not session_user:
         raise HTTPException(status_code=401, detail="Not authenticated")
 
-    return AuthCheckResponse(status_code=200, detail="Authenticated")
+    return AuthCheckResponse(
+        user_id=session_user["user_id"], username=session_user["username"]
+    )

@@ -1,7 +1,8 @@
 interface User {
-  id: string;
-  name: string;
-  bio: string;
+  user_id: number;
+  username: string;
 }
 
-export type {User};
+export type { User };
+
+

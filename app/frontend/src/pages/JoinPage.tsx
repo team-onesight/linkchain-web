@@ -1,4 +1,4 @@
-import { JoinForm } from "@/components/auth/signup-form";
+import { JoinForm } from "@components/auth/join-form.tsx";
 
 export const JoinPage = () => {
   return (
