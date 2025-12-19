@@ -72,7 +72,7 @@ export const JoinForm = ({ ...props }: React.ComponentProps<typeof Card>) => {
       <CardContent>
         <FieldGroup>
           <Field>
-            <FieldLabel htmlFor="username">id</FieldLabel>
+            <FieldLabel htmlFor="username">ID</FieldLabel>
             <Input id="username" type="text" placeholder="사용자 아이디를 입력해주세요"
                    value={username}
                    onChange={(e) => setUsername(e.target.value)}
@@ -80,7 +80,7 @@ export const JoinForm = ({ ...props }: React.ComponentProps<typeof Card>) => {
           </Field>
           <Field>
             <FieldLabel htmlFor="password">Password</FieldLabel>
-            <Input id="password" type="password"
+            <Input id="password" type="password" placeholder="비밀번호를 입력해주세요."
                    value={password}
                    onChange={(e) => setPassword(e.target.value)} />
             {/*<FieldDescription>Must be at least 8 characters long.</FieldDescription>*/}
@@ -88,7 +88,7 @@ export const JoinForm = ({ ...props }: React.ComponentProps<typeof Card>) => {
           <Field>
             <FieldLabel htmlFor="confirm-password"
             >Confirm Password</FieldLabel>
-            <Input id="confirm-password" type="password" value={confirmPassword}
+            <Input id="confirm-password" type="password" value={confirmPassword} placeholder="비밀번호를 다시 한 번 입력해주세요."
                    onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </Field>

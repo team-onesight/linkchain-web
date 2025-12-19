@@ -1,16 +1,18 @@
-import {PageContainer} from "@/components/styled/layout";
-import {ProfileHeader} from "@/features/user-info/ProfileHeader";
-import {StatsCard} from "@/features/user-info/StatsCard";
-import {MyRecentLinks} from "@/features/link/MyRecentLinks";
-import {useUser} from "@/hooks/useUsers";
+import { PageContainer } from "@/components/styled/layout";
+import { MyRecentLinks } from "@/features/link/MyRecentLinks";
+import { useUser } from "@/hooks/useUsers";
+import { useAuthStore } from "@/store/auth-store.ts";
+import { ProfileHeader } from "@/features/user/ProfileHeader.tsx";
+import { StatsCard } from "@/features/user/StatsCard.tsx";
 
 const MyPage = () => {
-  const user = useUser("1");
+  const { user, isLoading } = useAuthStore();
+  const userQuery = useUser(user?.user_id);
   return (
     <PageContainer>
-      <ProfileHeader user={user}/>
-      {user.isFetched && user.data?.id && <StatsCard userId={user.data?.id}/>}
-      <MyRecentLinks/>
+      <ProfileHeader user={userQuery} />
+      {isLoading && user?.user_id && <StatsCard />}
+      <MyRecentLinks />
     </PageContainer>
   );
 };

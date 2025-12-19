@@ -1,13 +1,13 @@
-import {useQuery} from "@tanstack/react-query";
-import {fetchLink, fetchLinksV2} from "@/model/link/api";
+import { useQuery } from "@tanstack/react-query";
+import { fetchLink, fetchLinks } from "@/model/link/api";
 
 interface UseLinksParams {
   q?: string | null;
   tag?: string | null;
-  linkId?: string | null;
-  groupName?: string | null;
-  userId?: string | null;
-  groupBy?: "date" | "tag" | "trending";
+  link_id?: string | null;
+  group_name?: string | null;
+  group_by?: "date" | "tag" | "trending";
+  user_id?: number | null;
 }
 
 export const useLink = (id: string | undefined) => {
@@ -20,11 +20,14 @@ export const useLink = (id: string | undefined) => {
   });
 };
 
-export const useLinks = ({q, tag, linkId, userId, groupName, groupBy}: UseLinksParams = {}) => {
-  console.log("useLinksV2 params:", {q, tag, linkId, userId, groupName, groupBy});
+export const useLinks = ({ q, tag, link_id, user_id, group_name, group_by }: UseLinksParams = {}) => {
+
+  console.log(link_id);
+
+
   const query = useQuery({
-    queryKey: ["linksV2", {q, tag, userId, groupBy}],
-    queryFn: () => fetchLinksV2({q, tag, userId, groupBy}),
+    queryKey: ["links", { q, tag, user_id, group_name, group_by }],
+    queryFn: () => fetchLinks({ q, tag, user_id, group_by }),
     retry: 1,
     refetchOnWindowFocus: false,
   });
@@ -36,7 +39,7 @@ export const useLinks = ({q, tag, linkId, userId, groupName, groupBy}: UseLinksP
         (acc, group) => {
           return acc.concat(group.links);
         },
-        [] as (typeof query.data)[0]["links"]
+        [] as (typeof query.data)[0]["links"],
       );
     },
   };
