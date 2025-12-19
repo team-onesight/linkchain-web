@@ -12,7 +12,7 @@ class UserRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def get_username_from_db(self, username: str):
+    def get_userinfo(self, username: str):
         return self.db.query(User).filter(User.username == username).first()
 
     def create_user(self, username: str, hashed_password: str):

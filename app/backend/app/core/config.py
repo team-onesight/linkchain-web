@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     db_user: str
     db_password: str
     db_port: str
+    session_key: str
 
     model_config = SettingsConfigDict(
         env_file=f".env.{env_state}",
