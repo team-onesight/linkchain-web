@@ -6,6 +6,7 @@ from api.auth import router as auth_router
 from api.link import router as link_router
 from core.auth import dispatch
 from core.deps import get_db, get_di_user_service
+from db.base import Base
 from db.session import TestingSessionLocal, engine
 from dotenv import load_dotenv
 from fastapi import FastAPI
@@ -54,9 +55,10 @@ def db_session(db_engine):
 # TestClient fixture
 @pytest.fixture
 def client(db_session):
+    Base.metadata.create_all(bind=engine)
+
     app = FastAPI()
 
-    # app.add_middleware(AuthSessionMiddleware)
     app.add_middleware(
         SessionMiddleware,
         secret_key="test-secret",
