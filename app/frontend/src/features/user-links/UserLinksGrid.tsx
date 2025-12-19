@@ -1,34 +1,34 @@
-import {motion} from "framer-motion";
-import {useLinks} from "@/hooks/useLinks";
-import {Skeleton} from "@/components/ui/skeleton";
-import {getLinkCardComponent} from "@/components/link/LinkCardFactory";
-import type {UseQueryResult} from "@tanstack/react-query";
-import type {User} from "@/model/user/type";
+import { motion } from "framer-motion";
+import { useLinks } from "@/hooks/useLinks";
+import { Skeleton } from "@/components/ui/skeleton";
+import { getLinkCardComponent } from "@/components/link/LinkCardFactory";
+import type { UseQueryResult } from "@tanstack/react-query";
+import type { User } from "@/model/user/type";
 
-export const UserLinksGrid = ({user}: { user: UseQueryResult<User | undefined, Error> }) => {
-  const {query, concat_groups} = useLinks({userId: user.data?.id});
+export const UserLinksGrid = ({ user }: { user: UseQueryResult<User | undefined, Error> }) => {
+  const { query, concat_groups } = useLinks({ user_id: user.data?.user_id });
 
   const containerVariants = {
-    hidden: {opacity: 0},
+    hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {staggerChildren: 0.07},
+      transition: { staggerChildren: 0.07 },
     },
   };
 
   const itemVariants = {
-    hidden: {y: 20, opacity: 0},
-    visible: {y: 0, opacity: 1},
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1 },
   };
 
   if (query.isLoading) {
-    return <GridSkeleton/>;
+    return <GridSkeleton />;
   }
 
   if (query.data?.length === 0) {
     return (
-      <div className='text-center py-20'>
-        <p className='text-xl text-gray-500'>
+      <div className="text-center py-20">
+        <p className="text-xl text-gray-500">
           {user ? "아직 큐레이션된 링크가 없습니다." : "사용자를 찾을 수 없습니다."}
         </p>
       </div>
@@ -36,18 +36,18 @@ export const UserLinksGrid = ({user}: { user: UseQueryResult<User | undefined, E
   }
 
   return (
-    <div className='space-y-8'>
+    <div className="space-y-8">
       <motion.div
-        className='grid grid-cols-1 sm:grid-cols-2 gap-4'
+        className="grid grid-cols-1 sm:grid-cols-2 gap-4"
         variants={containerVariants}
-        initial='hidden'
-        animate='visible'
+        initial="hidden"
+        animate="visible"
       >
         {concat_groups()?.map((link) => {
           const CardComponent = getLinkCardComponent(link.linkType);
           return (
             <motion.div key={link.id} variants={itemVariants}>
-              <CardComponent link={link}/>
+              <CardComponent link={link} />
             </motion.div>
           );
         })}
@@ -57,11 +57,11 @@ export const UserLinksGrid = ({user}: { user: UseQueryResult<User | undefined, E
 };
 
 const GridSkeleton = () => (
-  <div className='space-y-8'>
-    <Skeleton className='h-8 w-48 mb-4'/>
-    <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
-      <Skeleton className='h-36 w-full'/>
-      <Skeleton className='h-36 w-full'/>
+  <div className="space-y-8">
+    <Skeleton className="h-8 w-48 mb-4" />
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <Skeleton className="h-36 w-full" />
+      <Skeleton className="h-36 w-full" />
     </div>
   </div>
 );

@@ -25,8 +25,8 @@ class LogoutResponse(BaseModel):
 
 
 class AuthCheckResponse(BaseModel):
-    status_code: int
-    detail: str
+    user_id: int
+    username: str
 
     class Config:
         from_attributes = True

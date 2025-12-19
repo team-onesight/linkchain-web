@@ -4,18 +4,22 @@ import { Outlet } from "react-router-dom";
 import { FooterNavigation } from "./components/layout/Footer";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import { SearchOverlay } from "./features/search/SearchOverlay";
+import { AuthProvider } from "@/wrapper/AuthProvider.tsx";
 
 function App() {
+
   return (
     <>
-      <Container>
-        <ContentWrapper>
-          <ScrollToTop />
-          <Outlet />
-        </ContentWrapper>
-        <FooterNavigation />
-      </Container>
-      <SearchOverlay />
+      <AuthProvider>
+        <Container>
+          <ContentWrapper>
+            <ScrollToTop />
+            <Outlet />
+          </ContentWrapper>
+          <FooterNavigation />
+        </Container>
+        <SearchOverlay />
+      </AuthProvider>
     </>
   );
 }

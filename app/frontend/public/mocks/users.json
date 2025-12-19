@@ -1,32 +1,32 @@
 [
   {
-    "id": "1",
-    "name": "Devin",
+    "user_id": "1",
+    "username": "Devin",
     "bio": "Frontend Developer | React Enthusiast"
   },
   {
-    "id": "2",
-    "name": "Sarah",
+    "user_id": "2",
+    "username": "Sarah",
     "bio": "UX/UI Designer"
   },
   {
-    "id": "3",
-    "name": "Alex",
+    "user_id": "3",
+    "username": "Alex",
     "bio": "AI Researcher"
   },
   {
-    "id": "4",
-    "name": "Maria",
+    "user_id": "4",
+    "username": "Maria",
     "bio": "Marketing Professional"
   },
   {
-    "id": "5",
-    "name": "Tom",
+    "user_id": "5",
+    "username": "Tom",
     "bio": "Full-stack Developer"
   },
   {
-    "id": "6",
-    "name": "Chloe",
+    "user_id": "6",
+    "username": "Chloe",
     "bio": "Web3 Developer"
   }
 ]

@@ -34,7 +34,7 @@ const GridSkeleton = () => (
 
 const LinkPage = () => {
   const {query} = useLinks({
-    groupBy: "date",
+    group_by: "date",
   });
 
   return (

@@ -1,6 +1,6 @@
 from typing import Union
 
-from api import auth, link
+from api import auth, link, user
 from core.auth import dispatch
 from core.config import settings
 from db.base import Base
@@ -24,12 +24,7 @@ app.middleware(dispatch)
 
 app.include_router(link.router, prefix="/api/v1", tags=["v1"])
 app.include_router(auth.router, prefix="/api/v1", tags=["v1"])
-
-
-# 라우팅 정의 후 삭제 예정
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
+app.include_router(user.router, prefix="/api/v1", tags=["v1"])
 
 
 @app.get("/items/{item_id}")

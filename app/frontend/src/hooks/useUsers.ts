@@ -1,21 +1,23 @@
-import {useQuery} from "@tanstack/react-query";
-import {fetchUser, fetchUsers} from "@/model/user/api";
+import { useQuery } from "@tanstack/react-query";
+import { usersAPI, userAPI } from "@/model/user/api";
 
 export const useUsers = () => {
   return useQuery({
     queryKey: ["users"],
-    queryFn: () => fetchUsers(),
+    queryFn: () => usersAPI(),
     retry: 1,
     refetchOnWindowFocus: false,
   });
 };
 
-export const useUser = (id?: string | undefined) => {
+export const useUser = (user_id?: number) => {
   return useQuery({
-    queryKey: ["users", id],
-    queryFn: () => fetchUser(id!),
-    enabled: !!id,
+    queryKey: ["users", user_id],
+    queryFn: () => userAPI(user_id!),
+    enabled: !!user_id,
     retry: 1,
     refetchOnWindowFocus: false,
   });
 };
+
+
