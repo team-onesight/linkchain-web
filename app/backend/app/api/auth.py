@@ -49,8 +49,9 @@ def login(
         login_user = service.login(login_req.username, login_req.password)
         create_user_session(login_user)
 
-        return LoginResponse(message="login success")
+        return LoginResponse(user_id=login_user.user_id, username=login_user.username)
     except Exception as e:
+        print(e)
         raise HTTPException(status_code=401, detail="invalid credentials") from e
 
 
@@ -72,8 +73,4 @@ def get_auth(request: Request):
     if not session_user:
         raise HTTPException(status_code=401, detail="Not authenticated")
 
-    return AuthCheckResponse(
-        authenticated=True,
-        user_id=session_user["user_id"],
-        username=session_user["username"],
-    )
+    return AuthCheckResponse(status_code=200, detail="Authenticated")

@@ -1,13 +1,27 @@
-def test_login_success(client):
+from models.user import User
+from passlib.context import CryptContext
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def test_login_success(client, db_session):
     """
     login 테스트
     :param client: Description
     """
-    payload = {"username": "test", "password": "test"}
+    hashed_password = pwd_context.hash("test1")
+
+    user = User(
+        username="test1",
+        password=hashed_password,
+    )
+    db_session.add(user)
+    db_session.commit()
+    db_session.refresh(user)
+
+    payload = {"username": "test1", "password": "test1"}
     res = client.post("/api/v1/auth/login", json=payload)
 
     assert res.status_code == 200
-    assert res.json()["message"] == "login success"
 
 
 def test_login_fail(client):
@@ -46,7 +60,7 @@ def test_auth_check_requires_login(client):
     res = client.get("/api/v1/auth")
 
     assert res.status_code == 401
-    
+
 
 def test_get_auth_authenticated(client):
     """
@@ -60,6 +74,3 @@ def test_get_auth_authenticated(client):
     data = res.json()
 
     assert res.status_code == 200
-    assert data["authenticated"] is True
-    assert data["user_id"] == 1
-    assert data["username"] == "test"

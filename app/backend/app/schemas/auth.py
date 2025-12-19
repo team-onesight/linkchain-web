@@ -10,7 +10,8 @@ class LoginRequest(BaseModel):
 
 
 class LoginResponse(BaseModel):
-    message: str
+    user_id: int
+    username: str
 
     class Config:
         from_attributes = True
@@ -24,9 +25,8 @@ class LogoutResponse(BaseModel):
 
 
 class AuthCheckResponse(BaseModel):
-    authenticated: bool
-    user_id: int
-    username: str
+    status_code: int
+    detail: str
 
     class Config:
         from_attributes = True
