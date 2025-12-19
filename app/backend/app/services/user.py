@@ -15,7 +15,7 @@ class UserService:
         self.repository = repository
 
     def join_user(self, username: str, password: str):
-        existing_username = self.repository.get_username_from_db(username)
+        existing_username = self.repository.get_user_by_username(username)
         if existing_username:
             raise ValueError("user already exists")
 
@@ -26,3 +26,32 @@ class UserService:
             raise ValueError("user create fail") from e
 
         return new_user
+
+    def get_user_by_id(self, user_id: str):
+        """
+        Docstring for get_user_by_id
+        :param self: Description
+        :param user_id: Description
+        :type user_id: str
+        """
+        user = self.repository.get_user_by_id(user_id)
+        return user
+
+    def login(self, username: str, password: str):
+        """
+        Docstring for login
+        :param self: Description
+        :param username: Description
+        :type username: str
+        :param password: Description
+        :type password: str
+        """
+        try:
+            valid_user = self.repository.get_user_by_username(username)
+            auth = pwd_context.verify(password, valid_user.password)
+            if not valid_user or not auth:
+                raise ValueError("invalid credentials")
+        except Exception as e:
+            raise ValueError("invalid credentials") from e
+
+        return valid_user

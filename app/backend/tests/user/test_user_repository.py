@@ -11,5 +11,5 @@ def test_create_and_get_user(db_session):
     assert new_user.created_at is not None
 
     # User 조회
-    fetched_user = repo.get_username_from_db("testuser_repo")
+    fetched_user = repo.get_user_by_username("testuser_repo")
     assert fetched_user.username == new_user.username

@@ -1,20 +1,23 @@
-import type {User} from "./type";
+import type { User } from "./type";
+import type { BaseError } from "@/model/common/type.ts";
 
-const fetchUsers = async (): Promise<User[]> => {
+const usersAPI = async (): Promise<User[]> => {
   const response = await fetch("/mocks/users.json");
   if (!response.ok) {
     throw new Error("Network response was not ok");
   }
-  return response.json();
+
+  return await response.json() as User[];
 };
 
-const fetchUser = async (id: string): Promise<User | undefined> => {
-  const response = await fetch("/mocks/users.json");
+const userAPI = async (user_id: number): Promise<User | undefined> => {
+  const response = await fetch("/api/v1/users/{}".replace("{}", String(user_id)), {});
   if (!response.ok) {
-    throw new Error("Network response was not ok");
+    const data = await response.json() as BaseError;
+    throw new Error(data.detail);
   }
-  const users: User[] = await response.json();
-  return users.find((user) => user.id === id);
+
+  return await response.json() as User;
 };
 
-export {fetchUsers, fetchUser};
+export { usersAPI, userAPI };
