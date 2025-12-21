@@ -52,6 +52,9 @@ def db_session(db_engine):
     connection.close()
 
 
+TEST_SECRET_KEY = "test-secret"  # noqa: S105
+
+
 # TestClient fixture
 @pytest.fixture
 def client(db_session):
@@ -61,7 +64,7 @@ def client(db_session):
 
     app.add_middleware(
         SessionMiddleware,
-        secret_key="test-secret",
+        secret_key=TEST_SECRET_KEY,
         session_cookie="session_auth",
         max_age=60 * 60,
         https_only=False,

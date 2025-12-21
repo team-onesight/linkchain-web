@@ -51,6 +51,16 @@ jobs:
         working-directory: app/backend
         run: uv sync --frozen
 
+      - name: Lint and Format Check with Ruff
+        working-directory: app/backend
+        continue-on-error: true
+        run: |
+          echo "Running Ruff Linter..."
+          uv run ruff check ./app ./tests
+          
+          echo "Running Ruff Formatter Check..."
+          uv run ruff format --check ./app ./tests
+
       - name: Run Tests with Pytest
         working-directory: app/backend
         run: uv run pytest -v
