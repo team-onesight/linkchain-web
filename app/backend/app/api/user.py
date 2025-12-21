@@ -1,4 +1,3 @@
-from http.client import HTTPException
 from typing import Annotated
 
 from core.deps import get_di_user_service
