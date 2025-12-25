@@ -1,4 +1,8 @@
+from typing import Optional
+
 from models.link import Link
+from models.link_user_map import LinkUserMap
+from sqlalchemy import desc
 from sqlalchemy.orm import Session
 
 
@@ -8,3 +12,22 @@ class LinkRepository:
 
     def get_link_from_db(self, link_id: int):
         return self.db.query(Link).filter(Link.link_id == link_id).first()
+
+    def find_my_links(self, user_id: int, cursor: Optional[int], size: int):
+        query = (
+            self.db.query(
+                Link.link_id,
+                Link.url,
+                Link.title,
+                Link.description,
+                LinkUserMap.is_public,
+                LinkUserMap.id.label("map_id"),
+            )
+            .join(LinkUserMap, Link.link_id == LinkUserMap.link_id)
+            .filter(LinkUserMap.user_id == user_id)
+        )
+
+        if cursor:
+            query = query.filter(LinkUserMap.id < cursor)
+
+        return query.order_by(desc(LinkUserMap.id)).limit(size + 1).all()

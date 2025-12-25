@@ -9,9 +9,6 @@ class LinkResponse(BaseModel):
     url: str
     title: Optional[str]
     description: Optional[str]
-    views: int
-    created_by: Optional[int]
-    created_at: datetime
 
     class Config:
         from_attributes = True
