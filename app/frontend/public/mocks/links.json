@@ -1,323 +1,80 @@
 [
-    {
-        "name": "user-links",
-        "description": "Features related to displaying and managing user-specific links.",
-        "links": [
-            {
-                "id": "1",
-                "userId": "1",
-                "url": "https://react.dev",
-                "title": "React 공식 문서",
-                "description": "The library for web and native user interfaces. Learn about React, its ecosystem, and how to build with it.",
-                "tags": [
-                    {
-                        "id": "1",
-                        "name": "React"
-                    },
-                    {
-                        "id": "2",
-                        "name": "JavaScript"
-                    },
-                    {
-                        "id": "3",
-                        "name": "Official"
-                    }
-                ],
-                "created_at": "2025-12-05T10:00:00Z",
-                "linkType": "Blog",
-                "imageUrl": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070&auto=format&fit=crop"
-            },
-            {
-                "id": "2",
-                "userId": "2",
-                "url": "https://www.youtube.com/watch?v=s6_6E6sO86o",
-                "title": "shadcn/ui, 정말 혁신일까? 15분 총정리",
-                "description": "A comprehensive guide to learning TypeScript, from basic types to advanced concepts.",
-                "tags": [
-                    {
-                        "id": "8",
-                        "name": "TypeScript"
-                    },
-                    {
-                        "id": "3",
-                        "name": "Official"
-                    },
-                    {
-                        "id": "2",
-                        "name": "JavaScript"
-                    }
-                ],
-                "created_at": "2025-12-05T09:30:00Z",
-                "linkType": "Video",
-                "imageUrl": "https://img.youtube.com/vi/s6_6E6sO86o/maxresdefault.jpg"
-            },
-            {
-                "id": "3",
-                "userId": "2",
-                "url": "https://www.figma.com/design/",
-                "title": "Figma Learn Design",
-                "description": "A collection of articles, videos, and resources to help you learn the principles of design with Figma.",
-                "tags": [
-                    {
-                        "id": "9",
-                        "name": "Figma"
-                    },
-                    {
-                        "id": "10",
-                        "name": "Design"
-                    },
-                    {
-                        "id": "11",
-                        "name": "UI/UX"
-                    }
-                ],
-                "created_at": "2025-12-04T18:00:00Z",
-                "linkType": "Blog",
-                "imageUrl": "https://images.unsplash.com/photo-1611262588024-d12430b98920?q=80&w=1974&auto=format&fit=crop"
-            },
-            {
-                "id": "4",
-                "userId": "3",
-                "url": "https://www.nytimes.com/ca/section/technology",
-                "title": "NYT Technology News",
-                "description": "The latest tech news and analysis from The New York Times.",
-                "tags": [
-                    {
-                        "id": "4",
-                        "name": "NYT"
-                    },
-                    {
-                        "id": "5",
-                        "name": "News"
-                    },
-                    {
-                        "id": "6",
-                        "name": "Tech"
-                    },
-                    {
-                        "id": "7",
-                        "name": "OpenAI"
-                    }
-                ],
-                "created_at": "2025-12-04T15:20:00Z",
-                "linkType": "News",
-                "imageUrl": "https://images.unsplash.com/photo-1526470608268-f674ce90ebd4?q=80&w=2070&auto=format&fit=crop"
-            },
-            {
-                "id": "5",
-                "userId": "1",
-                "url": "https://nodejs.org/en/docs",
-                "title": "Node.js 공식 문서",
-                "description": "Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine. Explore the official documentation.",
-                "tags": [
-                    {
-                        "id": "12",
-                        "name": "Node.js"
-                    },
-                    {
-                        "id": "13",
-                        "name": "Backend"
-                    },
-                    {
-                        "id": "2",
-                        "name": "JavaScript"
-                    }
-                ],
-                "created_at": "2025-12-03T11:00:00Z",
-                "linkType": "Blog",
-                "imageUrl": "https://images.unsplash.com/photo-1566241440091-ec10de8db2e1?q=80&w=1916&auto=format&fit=crop"
-            },
-            {
-                "id": "6",
-                "userId": "2",
-                "url": "https://www.youtube.com/watch?v=gE04n7-3-48",
-                "title": "개발자 노트북, 이걸로 종결합니다.",
-                "description": "Evidence-Based User Experience Research, Training, and Consulting.",
-                "tags": [
-                    {
-                        "id": "14",
-                        "name": "UX"
-                    },
-                    {
-                        "id": "15",
-                        "name": "Research"
-                    },
-                    {
-                        "id": "16",
-                        "name": "Consulting"
-                    }
-                ],
-                "created_at": "2025-12-05T11:00:00Z",
-                "linkType": "Video",
-                "imageUrl": "https://img.youtube.com/vi/gE04n7-3-48/maxresdefault.jpg"
-            },
-            {
-                "id": "7",
-                "userId": "3",
-                "url": "https://www.theverge.com/tech",
-                "title": "The Verge » Tech",
-                "description": "The latest tech news, reviews, and opinion from The Verge.",
-                "tags": [
-                    {
-                        "id": "17",
-                        "name": "The Verge"
-                    },
-                    {
-                        "id": "5",
-                        "name": "News"
-                    },
-                    {
-                        "id": "6",
-                        "name": "Tech"
-                    }
-                ],
-                "created_at": "2025-12-03T09:00:00Z",
-                "linkType": "News",
-                "imageUrl": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop"
-            },
-            {
-                "id": "8",
-                "userId": "3",
-                "url": "https://distill.pub/",
-                "title": "Distill.pub",
-                "description": "An academic journal dedicated to clear, intuitive explanations of machine learning concepts.",
-                "tags": [
-                    {
-                        "id": "18",
-                        "name": "Machine Learning"
-                    },
-                    {
-                        "id": "19",
-                        "name": "AI"
-                    },
-                    {
-                        "id": "20",
-                        "name": "Research"
-                    }
-                ],
-                "created_at": "2025-12-02T14:00:00Z",
-                "linkType": "Blog",
-                "imageUrl": "https://images.unsplash.com/photo-1579567761406-461487c3c188?q=80&w=1974&auto=format&fit=crop"
-            }
-        ]
-    },
-    {
-        "name": "trending-links",
-        "description": "요즘 뜨는 뉴스",
-        "links": [
-            {
-                "id": "4",
-                "userId": "3",
-                "url": "https://www.nytimes.com/ca/section/technology",
-                "title": "NYT Technology News",
-                "description": "The latest tech news and analysis from The New York Times.",
-                "tags": [
-                    {
-                        "id": "4",
-                        "name": "NYT"
-                    },
-                    {
-                        "id": "5",
-                        "name": "News"
-                    },
-                    {
-                        "id": "6",
-                        "name": "Tech"
-                    },
-                    {
-                        "id": "7",
-                        "name": "OpenAI"
-                    }
-                ],
-                "created_at": "2025-12-04T15:20:00Z",
-                "linkType": "News",
-                "imageUrl": "https://images.unsplash.com/photo-1526470608268-f674ce90ebd4?q=80&w=2070&auto=format&fit=crop"
-            }
-        ]
-    },
-    {
-        "name": "trending-youtube-links",
-        "description": "인기있는 유트브 링크 모음",
-        "links": [
-            {
-                "id": "1",
-                "url": "https://www.youtube.com/watch?v=3JZ_D3ELwOQ",
-                "imageUrl": "https://img.youtube.com/vi/3JZ_D3ELwOQ/maxresdefault.jpg",
-                "title": "Imagine Dragons - Believer (Official Music Video)",
-                "description": "Music video by Imagine Dragons performing Believer.",
-                "userId": "1",
-                "tags": [
-                    {
-                        "id": "6",
-                        "name": "Tech"
-                    },
-                    {
-                        "id": "21",
-                        "name": "Music"
-                    }
-                ],
-                "created_at": "2024-01-01T00:00:00Z",
-                "linkType": "Video"
-            },
-            {
-                "id": "2",
-                "url": "https://www.youtube.com/watch?v=gE04n7-3-48",
-                "imageUrl": "https://img.youtube.com/vi/gE04n7-3-48/maxresdefault.jpg",
-                "title": "개발자 노트북, 이걸로 종결합니다. 2024 맥북 M3 Pro 리뷰",
-                "description": "2024 맥북 M3 Pro 리뷰 영상입니다.",
-                "tags": [
-                    {
-                        "id": "6",
-                        "name": "Tech"
-                    },
-                    {
-                        "id": "22",
-                        "name": "Review"
-                    }
-                ],
-                "created_at": "2024-01-02T00:00:00Z",
-                "userId": "1",
-                "linkType": "Video"
-            },
-            {
-                "id": "3",
-                "url": "https://www.youtube.com/watch?v=s6_6E6sO86o",
-                "imageUrl": "https://img.youtube.com/vi/s6_6E6sO86o/maxresdefault.jpg",
-                "title": "shadcn/ui, 정말 혁신일까? 15분 총정리",
-                "description": "shadcn/ui에 대한 15분 요약 영상입니다.",
-                "tags": [
-                    {
-                        "id": "6",
-                        "name": "Tech"
-                    },
-                    {
-                        "id": "23",
-                        "name": "UI"
-                    }
-                ],
-                "created_at": "2024-01-03T00:00:00Z",
-                "userId": "1",
-                "linkType": "Video"
-            },
-            {
-                "id": "4",
-                "url": "https://www.youtube.com/watch?v=U_sYwWv0o_w",
-                "imageUrl": "https://img.youtube.com/vi/U_sYwWv0o_w/maxresdefault.jpg",
-                "title": "Vercel CEO가 말하는 Next.js의 미래",
-                "description": "Vercel CEO가 Next.js의 미래에 대해 이야기하는 영상입니다.",
-                "tags": [
-                    {
-                        "id": "6",
-                        "name": "Tech"
-                    },
-                    {
-                        "id": "24",
-                        "name": "Next.js"
-                    }
-                ],
-                "created_at": "2024-01-04T00:00:00Z",
-                "linkType": "Video"
-            }
-        ]
-    }
+  {
+    "name": "user-links",
+    "description": "Features related to displaying and managing user-specific links.",
+    "links": [
+      {
+        "id": "1",
+        "userId": "1",
+        "url": "https://react.dev",
+        "title": "React 공식 문서",
+        "description": "The library for web and native user interfaces. Learn about React, its ecosystem, and how to build with it.",
+        "tags": [
+          {
+            "tag_id": "1",
+            "tag_name": "React"
+          },
+          {
+            "tag_id": "2",
+            "tag_name": "JavaScript"
+          },
+          {
+            "tag_id": "3",
+            "tag_name": "Official"
+          }
+        ],
+        "created_at": "2025-12-05T10:00:00Z",
+        "linkType": "Blog",
+        "imageUrl": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070&auto=format&fit=crop"
+      },
+      {
+        "id": "2",
+        "userId": "2",
+        "url": "https://www.youtube.com/watch?v=s6_6E6sO86o",
+        "title": "shadcn/ui, 정말 혁신일까? 15분 총정리",
+        "description": "A comprehensive guide to learning TypeScript, from basic types to advanced concepts.",
+        "tags": [
+          {
+            "tag_id": "8",
+            "tag_name": "TypeScript"
+          },
+          {
+            "tag_id": "3",
+            "tag_name": "Official"
+          },
+          {
+            "tag_id": "2",
+            "tag_name": "JavaScript"
+          }
+        ],
+        "created_at": "2025-12-05T09:30:00Z",
+        "linkType": "Video",
+        "imageUrl": "https://img.youtube.com/vi/s6_6E6sO86o/maxresdefault.jpg"
+      },
+      {
+        "id": "3",
+        "userId": "2",
+        "url": "https://www.figma.com/design/",
+        "title": "Figma Learn Design",
+        "description": "A collection of articles, videos, and resources to help you learn the principles of design with Figma.",
+        "tags": [
+          {
+            "tag_id": "9",
+            "tag_name": "Figma"
+          },
+          {
+            "tag_id": "10",
+            "tag_name": "Design"
+          },
+          {
+            "tag_id": "11",
+            "tag_name": "UI/UX"
+          }
+        ],
+        "created_at": "2025-12-04T18:00:00Z",
+        "linkType": "Blog",
+        "imageUrl": "https://images.unsplash.com/photo-1611262588024-d12430b98920?q=80&w=1974&auto=format&fit=crop"
+      }
+    ]
+  }
 ]

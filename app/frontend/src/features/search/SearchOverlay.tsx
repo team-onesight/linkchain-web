@@ -1,20 +1,20 @@
 "use client";
 
-import {useUiStore} from "@/store/ui-store";
-import {AnimatePresence, motion} from "framer-motion";
-import {useEffect, useRef, useState} from "react";
-import {Input} from "@/components/ui/input";
-import {Badge} from "@/components/ui/badge";
-import {Link, useNavigate} from "react-router-dom";
-import {useTags} from "@/hooks/useTags";
-import {Skeleton} from "@/components/ui/skeleton";
+import { useUiStore } from "@/store/ui-store";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Link, useNavigate } from "react-router-dom";
+import { useTags } from "@/hooks/useTags";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const SearchOverlay = () => {
-  const {isSearchOpen, closeSearch} = useUiStore();
+  const { isSearchOpen, closeSearch } = useUiStore();
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-  const {data: trendingTags, isLoading: isLoadingTags} = useTags();
+  const { data: trendingTags, isLoading: isLoadingTags } = useTags();
 
   useEffect(() => {
     if (isSearchOpen) {
@@ -35,7 +35,7 @@ export const SearchOverlay = () => {
       const tagName = query.substring(1);
       console.log(tagName);
       if (tagName) {
-        navigate(`/search?tag=${encodeURIComponent(tagName)}`);
+        navigate(`/search?tag_name=${encodeURIComponent(tagName)}`);
       }
     } else {
       navigate(`/search?query=${encodeURIComponent(query)}`);
@@ -49,9 +49,9 @@ export const SearchOverlay = () => {
     <AnimatePresence>
       {isSearchOpen && (
         <motion.div
-          initial={{opacity: 0}}
-          animate={{opacity: 1}}
-          exit={{opacity: 0}}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           className='fixed inset-0 z-50 bg-black/50 backdrop-blur-sm'
           onClick={closeSearch}
         >
@@ -73,7 +73,7 @@ export const SearchOverlay = () => {
                 <div className='flex flex-wrap gap-2'>
                   {inputValue.length > 1 && (
                     <Link
-                      to={`/search?tag=${isTagSearch ? inputValue.substring(1) : inputValue}`}
+                      to={`/search?tag_name=${isTagSearch ? inputValue.substring(1) : inputValue}`}
                       key={isTagSearch ? inputValue.substring(1) : inputValue}
                       onClick={handleKeywordClick}
                     >
@@ -87,23 +87,23 @@ export const SearchOverlay = () => {
                   )}
                   {isLoadingTags ? (
                     <>
-                      <Skeleton className='h-7 w-24 rounded-full'/>
-                      <Skeleton className='h-7 w-16 rounded-full'/>
-                      <Skeleton className='h-7 w-32 rounded-full'/>
-                      <Skeleton className='h-7 w-20 rounded-full'/>
+                      <Skeleton className='h-7 w-24 rounded-full' />
+                      <Skeleton className='h-7 w-16 rounded-full' />
+                      <Skeleton className='h-7 w-32 rounded-full' />
+                      <Skeleton className='h-7 w-20 rounded-full' />
                     </>
                   ) : (
                     trendingTags?.map((tag) => (
                       <Link
-                        to={`/search?tag=${tag.name}`}
-                        key={tag.id}
+                        to={`/search?tag_name=${tag.tag_name}`}
+                        key={tag.tag_id}
                         onClick={handleKeywordClick}
                       >
                         <Badge
                           variant='secondary'
                           className='text-sm py-1 px-3 hover:bg-accent transition-colors'
                         >
-                          {tag.name}
+                          {tag.tag_name}
                         </Badge>
                       </Link>
                     ))
