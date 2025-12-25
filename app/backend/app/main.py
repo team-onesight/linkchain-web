@@ -1,6 +1,6 @@
 from typing import Union
 
-from api import auth, link, user
+from api import auth, link, tag, user
 from core.auth import dispatch
 from core.config import settings
 from db.base import Base
@@ -25,6 +25,7 @@ app.middleware(dispatch)
 app.include_router(link.router, prefix="/api/v1", tags=["v1"])
 app.include_router(auth.router, prefix="/api/v1", tags=["v1"])
 app.include_router(user.router, prefix="/api/v1", tags=["v1"])
+app.include_router(tag.router, prefix="/api/v1", tags=["v1"])
 
 
 @app.get("/items/{item_id}")
