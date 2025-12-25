@@ -8,20 +8,20 @@ import {Header} from "@/components/layout/Header";
 const SearchPage = () => {
   const [searchParams] = useSearchParams();
   const query = searchParams.get("query");
-  const tag = searchParams.get("tag");
+  const tag_name = searchParams.get("tag_name");
 
   const generateTitle = () => {
-    if (tag && query) {
+    if (tag_name && query) {
       return (
         <>
-          Search results for "<strong>{query}</strong>" in #<strong>{tag}</strong>
+          Search results for "<strong>{query}</strong>" in #<strong>{tag_name}</strong>
         </>
       );
     }
-    if (tag) {
+    if (tag_name) {
       return (
         <>
-          Links tagged with #<strong>{tag}</strong>
+          Links tagged with #<strong>{tag_name}</strong>
         </>
       );
     }
@@ -51,7 +51,7 @@ const SearchPage = () => {
           </h1>
         </div>
 
-        <SearchResultsGrid q={query} tag={tag}/>
+        <SearchResultsGrid q={query} tag={tag_name}/>
       </SectionContainer>
     </PageContainer>
   );

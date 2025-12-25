@@ -1,17 +1,17 @@
-import {Badge} from "@/components/ui/badge";
-import {Button} from "@/components/ui/button";
-import {CardFooter} from "@/components/ui/card";
-import type {LinkItem} from "@/model/link/type";
-import {Bookmark, ExternalLink} from "lucide-react";
-import {useNavigate} from "react-router-dom";
-import {toast} from "sonner";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { CardFooter } from "@/components/ui/card";
+import type { LinkItem } from "@/model/link/type";
+import { Bookmark, ExternalLink } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
-const LinkCardFooter = ({link}: { link: LinkItem }) => {
+const LinkCardFooter = ({ link }: { link: LinkItem }) => {
   const navigate = useNavigate();
   const handleTagClick = (e: React.MouseEvent, tagName: string) => {
     e.stopPropagation();
 
-    navigate(`/search?tag=${encodeURIComponent(tagName)}`);
+    navigate(`/search?tag_name=${encodeURIComponent(tagName)}`);
   };
   const handleBookmark = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -36,26 +36,26 @@ const LinkCardFooter = ({link}: { link: LinkItem }) => {
         <div className='flex flex-wrap gap-1 mr-auto ml-2'>
           {link.tags.map((tag) => (
             <Badge
-              key={tag.id}
+              key={tag.tag_id}
               variant='default'
               className='text-xs'
-              onClick={(e) => handleTagClick(e, tag.name)}
+              onClick={(e) => handleTagClick(e, tag.tag_name)}
             >
-              {tag.name}
+              {tag.tag_name}
             </Badge>
           ))}
         </div>
       )}
       <div className='flex flex-row flex-nowrap gap-1'>
         <Button variant='outline' size='icon' className='h-8 w-8' onClick={handleBookmark}>
-          <Bookmark className='h-5 w-5'/>
+          <Bookmark className='h-5 w-5' />
         </Button>
         <Button variant='outline' size='icon' className='h-8 w-8' onClick={handleExternalLinkClick}>
-          <ExternalLink className='h-5 w-5'/>
+          <ExternalLink className='h-5 w-5' />
         </Button>
       </div>
     </CardFooter>
   );
 };
 
-export {LinkCardFooter};
+export { LinkCardFooter };
