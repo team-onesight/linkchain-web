@@ -5,6 +5,9 @@ from core.deps import get_di_link_service
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from schemas.common import Page
 from schemas.link import CreateLinkRequest, LinkResponse
+from core.deps import get_di_link_service, get_current_user_from_session
+from fastapi import APIRouter, Depends, HTTPException
+from schemas.link import CreateLinkRequest, CreateLinkResponse, LinkResponse
 from services.link import LinkService
 
 from api.session_utils import get_user_id_from_session
@@ -41,12 +44,30 @@ def read_link(
     return link
 
 
-@router.post("", response_model=dict)
-def create_link(body: CreateLinkRequest):
-    logging.warn("Creating link with data: %s", body)
-    return {
-        "link_id": 1,
-        "url": body.url,
-        "title": body.title,
-        "description": body.description,
-    }
+@router.post("", response_model=CreateLinkResponse)
+def create_link(
+    create_link_request: CreateLinkRequest,
+    service: Annotated[LinkService, Depends(get_di_link_service)],
+    current_user: Annotated[dict, Depends(get_current_user_from_session)]
+):
+    current_user_id = current_user["user_id"]
+    link = service.create_link(url=create_link_request.url, user_id=current_user_id)
+
+    if not link:
+        raise HTTPException(status_code=409, detail="Link already exists")
+
+    return CreateLinkResponse(link_id=str(link.link_id), user_id=link.user_id)
+
+
+"""
+@router.get("/links/{link_id}", response_model=LinkResponse)
+def read_link(link_id: str, db: Session = Depends(get_db)):
+    if not link_id:
+        raise HTTPException(status_code=400, detail="Invalid link")
+
+    service = LinkService(db)
+    link = service.get_link(int(link_id))
+    if not link:
+        raise HTTPException(status_code=404, detail="Link not found")
+    return link
+"""

@@ -16,7 +16,6 @@ class LinkResponse(BaseModel):
 
 class CreateLinkRequest(BaseModel):
     url: str
-    user_id: int
 
 class CreateLinkResponse(BaseModel):
     link_id: str

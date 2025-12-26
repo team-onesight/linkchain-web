@@ -2,7 +2,7 @@ import time
 from typing import Annotated, Callable
 
 from db.session import SessionLocal
-from fastapi import Depends, Request
+from fastapi import Depends, Request, HTTPException
 from repositories.link import LinkRepository
 from repositories.tag import TagRepository
 from repositories.link_user_map import LinkUserMapRepository
@@ -65,3 +65,12 @@ def get_user_session(request: Request) -> Callable:
         request.session["expired_time"] = now + (60 * 60)
 
     return create_session
+
+
+def get_current_user_from_session(
+    request: Request,
+) -> dict:
+    user_session = request.session.get("user")
+    if not user_session:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    return user_session
