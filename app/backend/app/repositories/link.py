@@ -3,6 +3,7 @@ from typing import Optional
 from models.link import Link
 from models.link_user_map import LinkUserMap
 from sqlalchemy import desc
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 
@@ -31,3 +32,16 @@ class LinkRepository:
             query = query.filter(LinkUserMap.id < cursor)
 
         return query.order_by(desc(LinkUserMap.id)).limit(size + 1).all()
+    
+    def create_link(self, link_id: str, url: str, created_by: int):
+        new_link = Link(link_id=link_id, url=url, created_by=created_by)
+        try:
+            self.db.add(new_link)
+            self.db.commit()
+            self.db.refresh(new_link)
+            return new_link
+        except IntegrityError as e:
+            self.db.rollback()
+            print(f"Error while creating link: {e}")
+            raise e
+

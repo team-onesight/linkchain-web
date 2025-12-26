@@ -4,18 +4,25 @@ from repositories.link import LinkRepository
 from schemas.common import Page
 from schemas.link import LinkResponse
 
+from repositories.link import LinkRepository
+from repositories.link_user_map import LinkUserMapRepository
+from utils.hash import get_uuid_hash
 
 class LinkService:
-    def __init__(self, repository: LinkRepository):
-        self.repository = repository
+    """
+    Link service to handle link-related operations
+    """
+    def __init__(self, link_repository: LinkRepository, link_user_map_repository: LinkUserMapRepository):
+        self.link_repository = link_repository
+        self.link_user_map_repository = link_user_map_repository
 
     def get_link(self, link_id: int):
-        return self.repository.get_link_from_db(link_id)
+        return self.link_repository.get_link_from_db(link_id)
 
     def get_links(
         self, user_id: int, cursor: Optional[int], size: int
     ) -> Page[LinkResponse]:
-        raw_data = self.repository.find_my_links(user_id, cursor, size)
+        raw_data = self.link_repository.find_my_links(user_id, cursor, size)
 
         has_more = len(raw_data) > size
         items = raw_data[:size]
@@ -25,3 +32,26 @@ class LinkService:
         return Page[LinkResponse](
             items=items, next_cursor=next_cursor, has_more=has_more
         )
+
+    def create_link(self, url: str, user_id: int):
+        """
+        Create a new link and associate it with a user.
+        1. 같은 url에 대해 동일한 user_id가 존재하면 아무 작업도 하지 않고 None 반환
+        2. link_user_map에 user_id와 link_id 매핑 생성
+        3. link 테이블에 link 생성
+        
+        :param self: Description
+        :param url: user가 등록하려는 링크
+        :type url: str
+        :param user_id: link를 등록하는 user의 아이디
+        :type user_id: int
+        """
+        link_id = get_uuid_hash(url)
+
+        if self.link_user_map_repository.get_link_user_map(link_id, user_id=user_id):
+            return None # LinkUserMap already exists -> link already exists for this user
+            
+        if not self.get_link(link_id):
+            self.link_repository.create_link(link_id, url, created_by=user_id) # Link does not exist, create it
+        return self.link_user_map_repository.create_link_user_map(link_id, user_id=user_id)  # Link already exists -> just create LinkUserMap
+            
