@@ -1,5 +1,8 @@
+import uuid
+
 from db.base import Base
 from sqlalchemy import Column, DateTime, Integer, String, func
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 
@@ -7,7 +10,7 @@ class Link(Base):
     __table_args__ = {"schema": "public"}
     __tablename__ = "link"
 
-    link_id = Column(Integer, primary_key=True, index=True)
+    link_id = Column(UUID, primary_key=True, default=uuid.uuid4, index=True)
     url = Column(String, nullable=False)
     title = Column(String, nullable=True)
     description = Column(String, nullable=True)
@@ -16,3 +19,8 @@ class Link(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     user_maps = relationship("LinkUserMap", back_populates="link")
+    tag_map = relationship("LinkTagMap", back_populates="link")
+    group_maps = relationship("LinkGroupLinkMap", back_populates="link")
+    histories = relationship(
+        "LinkHistory", back_populates="link", cascade="all, delete-orphan"
+    )

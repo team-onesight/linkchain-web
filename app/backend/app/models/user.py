@@ -19,3 +19,6 @@ class User(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     link_maps = relationship("LinkUserMap", back_populates="user")
+    histories = relationship(
+        "LinkHistory", back_populates="user", cascade="all, delete-orphan"
+    )
