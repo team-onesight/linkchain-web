@@ -13,7 +13,7 @@ class LinkUserMapRepository:
             LinkUserMap.user_id == user_id
         ).first()
 
-    def create_link_user_map(self, link_id: str, user_id: int, is_public: bool = False):
+    def create_link_user_map(self, link_id: str, user_id: int, is_public: bool = True):
         new_link_user_map = LinkUserMap(link_id=link_id, user_id=user_id, is_public=is_public)
         try:
             self.db.add(new_link_user_map)
