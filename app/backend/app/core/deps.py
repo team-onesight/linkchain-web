@@ -22,6 +22,9 @@ def get_db():
 
 
 def get_di_link_service(db: Annotated[Session, Depends(get_db)]) -> LinkService:
+    """
+    LinkService 의존성 주입 메소드
+    """
     link_repository = LinkRepository(db)  # db 세션을 넘겨 LinkRepository 인스턴스 생성
     link_user_map_repository = LinkUserMapRepository(db)  # db 세션을 넘겨 LinkUserMapRepository 인스턴스 생성
     return LinkService(
@@ -70,6 +73,14 @@ def get_user_session(request: Request) -> Callable:
 def get_current_user_from_session(
     request: Request,
 ) -> dict:
+    """
+    현재 세션에서 사용자 정보를 가져오는 의존성 주입 메소드
+    
+    :param request: request
+    :type request: Request
+    :return: user_id와 username을 포함한 딕셔너리
+    :rtype: dict
+    """
     user_session = request.session.get("user")
     if not user_session:
         raise HTTPException(status_code=401, detail="Unauthorized")
