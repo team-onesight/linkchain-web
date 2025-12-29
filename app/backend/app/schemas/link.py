@@ -1,11 +1,11 @@
-from datetime import datetime
 from typing import Optional
+from uuid import UUID
 
 from pydantic import BaseModel
 
 
 class LinkResponse(BaseModel):
-    link_id: int
+    link_id: UUID
     url: str
     title: Optional[str]
     description: Optional[str]
