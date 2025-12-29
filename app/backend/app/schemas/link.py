@@ -1,7 +1,9 @@
-from typing import Optional
+from typing import List, Optional
 from uuid import UUID
 
 from pydantic import BaseModel
+
+from schemas.tag import TagResponse
 
 
 class LinkResponse(BaseModel):
@@ -9,6 +11,7 @@ class LinkResponse(BaseModel):
     url: str
     title: Optional[str]
     description: Optional[str]
+    tags: List[TagResponse] = []
 
     class Config:
         from_attributes = True

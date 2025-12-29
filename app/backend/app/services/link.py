@@ -8,14 +8,11 @@ from utils.hash import get_uuid_hash
 
 
 class LinkService:
-    """
-    Link service to handle link-related operations
-    """
     def __init__(
             self,
             link_repository: LinkRepository,
             link_user_map_repository: LinkUserMapRepository
-            ):
+    ):
         self.link_repository = link_repository
         self.link_user_map_repository = link_user_map_repository
 

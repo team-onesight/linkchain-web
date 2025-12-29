@@ -15,11 +15,11 @@ export function LinkCard({link}: LinkCardProps) {
     return null;
   }
 
-  const {id, title, description, imageUrl} = link;
+  const {link_id, title, description, imageUrl} = link;
 
   return (
     <Card
-      onClick={() => navigate(`/links/${id}`)}
+      onClick={() => navigate(`/links/${link_id}`)}
       className='flex h-full flex-col min-h-[140px] overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group py-4'
     >
       <CardHeader className='p-0'>

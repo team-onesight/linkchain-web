@@ -5,7 +5,7 @@ from models.link_history import LinkHistory
 from models.link_user_map import LinkUserMap
 from sqlalchemy import desc, update
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 
 class LinkRepository:
@@ -15,17 +15,11 @@ class LinkRepository:
     def get_link_from_db(self, link_id: int):
         return self.db.query(Link).filter(Link.link_id == link_id).first()
 
-    def find_my_links(self, user_id: int, cursor: Optional[int], size: int):
+    def get_links_by_user_id(self, user_id: int, cursor: Optional[int], size: int):
         query = (
-            self.db.query(
-                Link.link_id,
-                Link.url,
-                Link.title,
-                Link.description,
-                LinkUserMap.is_public,
-                LinkUserMap.id.label("map_id"),
-            )
+            self.db.query(Link)
             .join(LinkUserMap, Link.link_id == LinkUserMap.link_id)
+            .options(joinedload(Link.tags))
             .filter(LinkUserMap.user_id == user_id)
         )
 
@@ -34,8 +28,15 @@ class LinkRepository:
 
         return query.order_by(desc(LinkUserMap.id)).limit(size + 1).all()
 
-    def create_link(self, link_id: str, url: str, created_by_user_id: int, created_by_username: str):
-        new_link = Link(link_id=link_id, url=url, created_by_user_id=created_by_user_id, created_by_username=created_by_username)
+    def create_link(
+        self, link_id: str, url: str, created_by_user_id: int, created_by_username: str
+    ):
+        new_link = Link(
+            link_id=link_id,
+            url=url,
+            created_by_user_id=created_by_user_id,
+            created_by_username=created_by_username,
+        )
         try:
             self.db.add(new_link)
             self.db.commit()
@@ -47,11 +48,7 @@ class LinkRepository:
             raise e
 
     def increase_view(self, link_id: str):
-        stmt = (
-                update(Link)
-                .where(Link.link_id == link_id)
-                .values(views=Link.views + 1)
-            )
+        stmt = update(Link).where(Link.link_id == link_id).values(views=Link.views + 1)
         self.db.execute(stmt)
         self.db.commit()
         return True

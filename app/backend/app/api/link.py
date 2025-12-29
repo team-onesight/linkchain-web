@@ -26,7 +26,7 @@ def get_my_links(
     size: Annotated[int, Query(ge=1, le=100)] = 20,
 ):
     user_id = get_user_id_from_session(request)
-    return service.get_links(user_id, cursor, size)
+    return service.get_links_by_user_id(user_id, cursor, size)
 
 
 @router.get("/{link_id}", response_model=LinkResponse)
