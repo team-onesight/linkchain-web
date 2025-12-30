@@ -16,5 +16,10 @@ class LinkResponse(BaseModel):
 
 class CreateLinkRequest(BaseModel):
     url: str
-    title: Optional[str] = None
-    description: Optional[str] = None
+
+class CreateLinkResponse(BaseModel):
+    link_id: str
+    user_id: int
+
+    class Config:
+        from_attributes = True
