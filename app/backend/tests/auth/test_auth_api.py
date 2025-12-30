@@ -1,9 +1,8 @@
 from unittest.mock import MagicMock
 
 import pytest
-from fastapi.testclient import TestClient
-
 from core.deps import get_di_user_service, get_user_session
+from fastapi.testclient import TestClient
 from main import app
 
 

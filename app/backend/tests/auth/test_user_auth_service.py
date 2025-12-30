@@ -40,7 +40,7 @@ def test_join_user_duplicate(service, user_repository):
 def test_login_success(mock_verify, service, user_repository):
     # given
     user_repository.get_user_by_username.return_value = MagicMock(
-        password="hashed",
+        password="hashed", # noqa: S106
         username="testuser",
     )
 
@@ -56,7 +56,7 @@ def test_login_success(mock_verify, service, user_repository):
 def test_login_invalid_password(mock_verify, service, user_repository):
     # given
     user_repository.get_user_by_username.return_value = MagicMock(
-        password="hashed"
+        password="hashed" # noqa: S106
     )
 
     # when / then
