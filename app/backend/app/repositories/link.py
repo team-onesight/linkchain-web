@@ -32,7 +32,7 @@ class LinkRepository:
             query = query.filter(LinkUserMap.id < cursor)
 
         return query.order_by(desc(LinkUserMap.id)).limit(size + 1).all()
-    
+
     def create_link(self, link_id: str, url: str, created_by: int):
         new_link = Link(link_id=link_id, url=url, created_by=created_by)
         try:

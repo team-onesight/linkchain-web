@@ -1,12 +1,8 @@
-import logging
 from typing import Annotated, Optional
 
-from core.deps import get_di_link_service
+from core.deps import get_current_user_from_session, get_di_link_service
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from schemas.common import Page
-from schemas.link import CreateLinkRequest, LinkResponse
-from core.deps import get_di_link_service, get_current_user_from_session
-from fastapi import APIRouter, Depends, HTTPException
 from schemas.link import CreateLinkRequest, CreateLinkResponse, LinkResponse
 from services.link import LinkService
 

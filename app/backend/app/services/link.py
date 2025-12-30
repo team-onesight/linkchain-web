@@ -1,18 +1,21 @@
 from typing import Optional
 
 from repositories.link import LinkRepository
+from repositories.link_user_map import LinkUserMapRepository
 from schemas.common import Page
 from schemas.link import LinkResponse
-
-from repositories.link import LinkRepository
-from repositories.link_user_map import LinkUserMapRepository
 from utils.hash import get_uuid_hash
+
 
 class LinkService:
     """
     Link service to handle link-related operations
     """
-    def __init__(self, link_repository: LinkRepository, link_user_map_repository: LinkUserMapRepository):
+    def __init__(
+            self,
+            link_repository: LinkRepository,
+            link_user_map_repository: LinkUserMapRepository
+            ):
         self.link_repository = link_repository
         self.link_user_map_repository = link_user_map_repository
 
@@ -39,7 +42,6 @@ class LinkService:
         1. 같은 url에 대해 동일한 user_id가 존재하면 아무 작업도 하지 않고 None 반환
         2. link_user_map에 user_id와 link_id 매핑 생성
         3. link 테이블에 link 생성
-        
         :param self: Description
         :param url: user가 등록하려는 링크
         :type url: str
@@ -49,9 +51,9 @@ class LinkService:
         link_id = get_uuid_hash(url)
 
         if self.link_user_map_repository.get_link_user_map(link_id, user_id=user_id):
-            return None # LinkUserMap already exists -> link already exists for this user
-            
+            return None # LinkUserMap already exists -> link already exists for this user # noqa: E501
+
         if not self.get_link(link_id):
-            self.link_repository.create_link(link_id, url, created_by=user_id) # Link does not exist, create it
-        return self.link_user_map_repository.create_link_user_map(link_id, user_id=user_id)  # Link already exists -> just create LinkUserMap
-            
+            self.link_repository.create_link(link_id, url, created_by=user_id) # Link does not exist, create it # noqa: E501
+        return self.link_user_map_repository.create_link_user_map(link_id, user_id=user_id)  # Link already exists -> just create LinkUserMap # noqa: E501
+
