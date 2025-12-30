@@ -6,10 +6,10 @@ from schemas.auth import AuthCheckResponse, LoginRequest, LoginResponse, LogoutR
 from schemas.user import UserRequest, UserResponse
 from services.user import UserService
 
-router = APIRouter()
+router = APIRouter(prefix="/auth")
 
 
-@router.post("/auth/join", response_model=UserResponse)
+@router.post("/join", response_model=UserResponse)
 def create_user(
     user_req: UserRequest,
     service: Annotated[UserService, Depends(get_di_user_service)],
@@ -30,7 +30,7 @@ def create_user(
     return UserResponse.from_orm(new_user)
 
 
-@router.post("/auth/login", response_model=LoginResponse)
+@router.post("/login", response_model=LoginResponse)
 def login(
     login_req: LoginRequest,
     service: Annotated[UserService, Depends(get_di_user_service)],
@@ -55,14 +55,14 @@ def login(
         raise HTTPException(status_code=401, detail="invalid credentials") from e
 
 
-@router.post("/auth/logout", response_model=LogoutResponse)
+@router.post("/logout", response_model=LogoutResponse)
 def logout(request: Request):
     request.session.clear()
 
     return LogoutResponse(message="logout success")
 
 
-@router.get("/auth", response_model=AuthCheckResponse)
+@router.get("", response_model=AuthCheckResponse)
 def get_auth(request: Request):
     """
     세션 유효성 검증
