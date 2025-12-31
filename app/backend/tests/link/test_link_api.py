@@ -22,7 +22,7 @@ def client(mock_link_service):
 
     # session 주입 user mock
     app.dependency_overrides[get_current_user_from_session] = (
-        lambda: {"user_id": 1}
+        lambda: {"user_id": 1, "username": "test"}
     )
 
     with TestClient(app) as client:
@@ -54,6 +54,7 @@ def test_create_link_success(client, mock_link_service):
     mock_link_service.create_link.assert_called_once_with(
         url="https://namu.wiki",
         user_id=1,
+        username="test"
     )
 
 

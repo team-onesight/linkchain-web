@@ -46,8 +46,9 @@ def create_link(
     service: Annotated[LinkService, Depends(get_di_link_service)],
     current_user: Annotated[dict, Depends(get_current_user_from_session)]
 ):
+    current_username = current_user["username"]
     current_user_id = current_user["user_id"]
-    link = service.create_link(url=create_link_request.url, user_id=current_user_id)
+    link = service.create_link(url=create_link_request.url, user_id=current_user_id, username=current_username)
 
     if not link:
         raise HTTPException(status_code=409, detail="Link already exists")
