@@ -60,7 +60,8 @@ const postLink = async (payload: PostLinkRequest) => {
   if (!response.ok) {
     const errorData = await response.json();
     const errorMessage = errorData.detail || "Network response was not ok";
-    throw new Error(errorMessage);
+    const errorCode = response.status || "unknown_error";
+    throw new Error(errorMessage, { cause: errorCode });
   }
   return await response.json();
 };

@@ -8,11 +8,13 @@ import {useUiStore} from "@/store/ui-store";
 import {Link2} from "lucide-react";
 import {toast} from "sonner";
 import {useCreateLink} from "@/hooks/useLinks";
+import {useNavigate} from "react-router-dom";
 
 export const StickyAddLinkForm = () => {
   const scrollDir = useScrollDirection();
   const {isInputFocused, setInputFocused, setInputBlurred} = useUiStore();
   const {mutate: createLink, isPending: isCreatingLink} = useCreateLink();
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,7 +35,15 @@ export const StickyAddLinkForm = () => {
         });
         form.reset();
       },
-      onError: (error) => {
+      onError: (error: any) => {
+        if (error.cause === 401) {
+          toast.error("Login Required", {
+            description: "Please log in to access feature !",
+            position: "top-center",
+          });
+          navigate("/login");
+          return;
+        }
         toast.error("Failed to add link", {
           description: error.message || "Something went wrong.",
           position: "top-center",
