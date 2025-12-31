@@ -20,4 +20,8 @@ interface LinkItem {
   linkType: LinkType;
 }
 
-export type {LinkItem, LinkType, LinksGroup};
+interface PostLinkRequest {
+  url: string;
+}
+
+export type {LinkItem, LinkType, LinksGroup, PostLinkRequest};

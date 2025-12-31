@@ -1,5 +1,5 @@
-import {useMutation, useQuery} from "@tanstack/react-query";
-import {fetchLink, fetchLinks, postLinkView} from "@/model/link/api";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
+import {fetchLink, fetchLinks, postLink, postLinkView} from "@/model/link/api";
 
 interface UseLinksParams {
   q?: string | null;
@@ -50,3 +50,13 @@ export const useLinkView = () => {
         mutationFn: (id: string) => postLinkView(id),
     });
 }
+
+export const useCreateLink = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (url: string) => postLink({ url }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["links"] });
+    },
+  });
+};

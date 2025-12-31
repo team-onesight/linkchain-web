@@ -1,4 +1,4 @@
-import type {LinkItem, LinksGroup} from "@/model/link/type";
+import type {LinkItem, LinksGroup, PostLinkRequest} from "@/model/link/type";
 
 type GroupByType = "date" | "tag" | "trending";
 
@@ -49,5 +49,21 @@ const postLinkView = async (linkId: string) => {
   return await response.json();
 };
 
+const postLink = async (payload: PostLinkRequest) => {
+  const response = await fetch("/api/v1/links", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) {
+    const errorData = await response.json();
+    const errorMessage = errorData.detail || "Network response was not ok";
+    throw new Error(errorMessage);
+  }
+  return await response.json();
+};
 
-export {fetchLink, fetchLinks, postLinkView};
+
+export {fetchLink, fetchLinks, postLinkView, postLink};

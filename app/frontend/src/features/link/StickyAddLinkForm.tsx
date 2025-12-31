@@ -7,28 +7,39 @@ import {cn} from "@/lib/utils";
 import {useUiStore} from "@/store/ui-store";
 import {Link2} from "lucide-react";
 import {toast} from "sonner";
+import {useCreateLink} from "@/hooks/useLinks";
 
 export const StickyAddLinkForm = () => {
   const scrollDir = useScrollDirection();
   const {isInputFocused, setInputFocused, setInputBlurred} = useUiStore();
+  const {mutate: createLink, isPending: isCreatingLink} = useCreateLink();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
     const url = formData.get("url");
-    if (!url) return;
 
-    toast("Link added", {
-      description: "Your link has been successfully added.",
-      position: "top-center",
-      action: {
-        label: "Undo",
+    if (!url || typeof url !== "string") {
+      toast.error("Please enter a valid URL.");
+      return;
+    }
 
-        onClick: () => console.log("Undo"),
+    createLink(url, {
+      onSuccess: () => {
+        toast.success("Link added", {
+          description: "Your link has been successfully added.",
+          position: "top-center",
+        });
+        form.reset();
+      },
+      onError: (error) => {
+        toast.error("Failed to add link", {
+          description: error.message || "Something went wrong.",
+          position: "top-center",
+        });
       },
     });
-
-    e.currentTarget.reset();
   };
 
   return (
@@ -53,8 +64,9 @@ export const StickyAddLinkForm = () => {
           required
           onFocus={setInputFocused}
           onBlur={setInputBlurred}
+          disabled={isCreatingLink}
         />
-        <Button type='submit' className='shrink-0 rounded-lg'>
+        <Button type='submit' className='shrink-0 rounded-lg' disabled={isCreatingLink}>
           Add Link
         </Button>
       </form>
