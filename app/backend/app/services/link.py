@@ -57,3 +57,8 @@ class LinkService:
             self.link_repository.create_link(link_id, url, created_by=user_id) # Link does not exist, create it # noqa: E501
         return self.link_user_map_repository.create_link_user_map(link_id, user_id=user_id)  # Link already exists -> just create LinkUserMap # noqa: E501
 
+    def increase_view(self, link_id: str):
+        return self.link_repository.increase_view(link_id)
+
+    def create_history(self, user_id: int, link_id: str):
+        return self.link_repository.create_history(user_id, link_id)

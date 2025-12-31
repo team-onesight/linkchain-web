@@ -3,7 +3,12 @@ from typing import Annotated, Optional
 from core.deps import get_current_user_from_session, get_di_link_service
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from schemas.common import Page
-from schemas.link import CreateLinkRequest, CreateLinkResponse, LinkResponse
+from schemas.link import (
+    CreateLinkRequest,
+    CreateLinkResponse,
+    LinkResponse,
+    LinkViewRegisterResponse,
+)
 from services.link import LinkService
 
 from api.session_utils import get_user_id_from_session
@@ -39,6 +44,29 @@ def read_link(
 
     return link
 
+@router.post("/{link_id}/view", response_model=LinkViewRegisterResponse)
+def register_link_view(
+    link_id: str,
+    service: Annotated[LinkService, Depends(get_di_link_service)],
+    request: Request,
+):
+    if not link_id:
+        raise HTTPException(status_code=400, detail="Invalid link")
+
+    if not service.increase_view(link_id):
+        raise HTTPException(status_code=404, detail="Link not found")
+
+    try:
+        user_id = get_user_id_from_session(request)
+
+        # TODO : (AS-IS)현재 익명 유저인 경우와 로직 상 실패한 경우를 분리하지 않았음
+        # (TO-BE) 익명 유저인 경우에는 히스토리 등록을 시도하지 않도록 변경 필요
+        if not service.create_history(user_id, link_id):
+            raise HTTPException(status_code=404, detail="Failed to register link view history")  # noqa: E501
+    except HTTPException:
+        pass
+
+    return LinkViewRegisterResponse(message="Link View registered.")
 
 @router.post("", response_model=CreateLinkResponse)
 def create_link(

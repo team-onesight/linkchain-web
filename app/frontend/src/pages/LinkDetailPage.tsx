@@ -6,13 +6,21 @@ import * as AspectRatio from "@radix-ui/react-aspect-ratio";
 import {Skeleton} from "@/components/ui/skeleton";
 import {LinkDetailView} from "@/components/link/LinkDetailView";
 import {RelatedLinks} from "@/features/link/RelatedLinks";
-import {useLink} from "@/hooks/useLinks";
+import {useLink, useLinkView} from "@/hooks/useLinks";
 import {Header} from "@/components/layout/Header";
+import {useEffect} from "react";
 
 const LinkDetailPage = () => {
   const {id} = useParams<{ id: string }>();
   const navigate = useNavigate();
   const {data: link, isLoading} = useLink(id);
+  const {mutate} = useLinkView();
+
+  useEffect(() => {
+    if (id) {
+      mutate(id);
+    }
+  }, [id, mutate]);
 
   if (isLoading) {
     return <DetailPageSkeleton/>;
