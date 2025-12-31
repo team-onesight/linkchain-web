@@ -5,7 +5,7 @@ from sqlalchemy.engine import Row
 from sqlalchemy.orm import Session
 
 from models.link import Link
-from models.link_user_map import LinkHistory
+from models.link_history import LinkHistory
 
 class LinkHistoryRepository:
     def __init__(self, db: Session):
