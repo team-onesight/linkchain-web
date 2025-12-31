@@ -17,7 +17,7 @@ class LinkRepository:
 
     def get_links_by_user_id(self, user_id: int, cursor: Optional[int], size: int):
         query = (
-            self.db.query(Link)
+            self.db.query(Link, LinkUserMap.id.label("map_id"))
             .join(LinkUserMap, Link.link_id == LinkUserMap.link_id)
             .options(joinedload(Link.tags))
             .filter(LinkUserMap.user_id == user_id)
