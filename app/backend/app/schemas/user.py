@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 from pydantic import BaseModel
 from uuid import UUID
 
@@ -44,8 +45,8 @@ class UserLinkHistoryItem(BaseModel):
 
     link_id: UUID
     url: str
-    title: str
-    description: str
+    title: Optional[str] = None
+    description: Optional[str] = None
     views: int
     created_at: datetime
 
