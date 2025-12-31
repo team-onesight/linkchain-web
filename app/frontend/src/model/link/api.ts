@@ -1,4 +1,4 @@
-import type { LinkItem, LinksGroup } from "@/model/link/type";
+import type {LinkItem, LinksGroup} from "@/model/link/type";
 
 type GroupByType = "date" | "tag" | "trending";
 
@@ -39,4 +39,15 @@ const fetchLink = async (id: string): Promise<LinkItem | undefined> => {
   return undefined;
 };
 
-export { fetchLink, fetchLinks };
+const postLinkView = async (linkId: string) => {
+  const response = await fetch(`/api/v1/links/${linkId}`, {
+    method: "POST",
+  });
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+  return await response.json();
+};
+
+
+export {fetchLink, fetchLinks, postLinkView};
