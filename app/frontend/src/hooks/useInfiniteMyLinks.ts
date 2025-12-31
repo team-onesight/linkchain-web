@@ -16,7 +16,8 @@ const useInfiniteMyLinks = (size: number = 20) => {
                     return undefined;
                 }
                 return lastPage.next_cursor;
-            }
+            },
+            retry: 1
         })
     }
 }

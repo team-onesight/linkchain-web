@@ -47,10 +47,10 @@ const LinkCardFooter = ({ link }: { link: LinkItem }) => {
         </div>
       )}
       <div className='flex flex-row flex-nowrap gap-1'>
-        <Button variant='outline' size='icon' className='h-8 w-8' onClick={handleBookmark}>
+        <Button variant='outline' size='icon' className='h-8 w-8 cursor-pointer' onClick={handleBookmark}>
           <Bookmark className='h-5 w-5' />
         </Button>
-        <Button variant='outline' size='icon' className='h-8 w-8' onClick={handleExternalLinkClick}>
+        <Button variant='outline' size='icon' className='h-8 w-8 cursor-pointer' onClick={handleExternalLinkClick}>
           <ExternalLink className='h-5 w-5' />
         </Button>
       </div>
