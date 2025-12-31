@@ -40,7 +40,7 @@ const fetchLink = async (id: string): Promise<LinkItem | undefined> => {
 };
 
 const postLinkView = async (linkId: string) => {
-  const response = await fetch(`/api/v1/links/${linkId}`, {
+  const response = await fetch(`/api/v1/links/${linkId}/view`, {
     method: "POST",
   });
   if (!response.ok) {

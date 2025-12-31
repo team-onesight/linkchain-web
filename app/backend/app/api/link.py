@@ -44,7 +44,7 @@ def read_link(
 
     return link
 
-@router.post("/{link_id}", response_model=LinkViewRegisterResponse)
+@router.post("/{link_id}/view", response_model=LinkViewRegisterResponse)
 def register_link_view(
     link_id: str,
     service: Annotated[LinkService, Depends(get_di_link_service)],
