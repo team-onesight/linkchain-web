@@ -1,8 +1,9 @@
 from typing import Optional
 
 from models.link import Link
+from models.link_history import LinkHistory
 from models.link_user_map import LinkUserMap
-from sqlalchemy import desc
+from sqlalchemy import desc, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -45,3 +46,18 @@ class LinkRepository:
             print(f"Error while creating link: {e}")
             raise e
 
+    def increase_view(self, link_id: str):
+        stmt = (
+                update(Link)
+                .where(Link.link_id == link_id)
+                .values(views=Link.views + 1)
+            )
+        self.db.execute(stmt)
+        self.db.commit()
+        return True
+
+    def create_history(self, user_id: int, link_id: str):
+        link_history = LinkHistory(user_id=user_id, link_id=link_id)
+        self.db.add(link_history)
+        self.db.commit()
+        return link_history

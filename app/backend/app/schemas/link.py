@@ -13,6 +13,12 @@ class LinkResponse(BaseModel):
     class Config:
         from_attributes = True
 
+class LinkViewRegisterResponse(BaseModel):
+    message: str
+
+    class Config:
+        from_attributes = True
+
 
 class CreateLinkRequest(BaseModel):
     url: str
