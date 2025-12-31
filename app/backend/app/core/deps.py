@@ -7,9 +7,10 @@ from repositories.link import LinkRepository
 from repositories.link_user_map import LinkUserMapRepository
 from repositories.tag import TagRepository
 from repositories.user import UserRepository
+from repositories.link_history import LinkHistoryRepository
 from services.link import LinkService
 from services.tag import TagService
-from services.user import UserService
+from services.user import UserService, UserLinkHistoryService
 from sqlalchemy.orm import Session
 
 
@@ -48,6 +49,14 @@ def get_di_user_service(db: Annotated[Session, Depends(get_db)]) -> UserService:
     """
     repository = UserRepository(db)
     return UserService(repository)
+
+
+def get_di_user_link_history_service(db: Annotated[Session, Depends(get_db)]) -> UserLinkHistoryService:
+    """
+    UserLinkHistoryResponse 의존성 주입 메소드
+    """
+    link_history_repository = LinkHistoryRepository(db)
+    return UserLinkHistoryService(link_history_repository)
 
 
 def get_user_session(request: Request) -> Callable:
