@@ -30,6 +30,7 @@ def test_create_link_when_mapping_exists(service, link_user_map_repository):
     result = service.create_link(
         url="https://name.wiki",
         user_id=1,
+        username="test"
     )
 
     # then
@@ -56,6 +57,7 @@ def test_create_link_when_new_link_created(
     result = service.create_link(
         url="https://namu.wiki",
         user_id=1,
+        username="test"
     )
 
     # then

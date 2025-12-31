@@ -20,7 +20,8 @@ def test_create_link_success(repository, db_session):
     result = repository.create_link(
         link_id="abc",
         url="https://namu.wiki",
-        created_by=1,
+        created_by_user_id=1,
+        created_by_username="test"
     )
 
     # then
@@ -39,7 +40,8 @@ def test_create_link_integrity_error(repository, db_session):
         repository.create_link(
             link_id="abc",
             url="https://namu.wiki",
-            created_by=1,
+            created_by_user_id=1,
+            created_by_username="test"
         )
 
     db_session.rollback.assert_called_once()

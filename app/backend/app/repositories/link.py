@@ -34,8 +34,8 @@ class LinkRepository:
 
         return query.order_by(desc(LinkUserMap.id)).limit(size + 1).all()
 
-    def create_link(self, link_id: str, url: str, created_by: int):
-        new_link = Link(link_id=link_id, url=url, created_by=created_by)
+    def create_link(self, link_id: str, url: str, created_by_user_id: int, created_by_username: str):
+        new_link = Link(link_id=link_id, url=url, created_by_user_id=created_by_user_id, created_by_username=created_by_username)
         try:
             self.db.add(new_link)
             self.db.commit()

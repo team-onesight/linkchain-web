@@ -15,7 +15,5 @@ class LinkTagMap(Base):
     )
     tag_id = Column(Integer, ForeignKey("public.tag.tag_id", ondelete="CASCADE"))
 
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-
     link = relationship("Link", back_populates="tag_map")
     tag = relationship("Tag", back_populates="link_maps")
