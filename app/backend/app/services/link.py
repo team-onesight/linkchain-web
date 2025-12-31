@@ -12,6 +12,12 @@ class LinkService:
     def get_link(self, link_id: int):
         return self.repository.get_link_from_db(link_id)
 
+    def increase_view(self, link_id: str):
+        return self.repository.increase_view(link_id)
+
+    def create_history(self, user_id: int, link_id: str):
+        return self.repository.create_history(user_id, link_id)
+
     def get_links(
         self, user_id: int, cursor: Optional[int], size: int
     ) -> Page[LinkResponse]:

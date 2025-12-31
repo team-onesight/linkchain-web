@@ -1,8 +1,9 @@
 from typing import Optional
 
 from models.link import Link
+from models.link_history import LinkHistory
 from models.link_user_map import LinkUserMap
-from sqlalchemy import desc
+from sqlalchemy import desc, update
 from sqlalchemy.orm import Session
 
 
@@ -12,6 +13,22 @@ class LinkRepository:
 
     def get_link_from_db(self, link_id: int):
         return self.db.query(Link).filter(Link.link_id == link_id).first()
+
+    def increase_view(self, link_id: str):
+        stmt = (
+                update(Link)
+                .where(Link.link_id == link_id)
+                .values(views=Link.views + 1)
+            )
+        self.db.execute(stmt)
+        self.db.commit()
+        return True
+
+    def create_history(self, user_id: int, link_id: str):
+        link_history = LinkHistory(user_id=user_id, link_id=link_id)
+        self.db.add(link_history)
+        self.db.commit()
+        return link_history
 
     def find_my_links(self, user_id: int, cursor: Optional[int], size: int):
         query = (
