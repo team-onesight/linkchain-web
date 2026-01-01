@@ -16,8 +16,8 @@ class LinkService:
         self.link_repository = link_repository
         self.link_user_map_repository = link_user_map_repository
 
-    def get_link(self, link_id: int):
-        return self.link_repository.get_link_from_db(link_id)
+    def get_link(self, link_id: str):
+        return self.link_repository.get_link_by_link_id(link_id)
 
     def get_links(
         self, user_id: int, cursor: Optional[int], size: int

@@ -9,7 +9,11 @@ from core.deps import (
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from schemas.common import Page
 from schemas.link import LinkResponse
-from schemas.user import UserLinkHistoryResponse, UserResponse
+from schemas.user import (
+    UserLinkHistoryResponse,
+    UsernameAvailabilityResponse,
+    UserResponse,
+)
 from services.link import LinkService
 from services.user import UserLinkHistoryService, UserService
 
@@ -66,3 +70,15 @@ def get_user_link_histories(
     user_link_history_response = service.get_user_link_history(user_id)
 
     return user_link_history_response
+
+@router.post("/validate/id", response_model=UsernameAvailabilityResponse)
+def validate_username(
+    username: str,
+    service: Annotated[UserService, Depends(get_di_user_service)],
+):
+    """
+    username 중복 확인
+    :param username: username
+    :type username: str
+    """
+    return {"available": service.is_username_available(username)}
