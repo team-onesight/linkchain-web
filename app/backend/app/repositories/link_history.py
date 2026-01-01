@@ -1,11 +1,11 @@
 from typing import Sequence
 
+from models.link import Link
+from models.link_history import LinkHistory
 from sqlalchemy import desc
 from sqlalchemy.engine import Row
 from sqlalchemy.orm import Session
 
-from models.link import Link
-from models.link_history import LinkHistory
 
 class LinkHistoryRepository:
     def __init__(self, db: Session):
@@ -44,7 +44,7 @@ class LinkHistoryRepository:
                 Link.title,
                 Link.description,
                 Link.views,
-                LinkHistory.created_at.label("visited_at"),
+                LinkHistory.created_at.label("visited_at"), # 최근 방문 시점
             )
             .join(LinkHistory, Link.link_id == LinkHistory.link_id)
             .filter(LinkHistory.user_id == user_id)

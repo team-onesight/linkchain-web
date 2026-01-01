@@ -4,13 +4,13 @@ from typing import Annotated, Callable
 from db.session import SessionLocal
 from fastapi import Depends, HTTPException, Request
 from repositories.link import LinkRepository
+from repositories.link_history import LinkHistoryRepository
 from repositories.link_user_map import LinkUserMapRepository
 from repositories.tag import TagRepository
 from repositories.user import UserRepository
-from repositories.link_history import LinkHistoryRepository
 from services.link import LinkService
 from services.tag import TagService
-from services.user import UserService, UserLinkHistoryService
+from services.user import UserLinkHistoryService, UserService
 from sqlalchemy.orm import Session
 
 
@@ -51,7 +51,7 @@ def get_di_user_service(db: Annotated[Session, Depends(get_db)]) -> UserService:
     return UserService(repository)
 
 
-def get_di_user_link_history_service(db: Annotated[Session, Depends(get_db)]) -> UserLinkHistoryService:
+def get_di_user_link_history_service(db: Annotated[Session, Depends(get_db)]) -> UserLinkHistoryService: # noqa: E501
     """
     UserLinkHistoryResponse 의존성 주입 메소드
     """

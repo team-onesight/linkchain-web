@@ -1,9 +1,8 @@
 from passlib.context import CryptContext
-from repositories.user import UserRepository
 from repositories.link_history import LinkHistoryRepository
-from sqlalchemy.exc import IntegrityError
-
+from repositories.user import UserRepository
 from schemas.user import UserLinkHistoryItem, UserLinkHistoryResponse
+from sqlalchemy.exc import IntegrityError
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -76,7 +75,7 @@ class UserLinkHistoryService:
         :type user_id: int
         """
         total = self.link_history_repository.count_distinct_links_by_user(user_id)
-        records = self.link_history_repository.find_recently_visited_links_by_user(user_id)
+        records = self.link_history_repository.find_recently_visited_links_by_user(user_id) # noqa: E501
 
         links = [
             UserLinkHistoryItem(
@@ -85,7 +84,7 @@ class UserLinkHistoryService:
                 title=record.title,
                 description=record.description,
                 views=record.views,
-                created_at=record.visited_at,
+                created_at=record.visited_at, # 최근 방문 시점
             )
             for record in records
         ]

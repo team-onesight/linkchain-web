@@ -1,7 +1,9 @@
 from datetime import datetime
 from typing import Optional
-from pydantic import BaseModel
 from uuid import UUID
+
+from pydantic import BaseModel
+
 
 class UserRequest(BaseModel):
     """
@@ -48,7 +50,7 @@ class UserLinkHistoryItem(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
     views: int
-    created_at: datetime
+    created_at: datetime # 최근 방문 시점
 
     class Config:
         from_attributes = True
