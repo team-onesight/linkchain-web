@@ -48,37 +48,37 @@ export const TodayStatsSection = () => {
             initial='hidden'
             animate='visible'
           >
-            {
-              trendingTags && trendingTags.length === 0 && !isLoading ? (
-                <p className='text-center text-sm text-muted-foreground'>표시할 키워드가 없습니다.</p>
-              ) : (
-                  <>
-                    <div className='text-center'>
-                      <p className='text-sm text-muted-foreground'>요즘 뜨는 키워드</p>
-                    </div>
-                    <div className='flex flex-wrap gap-2 justify-center'>
-                      {isLoading ? (
-                          <>
-                            <Skeleton className='h-6 w-24 rounded-full' />
-                            <Skeleton className='h-6 w-16 rounded-full' />
-                            <Skeleton className='h-6 w-32 rounded-full' />
-                          </>
-                      ) : (
-                          trendingTags?.map((tag) => (
-                              <motion.div key={tag.tag_id} variants={itemVariants}>
-                                <Link to={`/search?tag_name=${tag.tag_name}`}>
-                                  <Badge variant='default' className='hover:bg-primary/80 transition-colors'>
-                                    {tag.tag_name}
-                                  </Badge>
-                                </Link>
-                              </motion.div>
-                          ))
-                      )}
-                    </div>
-                  </>
-              )
-            }
-
+            {trendingTags && trendingTags.length > 0 && !isLoading ? (
+              <>
+                <div className='text-center'>
+                  <p className='text-sm text-muted-foreground'>요즘 뜨는 키워드</p>
+                </div>
+                <div className='flex flex-wrap gap-2 justify-center'>
+                  {isLoading ? (
+                    <>
+                      <Skeleton className='h-6 w-24 rounded-full' />
+                      <Skeleton className='h-6 w-16 rounded-full' />
+                      <Skeleton className='h-6 w-32 rounded-full' />
+                    </>
+                  ) : (
+                    trendingTags?.map((tag) => (
+                      <motion.div key={tag.tag_id} variants={itemVariants}>
+                        <Link to={`/search?tag_name=${tag.tag_name}`}>
+                          <Badge
+                            variant='default'
+                            className='hover:bg-primary/80 transition-colors'
+                          >
+                            {tag.tag_name}
+                          </Badge>
+                        </Link>
+                      </motion.div>
+                    ))
+                  )}
+                </div>
+              </>
+            ) : (
+              <p className='text-center text-sm text-muted-foreground'>표시할 키워드가 없습니다.</p>
+            )}
           </motion.div>
         </CardContent>
       </Card>
