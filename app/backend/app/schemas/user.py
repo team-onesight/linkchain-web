@@ -70,3 +70,5 @@ class UserLinkHistoryResponse(BaseModel):
     total: int
     link_groups: list[UserLinkHistoryGroup]
     
+class UsernameAvailabilityResponse(BaseModel):
+    available: bool

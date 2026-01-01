@@ -40,6 +40,14 @@ class UserService:
         """
         user = self.user_repository.get_user_by_id(user_id)
         return user
+    
+    def is_username_available(self, username: str) -> bool:
+        """
+        username 중복 확인
+        :param username: username
+        :type username: str
+        """
+        return not self.user_repository.get_user_by_username(username)
 
     def login(self, username: str, password: str):
         """
