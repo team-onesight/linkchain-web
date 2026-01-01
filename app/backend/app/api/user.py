@@ -16,7 +16,10 @@ def get_user(
     print(user_id)
     user = service.get_user_by_id(user_id)
 
-    return UserResponse(  # TODO need to add more fields link Related Links
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return UserResponse(
         user_id=user.user_id,
         username=user.username,
     )
