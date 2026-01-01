@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { PageContainer, SectionContainer } from "@/components/styled/layout";
 import { Header } from "@/components/layout/Header";
 import { Button } from "@/components/ui/button";
@@ -8,10 +8,20 @@ import { useUser } from "@/hooks/useUsers";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ProfileHeader } from "@/features/user/ProfileHeader.tsx";
 import { StatsCard } from "@/features/user/StatsCard.tsx";
+import { useAuthStore } from "@/store/auth-store.ts";
+import { useEffect } from "react";
 
 const UserLinksPage = () => {
   const { user_id } = useParams<{ user_id: string }>();
   const user = useUser(user_id ? parseInt(user_id, 10) : undefined);
+  const { user: authUser } = useAuthStore();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (authUser?.user_id && user_id && parseInt(user_id, 10) === authUser.user_id) {
+      navigate("/my");
+    }
+  }, [authUser, user_id, navigate]);
 
   return (
     <PageContainer>
