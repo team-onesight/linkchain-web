@@ -1,20 +1,19 @@
 import { motion } from "framer-motion";
 import { History } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { LinkHistoryCard } from "@components/history/LinkHistoryCard.tsx";
 import { useMyLinkHistory } from "@/hooks/useMyLinkHistory.ts";
-import { LinkHistoryCard } from "@components/link/card/LinkHistoryCard.tsx";
 
-// --- Animation Variants ---
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.1 },
+    transition: { staggerChildren: 0.05 },
   },
 };
 
 const itemVariants = {
-  hidden: { y: 20, opacity: 0 },
+  hidden: { y: 10, opacity: 0 },
   visible: { y: 0, opacity: 1 },
 };
 
@@ -39,11 +38,12 @@ const formatDateHeader = (dateStr: string) => {
 const HistorySkeleton = () => (
   <div className='space-y-8'>
     {[1, 2].map((group) => (
-      <div key={group} className='space-y-4'>
-        <Skeleton className='h-8 w-32' />
-        <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
-          <Skeleton className='h-[160px] w-full rounded-xl' />
-          <Skeleton className='h-[160px] w-full rounded-xl' />
+      <div key={group} className='space-y-3'>
+        <Skeleton className='h-6 w-24 mb-2' />
+        <div className='space-y-2'>
+          <Skeleton className='h-[60px] w-full rounded-lg' />
+          <Skeleton className='h-[60px] w-full rounded-lg' />
+          <Skeleton className='h-[60px] w-full rounded-lg' />
         </div>
       </div>
     ))}
@@ -75,19 +75,22 @@ export const MyLinkHistories = () => {
   }
 
   return (
-    <div className='space-y-10'>
+    <div className='space-y-8 pb-20'>
+      {" "}
       {query.data.map((group) => (
         <section key={group.date} className='relative'>
-          <div className='flex items-center mb-4 sticky top-[60px] z-10 bg-background/95 backdrop-blur-sm py-2'>
-            <h2 className='text-lg font-bold flex items-center gap-2'>
-              <span className='w-2 h-2 rounded-full bg-primary' />
+          <div className='flex items-center mb-3 sticky top-[60px] z-10 bg-background/95 backdrop-blur-sm py-2'>
+            <h2 className='text-base font-bold flex items-center gap-2 text-foreground'>
+              <span className='w-1.5 h-1.5 rounded-full bg-primary' />
               {formatDateHeader(group.date)}
             </h2>
-            <span className='text-xs text-muted-foreground ml-2 mt-0.5'>{group.date}</span>
+            <span className='text-xs text-muted-foreground ml-2 mt-0.5 font-normal opacity-70'>
+              {group.date}
+            </span>
           </div>
 
           <motion.div
-            className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5'
+            className='flex flex-col gap-2'
             variants={containerVariants}
             initial='hidden'
             animate='visible'
