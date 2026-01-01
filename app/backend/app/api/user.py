@@ -1,9 +1,13 @@
 from typing import Annotated
 
-from core.deps import get_di_user_service
+from core.deps import (
+    get_current_user_from_session,
+    get_di_user_link_history_service,
+    get_di_user_service,
+)
 from fastapi import APIRouter, Depends, HTTPException, Request
-from schemas.user import UserResponse
-from services.user import UserService
+from schemas.user import UserLinkHistoryResponse, UserResponse
+from services.user import UserLinkHistoryService, UserService
 
 router = APIRouter(prefix="/users")
 
@@ -29,3 +33,18 @@ def _get_user_session_from_request(
     if not user_session:
         raise HTTPException(status_code=401, detail="Unauthorized")
     return user_session
+
+@router.get("/{user_id}/histories", response_model=UserLinkHistoryResponse) # noqa: E501
+def get_user_link_histories(
+    service: Annotated[UserLinkHistoryService, Depends(get_di_user_link_history_service)], # noqa: E501
+    current_user: Annotated[dict, Depends(get_current_user_from_session)],
+):
+    """
+    user가 방문한 link history 조회
+    :param user_id: user_id
+    :type user_id: int
+    """
+    user_id = current_user["user_id"]
+    user_link_history_response = service.get_user_link_history(user_id)
+
+    return user_link_history_response
