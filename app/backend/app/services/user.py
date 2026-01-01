@@ -27,12 +27,12 @@ class UserService:
 
         return new_user
 
-    def get_user_by_id(self, user_id: str):
+    def get_user_by_id(self, user_id: int):
         """
         Docstring for get_user_by_id
         :param self: Description
         :param user_id: Description
-        :type user_id: str
+        :type user_id: int
         """
         user = self.repository.get_user_by_id(user_id)
         return user
