@@ -12,7 +12,7 @@ const MyPage = () => {
     <PageContainer>
       <ProfileHeader user={userQuery} />
       {isLoading && user?.user_id && <StatsCard />}
-      <MyRecentLinks />
+      <MyRecentLinks/>
     </PageContainer>
   );
 };

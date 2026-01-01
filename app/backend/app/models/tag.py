@@ -12,5 +12,6 @@ class Tag(Base):
     tag_name = Column(String, nullable=True)
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    links = relationship("Link", secondary="public.link_tag_map", back_populates="tags")
 
     link_maps = relationship("LinkTagMap", back_populates="tag")

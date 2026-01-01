@@ -44,6 +44,7 @@ def read_link(
 
     return link
 
+
 @router.post("/{link_id}/view", response_model=LinkViewRegisterResponse)
 def register_link_view(
     link_id: str,
@@ -62,21 +63,26 @@ def register_link_view(
         # TODO : (AS-IS)현재 익명 유저인 경우와 로직 상 실패한 경우를 분리하지 않았음
         # (TO-BE) 익명 유저인 경우에는 히스토리 등록을 시도하지 않도록 변경 필요
         if not service.create_history(user_id, link_id):
-            raise HTTPException(status_code=404, detail="Failed to register link view history")  # noqa: E501
+            raise HTTPException(
+                status_code=404, detail="Failed to register link view history"
+            )  # noqa: E501
     except HTTPException:
         pass
 
     return LinkViewRegisterResponse(message="Link View registered.")
 
+
 @router.post("", response_model=CreateLinkResponse)
 def create_link(
     create_link_request: CreateLinkRequest,
     service: Annotated[LinkService, Depends(get_di_link_service)],
-    current_user: Annotated[dict, Depends(get_current_user_from_session)]
+    current_user: Annotated[dict, Depends(get_current_user_from_session)],
 ):
     current_username = current_user["username"]
     current_user_id = current_user["user_id"]
-    link = service.create_link(url=create_link_request.url, user_id=current_user_id, username=current_username)
+    link = service.create_link(
+        url=create_link_request.url, user_id=current_user_id, username=current_username
+    )
 
     if not link:
         raise HTTPException(status_code=409, detail="Link already exists")

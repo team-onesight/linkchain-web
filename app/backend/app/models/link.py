@@ -20,6 +20,7 @@ class Link(Base):
     created_by_username = Column(String, nullable=True) # 위와 같음. NULL 허용으로 crawler 여부 판단
     link_embedding = Column(VECTOR(768), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    tags = relationship("Tag", secondary="public.link_tag_map", back_populates="links")
 
     user_maps = relationship("LinkUserMap", back_populates="link")
     tag_map = relationship("LinkTagMap", back_populates="link")

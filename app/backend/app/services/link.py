@@ -8,14 +8,11 @@ from utils.hash import get_uuid_hash
 
 
 class LinkService:
-    """
-    Link service to handle link-related operations
-    """
     def __init__(
-            self,
-            link_repository: LinkRepository,
-            link_user_map_repository: LinkUserMapRepository
-            ):
+        self,
+        link_repository: LinkRepository,
+        link_user_map_repository: LinkUserMapRepository,
+    ):
         self.link_repository = link_repository
         self.link_user_map_repository = link_user_map_repository
 
@@ -25,12 +22,13 @@ class LinkService:
     def get_links(
         self, user_id: int, cursor: Optional[int], size: int
     ) -> Page[LinkResponse]:
-        raw_data = self.link_repository.find_my_links(user_id, cursor, size)
-
+        raw_data = self.link_repository.get_links_by_user_id(user_id, cursor, size)
         has_more = len(raw_data) > size
-        items = raw_data[:size]
+        sliced_data = raw_data[:size]
 
-        next_cursor = items[-1].map_id if items and has_more else None
+        items = [row.Link for row in sliced_data]
+
+        next_cursor = sliced_data[-1].map_id if sliced_data and has_more else None
 
         return Page[LinkResponse](
             items=items, next_cursor=next_cursor, has_more=has_more
@@ -42,20 +40,25 @@ class LinkService:
         1. 같은 url에 대해 동일한 user_id가 존재하면 아무 작업도 하지 않고 None 반환
         2. link_user_map에 user_id와 link_id 매핑 생성
         3. link 테이블에 link 생성
+        :param username:  link를 생성하는 user의 이름
         :param self: Description
         :param url: user가 등록하려는 링크
         :type url: str
         :param user_id: link를 등록하는 user의 아이디
         :type user_id: int
         """
-        link_id = get_uuid_hash(url)
+        link_id: str = get_uuid_hash(url)
 
         if self.link_user_map_repository.get_link_user_map(link_id, user_id=user_id):
-            return None # LinkUserMap already exists -> link already exists for this user # noqa: E501
+            return None  # LinkUserMap already exists -> link already exists for this user # noqa: E501
 
         if not self.get_link(link_id):
-            self.link_repository.create_link(link_id, url, created_by_user_id=user_id, created_by_username=username) # Link does not exist, create it # noqa: E501
-        return self.link_user_map_repository.create_link_user_map(link_id, user_id=user_id)  # Link already exists -> just create LinkUserMap # noqa: E501
+            self.link_repository.create_link(
+                link_id, url, created_by_user_id=user_id, created_by_username=username
+            )  # Link does not exist, create it # noqa: E501
+        return self.link_user_map_repository.create_link_user_map(
+            link_id, user_id=user_id
+        )  # Link already exists -> just create LinkUserMap # noqa: E501
 
     def increase_view(self, link_id: str):
         return self.link_repository.increase_view(link_id)
