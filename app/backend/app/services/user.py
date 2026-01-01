@@ -1,7 +1,9 @@
+from collections import defaultdict
+from datetime import date
 from passlib.context import CryptContext
 from repositories.link_history import LinkHistoryRepository
 from repositories.user import UserRepository
-from schemas.user import UserLinkHistoryItem, UserLinkHistoryResponse
+from schemas.user import UserLinkHistoryItem, UserLinkHistoryGroup, UserLinkHistoryResponse
 from sqlalchemy.exc import IntegrityError
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -68,7 +70,7 @@ class UserLinkHistoryService:
     def __init__(self, link_history_repository: LinkHistoryRepository):
         self.link_history_repository = link_history_repository
 
-    def get_user_link_history(self, user_id: int):
+    def get_user_link_history(self, user_id: int) -> UserLinkHistoryResponse:
         """
         user link history 조회
         :param user_id: user_id
@@ -77,16 +79,25 @@ class UserLinkHistoryService:
         total = self.link_history_repository.count_distinct_links_by_user(user_id)
         records = self.link_history_repository.find_recently_visited_links_by_user(user_id) # noqa: E501
 
-        links = [
-            UserLinkHistoryItem(
-                link_id=record.link_id,
-                url=record.url,
-                title=record.title,
-                description=record.description,
-                views=record.views,
-                created_at=record.visited_at, # 최근 방문 시점
-            )
-            for record in records
-        ]
+        grouped: dict[date, list[UserLinkHistoryItem]] = defaultdict(list)
 
-        return UserLinkHistoryResponse(total=total, links=links)
+        for record in records:
+            link = UserLinkHistoryItem(
+                    link_id=record.link_id,
+                    url=record.url,
+                    title=record.title,
+                    description=record.description,
+                    views=record.views,
+                    created_at=record.visited_at, # 최근 방문 시점
+                )
+            
+            grouped[record.visited_at.date()].append(link)
+
+        link_groups = [
+            UserLinkHistoryGroup(date=group_date, items=items)
+            for group_date, items in grouped.items()
+        ]
+        
+        link_groups.sort(key=lambda x: x.date, reverse=True)
+
+        return UserLinkHistoryResponse(total=total, link_groups=link_groups)

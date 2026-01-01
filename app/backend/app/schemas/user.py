@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from typing import Optional
 from uuid import UUID
 
@@ -56,9 +56,17 @@ class UserLinkHistoryItem(BaseModel):
         from_attributes = True
 
 
+class UserLinkHistoryGroup(BaseModel):
+    """
+    Date별 user link history 그룹 정의
+    """
+    date: date
+    items: list[UserLinkHistoryItem]
+
 class UserLinkHistoryResponse(BaseModel):
     """
     user link history 응답값 정의
     """
-    links: list[UserLinkHistoryItem]
     total: int
+    link_groups: list[UserLinkHistoryGroup]
+    
