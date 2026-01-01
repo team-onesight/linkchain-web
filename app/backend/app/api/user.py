@@ -9,7 +9,11 @@ from core.deps import (
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from schemas.common import Page
 from schemas.link import LinkResponse
-from schemas.user import UserLinkHistoryResponse, UserResponse, UsernameAvailabilityResponse
+from schemas.user import (
+    UserLinkHistoryResponse,
+    UsernameAvailabilityResponse,
+    UserResponse,
+)
 from services.link import LinkService
 from services.user import UserLinkHistoryService, UserService
 

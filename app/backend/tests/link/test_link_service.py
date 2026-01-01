@@ -46,7 +46,7 @@ def test_create_link_when_new_link_created(
 ):
     # given
     link_user_map_repository.get_link_user_map.return_value = None
-    link_repository.get_link_from_db.return_value = None
+    link_repository.get_link_by_link_id.return_value = None
 
     link_user_map_repository.create_link_user_map.return_value = MagicMock(
         link_id="abc",

@@ -1,9 +1,14 @@
 from collections import defaultdict
 from datetime import date
+
 from passlib.context import CryptContext
 from repositories.link_history import LinkHistoryRepository
 from repositories.user import UserRepository
-from schemas.user import UserLinkHistoryItem, UserLinkHistoryGroup, UserLinkHistoryResponse
+from schemas.user import (
+    UserLinkHistoryGroup,
+    UserLinkHistoryItem,
+    UserLinkHistoryResponse,
+)
 from sqlalchemy.exc import IntegrityError
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -40,7 +45,7 @@ class UserService:
         """
         user = self.user_repository.get_user_by_id(user_id)
         return user
-    
+
     def is_username_available(self, username: str) -> bool:
         """
         username 중복 확인
@@ -98,14 +103,14 @@ class UserLinkHistoryService:
                     views=record.views,
                     created_at=record.visited_at, # 최근 방문 시점
                 )
-            
+
             grouped[record.visited_at.date()].append(link)
 
         link_groups = [
             UserLinkHistoryGroup(date=group_date, items=items)
             for group_date, items in grouped.items()
         ]
-        
+
         link_groups.sort(key=lambda x: x.date, reverse=True)
 
         return UserLinkHistoryResponse(total=total, link_groups=link_groups)
