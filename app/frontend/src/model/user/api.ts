@@ -1,5 +1,4 @@
-import type { User } from "./type";
-import type { BaseError } from "@/model/common/type.ts";
+import type {User, UserLinksResponse} from "@/model/user/type";
 
 const usersAPI = async (): Promise<User[]> => {
   const response = await fetch("/mocks/users.json");
@@ -10,14 +9,29 @@ const usersAPI = async (): Promise<User[]> => {
   return await response.json() as User[];
 };
 
-const userAPI = async (user_id: number): Promise<User | undefined> => {
-  const response = await fetch("/api/v1/users/{}".replace("{}", String(user_id)), {});
-  if (!response.ok) {
-    const data = await response.json() as BaseError;
-    throw new Error(data.detail);
-  }
+const fetchUser = async (user_id: number): Promise<User> => {
+    const response = await fetch(`/api/v1/users/${user_id}`);
 
-  return await response.json() as User;
-};
+    if (!response.ok) {
+        throw new Error("Network response was not ok");
+    }
 
-export { usersAPI, userAPI };
+    return await response.json() as User;
+}
+
+
+const fetchUserLinks = async (user_id: number, size: number = 20, cursor: number | undefined): Promise<UserLinksResponse> => {
+    const params = new URLSearchParams();
+    params.append("size", size.toString());
+    cursor && params.append("cursor", cursor.toString());
+
+    const response = await fetch(`/api/v1/users/${user_id}/links?${params.toString()}`);
+
+    if (!response.ok) {
+        throw new Error("Network response was not ok");
+    }
+
+    return await response.json() as UserLinksResponse;
+}
+
+export {usersAPI, fetchUser, fetchUserLinks};
