@@ -11,7 +11,7 @@ def user_repository():
 
 @pytest.fixture
 def service(user_repository):
-    return UserService(repository=user_repository)
+    return UserService(user_repository=user_repository)
 
 
 def test_join_user_success(service, user_repository):
