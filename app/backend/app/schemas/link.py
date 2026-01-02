@@ -32,3 +32,13 @@ class CreateLinkResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class SearchLinkResponse(BaseModel):
+    items: List[LinkResponse]
+    total: int
+    page: int
+    size: int
+    total_pages: int
+
+    class Config:
+        from_attributes = True

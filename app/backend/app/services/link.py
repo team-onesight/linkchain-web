@@ -3,7 +3,8 @@ from typing import Optional
 from repositories.link import LinkRepository
 from repositories.link_user_map import LinkUserMapRepository
 from schemas.common import Page
-from schemas.link import LinkResponse
+from schemas.link import LinkResponse, SearchLinkResponse
+from utils.embedding import generate_query_embedding
 from utils.hash import get_uuid_hash
 
 
@@ -65,3 +66,60 @@ class LinkService:
 
     def create_history(self, user_id: int, link_id: str):
         return self.link_repository.create_history(user_id, link_id)
+
+    def search_links(
+        self,
+        query: Optional[str],
+        tag: Optional[str],
+        page: int,
+        size: int,
+    ) -> SearchLinkResponse:
+        """
+        검색어 또는 태그로 링크 검색하는 Service 메서드입니다.
+
+        1. query 가 주어진 경우, query_embedding 기반 유사도 검색을 수행합니다.
+        1.1. query_embedding 생성은 utils.embedding.generate_query_embedding 함수를 사용합니다.
+        2. tag 가 주어진 경우, 태그 기반 검색을 수행합니다.
+        3. 검색 조건이 없는 경우, 빈 결과를 반환합니다.
+        ( total_count 는 페이징을 위한 전체 결과 수입니다. )
+
+        :param self:
+        :param query: 검색 쿼리
+        :type query: Optional[str]
+        :param tag: 태그
+        :type tag: Optional[str]
+        :param page: 페이지 번호
+        :type page: int
+        :param size: 페이지 당 아이템 수
+        :type size: int
+        :return: 검색 결과
+        :rtype: SearchLinkResponse
+        """  # noqa: E501
+        if query:
+            query_embedding = generate_query_embedding(query)
+            links, total_count = self.link_repository.search_links_by_embedding(
+                query_embedding=query_embedding,
+                page=page,
+                size=size,
+            )
+        elif tag:
+            links, total_count = self.link_repository.search_links_by_tag(
+                tag=tag,
+                page=page,
+                size=size,
+            )
+        else:
+            # 검색 조건이 없는 경우 빈 결과 반환
+            links = []
+            total_count = 0
+
+        # 올림 연산
+        total_pages = (total_count + size - 1) // size if total_count > 0 else 0
+
+        return SearchLinkResponse(
+            items=links,
+            total=total_count,
+            page=page,
+            size=size,
+            total_pages=total_pages,
+        )
