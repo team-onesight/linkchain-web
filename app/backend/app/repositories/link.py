@@ -1,11 +1,11 @@
-from typing import List, Optional
+from typing import Optional
 
 from models.link import Link
 from models.link_history import LinkHistory
 from models.link_tag_map import LinkTagMap
 from models.link_user_map import LinkUserMap
 from models.tag import Tag
-from sqlalchemy import Float, desc, func, update
+from sqlalchemy import desc, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, joinedload
 
@@ -61,49 +61,40 @@ class LinkRepository:
         self.db.commit()
         return link_history
 
-    def search_links_by_embedding(
+    def search_links_by_query(
         self,
-        query_embedding: List[float],
+        query: str,
         page: int,
         size: int,
     ):
         """
-        query_embedding 기반 유사도 검색을 진행합니다.
+        query 기반 링크 검색을 진행합니다.
 
-        1. postgreSQL 의 <=> 연산자를 사용하여 코사인 유사도를 계산합니다.
-        2. 유사도 기준 내림차순으로 정렬하고 page와 size를 각각 offset과 limit으로 적용하여 결과를 반환합니다.
+        1. title, description 필드에 대해 LIKE 검색을 수행합니다.
+        2. 생성일 기준 내림차순으로 정렬하고 page와 size를 각각 offset과 limit으로 적용하여 결과를 반환합니다.
         ( total_count 는 페이징을 위한 전체 결과 수입니다. )
 
         :param self:
-        :param query_embedding:
-        :type query_embedding: List[float]
+        :param query: 검색어
+        :type query: str
         :param page: 페이지 번호
         :type page: int
         :param size: 페이지 당 아이템 수
         :type size: int
         """  # noqa: E501
-        embedding_str = "[" + ",".join(map(str, query_embedding)) + "]"
-
-        query = (
-            self.db.query(
-                Link,
-                (1 - func.cast(Link.link_embedding.op("<=>")(embedding_str), Float)).label("similarity")  # noqa: E501
-            )
-            .options(joinedload(Link.tags))
-            .filter(Link.link_embedding.isnot(None))
+        query = self.db.query(Link).filter(
+            (Link.title.ilike(f"%{query}%")) | (Link.description.ilike(f"%{query}%"))
         )
 
         total_count = query.count()
 
         offset = (page - 1) * size
-        results = (
-            query.order_by(desc("similarity"))
+        links = (
+            query.order_by(desc(Link.created_at))
             .offset(offset)
             .limit(size)
             .all()
         )
-
-        links = [row.Link for row in results]
 
         return links, total_count
 

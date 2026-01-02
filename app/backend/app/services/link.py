@@ -4,7 +4,6 @@ from repositories.link import LinkRepository
 from repositories.link_user_map import LinkUserMapRepository
 from schemas.common import Page
 from schemas.link import LinkResponse, SearchLinkResponse
-from utils.embedding import generate_query_embedding
 from utils.hash import get_uuid_hash
 
 
@@ -77,8 +76,7 @@ class LinkService:
         """
         검색어 또는 태그로 링크 검색하는 Service 메서드입니다.
 
-        1. query 가 주어진 경우, query_embedding 기반 유사도 검색을 수행합니다.
-        1.1. query_embedding 생성은 utils.embedding.generate_query_embedding 함수를 사용합니다.
+        1. query 가 주어진 경우, title,description 기반 LIKE 검색을 수행합니다.
         2. tag 가 주어진 경우, 태그 기반 검색을 수행합니다.
         3. 검색 조건이 없는 경우, 빈 결과를 반환합니다.
         ( total_count 는 페이징을 위한 전체 결과 수입니다. )
@@ -96,9 +94,8 @@ class LinkService:
         :rtype: SearchLinkResponse
         """  # noqa: E501
         if query:
-            query_embedding = generate_query_embedding(query)
-            links, total_count = self.link_repository.search_links_by_embedding(
-                query_embedding=query_embedding,
+            links, total_count = self.link_repository.search_links_by_query(
+                query=query,
                 page=page,
                 size=size,
             )
