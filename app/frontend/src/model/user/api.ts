@@ -1,5 +1,4 @@
-import type { User, UserLinksResponse, LinkHistoryItem } from "@/model/user/type";
-import type { BaseError } from "@/model/common/type.ts";
+import type { User, UserLinksResponse, UserLinkHistoryResponse } from "@/model/user/type";
 
 const usersAPI = async (): Promise<User[]> => {
   const response = await fetch("/mocks/users.json");
@@ -39,7 +38,7 @@ const fetchUserLinks = async (
 };
 
 const fetchMyLinkHistory = async () => {
-  const response = await fetch(`/api/v1/users/`);
+  const response = await fetch(`/api/v1/users/histories`);
   if (!response.ok) {
     if (response.status === 401 || response.status === 403) {
       location.href = "/login";
@@ -47,7 +46,7 @@ const fetchMyLinkHistory = async () => {
     throw new Error("Network response was not ok");
   }
 
-  return (await response.json()) as LinkHistoryItem[];
+  return (await response.json()) as UserLinkHistoryResponse;
 };
 
 export { usersAPI, fetchUser, fetchUserLinks, fetchMyLinkHistory };

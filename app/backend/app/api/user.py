@@ -1,7 +1,6 @@
 from typing import Annotated, Optional
 
 from core.deps import (
-    get_current_user_from_session,
     get_di_link_service,
     get_di_user_link_history_service,
     get_di_user_service,
@@ -17,7 +16,29 @@ from schemas.user import (
 from services.link import LinkService
 from services.user import UserLinkHistoryService, UserService
 
+from api.session_utils import get_user_id_from_session
+
 router = APIRouter(prefix="/users")
+
+
+@router.get("/histories", response_model=UserLinkHistoryResponse)  # noqa: E501
+def get_user_link_histories(
+    request: Request,
+    service: Annotated[
+        UserLinkHistoryService, Depends(get_di_user_link_history_service)
+    ],  # noqa: E501
+):
+    """
+    user가 방문한 link history 조회
+    :param service:
+    :param request:
+    :param user_id: user_id
+    :type user_id: int
+    """
+    user_id = get_user_id_from_session(request)
+    user_link_history_response = service.get_user_link_history(user_id)
+
+    return user_link_history_response
 
 
 @router.get("/{user_id}", response_model=UserResponse)
@@ -56,20 +77,6 @@ def _get_user_session_from_request(
         raise HTTPException(status_code=401, detail="Unauthorized")
     return user_session
 
-@router.get("/{user_id}/histories", response_model=UserLinkHistoryResponse) # noqa: E501
-def get_user_link_histories(
-    service: Annotated[UserLinkHistoryService, Depends(get_di_user_link_history_service)], # noqa: E501
-    current_user: Annotated[dict, Depends(get_current_user_from_session)],
-):
-    """
-    user가 방문한 link history 조회
-    :param user_id: user_id
-    :type user_id: int
-    """
-    user_id = current_user["user_id"]
-    user_link_history_response = service.get_user_link_history(user_id)
-
-    return user_link_history_response
 
 @router.post("/validate/id", response_model=UsernameAvailabilityResponse)
 def validate_username(

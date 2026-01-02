@@ -1,11 +1,11 @@
 import { Card } from "@components/ui/card.tsx";
 import { useNavigate } from "react-router-dom";
 import { Eye, Clock } from "lucide-react";
-import type { LinkHistoryItem } from "@/model/user/type.ts";
 import { cn } from "@/lib/utils.ts";
+import type { UserLinkHistoryItem } from "@/model/user/type";
 
 interface LinkHistoryCardProps {
-  item: LinkHistoryItem;
+  item: UserLinkHistoryItem;
 }
 
 export const LinkHistoryCard = ({ item }: LinkHistoryCardProps) => {
@@ -15,7 +15,7 @@ export const LinkHistoryCard = ({ item }: LinkHistoryCardProps) => {
     return null;
   }
 
-  const { link_id, title, url, image_url, created_at, views } = item;
+  const { link_id, title, url, created_at, views } = item;
 
   const timeString = new Date(created_at).toLocaleTimeString("ko-KR", {
     hour: "2-digit",
@@ -29,13 +29,13 @@ export const LinkHistoryCard = ({ item }: LinkHistoryCardProps) => {
       className={cn(
         "flex flex-row items-center gap-3 p-2 sm:p-3 w-full",
         "cursor-pointer group transition-colors duration-200",
-        "hover:bg-accent/50 border-transparent hover:border-border", // 호버 시 경계선 및 배경 강조
-        "rounded-lg shadow-sm hover:shadow-md" // 그림자 효과 조절
+        "hover:bg-accent/50 border-transparent hover:border-border",
+        "rounded-lg shadow-sm hover:shadow-md"
       )}
     >
       <div className='relative flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-md overflow-hidden bg-muted border border-border/40'>
         <img
-          src={image_url || "/images/default_link_image.png"}
+          src={"/images/default_link_image.png"}
           alt={title || "링크 이미지"}
           className='object-cover w-full h-full transition-transform duration-300 group-hover:scale-105'
         />

@@ -1,4 +1,4 @@
-import type {LinkItem} from "@/model/link/type";
+import type { LinkItem } from "@/model/link/type";
 
 interface User {
   user_id: number;
@@ -6,24 +6,34 @@ interface User {
 }
 
 interface UserLinksResponse {
-    items: LinkItem[];
-    next_cursor: number | null;
-    has_more: boolean;
+  items: LinkItem[];
+  next_cursor: number | null;
+  has_more: boolean;
 }
 
-interface LinkHistoryItem {
+interface UserLinkHistoryResponse {
+  total: number;
+  link_groups: UserLinkHistoryGroup[];
+}
+
+interface UserLinkHistoryGroup {
+  date: string;
+  items: UserLinkHistoryItem[];
+}
+
+interface UserLinkHistoryItem {
   link_id: string;
   url: string;
-  image_url: string | null;
-  title: string | null;
-  description: string | null;
+  title?: string;
+  description?: string;
   views: number;
   created_at: string;
 }
 
-interface GroupedLinkHistory {
-  date: string;
-  items: LinkHistoryItem[];
-}
-
-export type { User, LinkHistoryItem, GroupedLinkHistory, UserLinksResponse };
+export type {
+  User,
+  UserLinkHistoryGroup,
+  UserLinkHistoryResponse,
+  UserLinksResponse,
+  UserLinkHistoryItem,
+};

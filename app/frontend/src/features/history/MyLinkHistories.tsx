@@ -64,7 +64,7 @@ const EmptyHistoryState = () => (
 
 export const MyLinkHistories = () => {
   const query = useMyLinkHistory();
-  const hasHistory = query.data && query.data.length > 0;
+  const hasHistory = query.data && query.data.total > 0;
 
   if (query.isLoading) {
     return <HistorySkeleton />;
@@ -76,8 +76,7 @@ export const MyLinkHistories = () => {
 
   return (
     <div className='space-y-8 pb-20'>
-      {" "}
-      {query.data.map((group) => (
+      {query.data.link_groups.map((group) => (
         <section key={group.date} className='relative'>
           <div className='flex items-center mb-3 sticky top-[60px] z-10 bg-background/95 backdrop-blur-sm py-2'>
             <h2 className='text-base font-bold flex items-center gap-2 text-foreground'>
@@ -90,13 +89,14 @@ export const MyLinkHistories = () => {
           </div>
 
           <motion.div
+            key={group.date}
             className='flex flex-col gap-2'
             variants={containerVariants}
             initial='hidden'
             animate='visible'
           >
-            {group.items.map((link) => (
-              <motion.div key={link.link_id} variants={itemVariants}>
+            {group.items.map((link, idx) => (
+              <motion.div key={idx} variants={itemVariants} initial='hidden' animate='visible'>
                 <LinkHistoryCard item={link} />
               </motion.div>
             ))}
