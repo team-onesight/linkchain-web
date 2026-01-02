@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { usersAPI, userAPI } from "@/model/user/api";
+import { fetchUser, usersAPI } from "@/model/user/api";
 
 export const useUsers = () => {
   return useQuery({
@@ -13,7 +13,7 @@ export const useUsers = () => {
 export const useUser = (user_id?: number) => {
   return useQuery({
     queryKey: ["users", user_id],
-    queryFn: () => userAPI(user_id!),
+    queryFn: () => fetchUser(user_id!),
     enabled: !!user_id,
     retry: 1,
     refetchOnWindowFocus: false,

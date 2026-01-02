@@ -8,13 +8,15 @@ import { LogOut } from "lucide-react";
 import { useAuthStore } from "@/store/auth-store.ts";
 
 export const ProfileHeader = ({ user }: { user: UseQueryResult<User | undefined, Error> }) => {
-  const { logout } = useAuthStore();
+  const { logout, user: authUser } = useAuthStore();
   if (user.isLoading) {
     return <ProfileHeaderSkeleton />;
   } else if (!user.data) {
     return <UserNotFoundComponent />;
   } else {
     const avatarIndex = parseInt(String(user.data.user_id % 5), 10);
+    const isMyProfile = authUser?.user_id === user.data.user_id;
+
     return (
       <SectionContainer className="pt-8">
         <div className="flex flex-col items-center gap-4">
@@ -26,10 +28,12 @@ export const ProfileHeader = ({ user }: { user: UseQueryResult<User | undefined,
             <h1 className="text-3xl font-bold">{user.data?.username}</h1>
             {/*<p className='text-muted-foreground mt-1'>{user.data?.bio}</p>*/}
           </div>
-          <Button variant="outline" onClick={logout}>
-            <LogOut className="mr-2 h-4 w-4" />
-            Log Out
-          </Button>
+          {isMyProfile && (
+            <Button variant="outline" onClick={logout}>
+              <LogOut className="mr-2 h-4 w-4" />
+              Log Out
+            </Button>
+          )}
         </div>
       </SectionContainer>
     );

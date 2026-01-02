@@ -1,17 +1,23 @@
-from datetime import datetime
-from typing import Optional
+from typing import List, Optional
+from uuid import UUID
 
 from pydantic import BaseModel
 
+from schemas.tag import TagResponse
+
 
 class LinkResponse(BaseModel):
-    link_id: int
+    link_id: UUID
     url: str
     title: Optional[str]
     description: Optional[str]
-    views: int
-    created_by: Optional[int]
-    created_at: datetime
+    tags: List[TagResponse] = []
+
+    class Config:
+        from_attributes = True
+
+class LinkViewRegisterResponse(BaseModel):
+    message: str
 
     class Config:
         from_attributes = True
@@ -19,5 +25,20 @@ class LinkResponse(BaseModel):
 
 class CreateLinkRequest(BaseModel):
     url: str
-    title: Optional[str] = None
-    description: Optional[str] = None
+
+class CreateLinkResponse(BaseModel):
+    link_id: str
+    user_id: int
+
+    class Config:
+        from_attributes = True
+
+class SearchLinkResponse(BaseModel):
+    items: List[LinkResponse]
+    total: int
+    page: int
+    size: int
+    total_pages: int
+
+    class Config:
+        from_attributes = True

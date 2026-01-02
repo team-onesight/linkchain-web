@@ -9,7 +9,8 @@ interface LinksGroup {
 }
 
 interface LinkItem {
-  id: string;
+  id: string // deprecated, use link_id instead
+  link_id: string;
   userId?: string;
   url: string;
   imageUrl: string;
@@ -20,4 +21,15 @@ interface LinkItem {
   linkType: LinkType;
 }
 
-export type {LinkItem, LinkType, LinksGroup};
+interface MyLinksResponse {
+  items: LinkItem[];
+  next_cursor: number | null;
+  has_more: boolean;
+}
+
+
+interface PostLinkRequest {
+  url: string;
+}
+
+export type {LinkItem, LinkType, LinksGroup, PostLinkRequest, MyLinksResponse};

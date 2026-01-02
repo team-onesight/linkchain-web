@@ -1,72 +1,64 @@
-# import pytest
-# from core.deps import get_di_user_service
-# from models.user import User
-# from passlib.context import CryptContext
-# from repositories.user import UserRepository
-# from services.user import UserService
+from unittest.mock import MagicMock, patch
 
-# pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+import pytest
+from services.user import UserService
 
 
-# def test_login_success(db_session):
-#     """
-#     services/user.py 의 login 서비스에 대한 test
-#     :param db_session: Description
-#     """
-#     hashed_password = pwd_context.hash("test1")
-
-#     user = User(
-#         username="test1",
-#         password=hashed_password,
-#     )
-#     db_session.add(user)
-#     db_session.commit()
-#     db_session.refresh(user)
+@pytest.fixture
+def user_repository():
+    return MagicMock()
 
 
-#     service = UserService(UserRepository(db_session))
-#     result = service.login("test1", "test1")
-
-#     assert result.user_id == user.user_id
-#     assert result.username == "test1"
+@pytest.fixture
+def service(user_repository):
+    return UserService(user_repository=user_repository)
 
 
-# def test_login_user_not_found(db_session):
-#     """
-#     user가 존재하지 않을때 test
-#     :param db_session: Description
-#     """
-#     hashed_password = pwd_context.hash("test1")
+def test_join_user_success(service, user_repository):
+    # given
+    user_repository.get_user_by_username.return_value = None
+    user_repository.create_user.return_value = MagicMock(username="testuser")
 
-#     user = User(
-#         username="test1",
-#         password=hashed_password,
-#     )
-#     db_session.add(user)
-#     db_session.commit()
-#     db_session.refresh(user)
+    # when
+    user = service.join_user("testuser", "password")
 
-#     service = get_di_user_service(db_session)
-
-#     with pytest.raises(ValueError):
-#         service.login("not-exist", "password")
+    # then
+    assert user.username == "testuser"
+    user_repository.create_user.assert_called_once()
 
 
-# def test_login_password_mismatch(db_session):
-#     """
-#     패스워드 불일치시 login test
-#     :param db_session: Description
-#     """
-#     hashed_password = pwd_context.hash("test1")
+def test_join_user_duplicate(service, user_repository):
+    # given
+    user_repository.get_user_by_username.return_value = MagicMock()
 
-#     user = User(
-#         username="test1",
-#         password=hashed_password,
-#     )
-#     db_session.add(user)
-#     db_session.commit()
+    # when / then
+    with pytest.raises(ValueError, match="user already exists"):
+        service.join_user("testuser", "password")
 
-#     service = get_di_user_service(db_session)
 
-#     with pytest.raises(ValueError):
-#         service.login("test1", "wrong-password")
+@patch("services.user.pwd_context.verify", return_value=True)
+def test_login_success(mock_verify, service, user_repository):
+    # given
+    user_repository.get_user_by_username.return_value = MagicMock(
+        password="hashed", # noqa: S106
+        username="testuser",
+    )
+
+    # when
+    user = service.login("testuser", "password")
+
+    # then
+    assert user.username == "testuser"
+    mock_verify.assert_called_once()
+
+
+@patch("services.user.pwd_context.verify", return_value=False)
+def test_login_invalid_password(mock_verify, service, user_repository):
+    # given
+    user_repository.get_user_by_username.return_value = MagicMock(
+        password="hashed" # noqa: S106
+    )
+
+    # when / then
+    with pytest.raises(ValueError, match="invalid credentials"):
+        service.login("testuser", "wrong")

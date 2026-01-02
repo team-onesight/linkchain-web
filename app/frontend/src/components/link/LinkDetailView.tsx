@@ -12,7 +12,7 @@ interface LinkDetailViewProps {
 }
 
 export function LinkDetailView({link}: LinkDetailViewProps) {
-  const [currentTags, setCurrentTags] = useState<string[]>(link.tags.map((tag) => tag.name));
+  const [currentTags, setCurrentTags] = useState<string[]>(link.tags.map((tag) => tag.tag_name));
 
   const handleBookmark = () => {
     toast("is bookmarked", {

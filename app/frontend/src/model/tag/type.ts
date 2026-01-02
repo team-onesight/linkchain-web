@@ -1,6 +1,7 @@
 interface Tag {
-  id: string;
-  name: string;
+  tag_id: number;
+  tag_name: string;
+  created_at: string;
 }
 
-export type {Tag};
+export type { Tag };

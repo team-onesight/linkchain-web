@@ -1,65 +1,89 @@
-import { motion } from "framer-motion";
-import { SectionContainer } from "@/components/styled/layout";
-import { useLinks } from "@/hooks/useLinks";
-import { Skeleton } from "@/components/ui/skeleton";
-import { getLinkCardComponent } from "@/components/link/LinkCardFactory";
-import { useAuthStore } from "@/store/auth-store.ts";
+import {useEffect, useRef, Fragment} from "react";
+import {motion} from "framer-motion";
+import {SectionContainer} from "@/components/styled/layout";
+import {Skeleton} from "@/components/ui/skeleton";
+import {useInfiniteMyLinks} from "@/hooks/useInfiniteMyLinks.ts";
+import {LinkCard} from "@components/link/card/LinkCard.tsx";
+
+const containerVariants = {
+    hidden: {opacity: 0},
+    visible: {
+        opacity: 1,
+        transition: {staggerChildren: 0.1, delayChildren: 0.2},
+    },
+};
+
 
 export const MyRecentLinks = () => {
-  const { user } = useAuthStore();
-  const { query, concat_groups } = useLinks({ user_id: user?.user_id, group_by: "date" });
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1, delayChildren: 0.2 },
-    },
-  };
+    const {query} = useInfiniteMyLinks(20);
+    const observer = useRef<IntersectionObserver | null>(null);
+    const lastElementRef = useRef<HTMLDivElement | null>(null);
 
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1 },
-  };
+    useEffect(() => {
+        if (query.isFetchingNextPage) return;
+        if (observer.current) observer.current.disconnect();
 
-  if (query.isLoading) {
-    return <MyRecentLinksSkeleton />;
-  }
+        observer.current = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting && query.hasNextPage) {
+                void query.fetchNextPage();
+            }
+        });
 
-  if (Object.keys(query.data || {}).length === 0) {
-    return null;
-  }
+        if (lastElementRef.current) {
+            observer.current.observe(lastElementRef.current);
+        }
 
-  return (
-    <SectionContainer className="pt-0">
-      <h2 className="text-2xl font-bold mb-4">My Recent Links</h2>
-      <div className="space-y-8">
-        <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 gap-4"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
-          {concat_groups()?.map((link) => {
-            const CardComponent = getLinkCardComponent(link.linkType);
-            return (
-              <motion.div key={link.id} variants={itemVariants}>
-                <CardComponent link={link} />
-              </motion.div>
-            );
-          })}
-        </motion.div>
-      </div>
-    </SectionContainer>
-  );
+        return () => observer.current?.disconnect();
+    }, [query.isFetchingNextPage, query.hasNextPage, query.data]);
+
+    if (query.isLoading) return <MyRecentLinksSkeleton/>;
+
+    return (
+        <SectionContainer className="pt-0">
+            <h2 className="text-2xl font-bold mb-4">My Recent Links</h2>
+            <div className="space-y-8">
+                <motion.div
+                    className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                >
+                    {query.data?.pages.map((page, pageIndex) => (
+                        <Fragment key={`page-${pageIndex}-${page.next_cursor}`}>
+                            {page.items.map((link, linkIndex) => {
+                                const isLastItem =
+                                    pageIndex === query.data!.pages.length - 1 &&
+                                    linkIndex === page.items.length - 1;
+
+                                return (
+                                    <div
+                                        key={`${link.link_id}-${pageIndex}`}
+                                        ref={isLastItem ? lastElementRef : null}
+                                    >
+                                        <LinkCard link={link}/>
+                                    </div>
+                                );
+                            })}
+                        </Fragment>
+                    ))}
+                </motion.div>
+
+                {query.isFetchingNextPage && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                        <Skeleton className="h-36 rounded-xl"/>
+                    </div>
+                )}
+            </div>
+        </SectionContainer>
+    );
 };
 
 const MyRecentLinksSkeleton = () => (
-  <SectionContainer className="pt-0">
-    <Skeleton className="h-8 w-48 mb-4" />
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <Skeleton className="h-36" />
-      <Skeleton className="h-36" />
-    </div>
-  </SectionContainer>
+    <SectionContainer className="pt-0">
+        <Skeleton className="h-8 w-48 mb-4"/>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Skeleton className="h-36 rounded-xl"/>
+            <Skeleton className="h-36 rounded-xl"/>
+        </div>
+    </SectionContainer>
 );

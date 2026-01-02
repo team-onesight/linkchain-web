@@ -39,8 +39,8 @@ const router = createBrowserRouter([
         element: <LazyComponent RenderElement={lazy(() => import("@pages/HomePage.tsx"))} />,
       },
       {
-        path: "links",
-        element: <LazyComponent RenderElement={lazy(() => import("@pages/LinkPage.tsx"))} />,
+        path: "histories",
+        element: <LazyComponent RenderElement={lazy(() => import("@pages/HistoryPage.tsx"))} />,
       },
       {
         path: "links/:id",

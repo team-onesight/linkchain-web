@@ -1,6 +1,7 @@
 ## Ignore IDE specific files
 .idea/*
 .vscode/*
+*.iml
 
 ## Ignore backend modules
 app/backend/.venv/

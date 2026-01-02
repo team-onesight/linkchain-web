@@ -1,12 +1,33 @@
+import {useEffect, useRef, Fragment} from "react";
 import { motion } from "framer-motion";
-import { useLinks } from "@/hooks/useLinks";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getLinkCardComponent } from "@/components/link/LinkCardFactory";
 import type { UseQueryResult } from "@tanstack/react-query";
 import type { User } from "@/model/user/type";
+import { useInfiniteUserLinks } from "@/hooks/useInfiniteUserLinks.ts";
 
 export const UserLinksGrid = ({ user }: { user: UseQueryResult<User | undefined, Error> }) => {
-  const { query, concat_groups } = useLinks({ user_id: user.data?.user_id });
+  const { query } = useInfiniteUserLinks(user.data?.user_id);
+  const observer = useRef<IntersectionObserver | null>(null);
+  const lastElementRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (query.isFetchingNextPage) return;
+    if (observer.current) observer.current.disconnect();
+
+    observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && query.hasNextPage) {
+            void query.fetchNextPage();
+        }
+    });
+
+    if (lastElementRef.current) {
+        observer.current.observe(lastElementRef.current);
+    }
+
+    return () => observer.current?.disconnect();
+  }, [query.isFetchingNextPage, query.hasNextPage, query.data]);
+
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -16,16 +37,13 @@ export const UserLinksGrid = ({ user }: { user: UseQueryResult<User | undefined,
     },
   };
 
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1 },
-  };
-
   if (query.isLoading) {
     return <GridSkeleton />;
   }
+  
+  const links = query.data?.pages.flatMap((page) => page.items) ?? [];
 
-  if (query.data?.length === 0) {
+  if (links.length === 0) {
     return (
       <div className="text-center py-20">
         <p className="text-xl text-gray-500">
@@ -43,22 +61,37 @@ export const UserLinksGrid = ({ user }: { user: UseQueryResult<User | undefined,
         initial="hidden"
         animate="visible"
       >
-        {concat_groups()?.map((link) => {
-          const CardComponent = getLinkCardComponent(link.linkType);
-          return (
-            <motion.div key={link.id} variants={itemVariants}>
-              <CardComponent link={link} />
-            </motion.div>
-          );
-        })}
+        {query.data?.pages.map((page, pageIndex) => (
+            <Fragment key={`page-${pageIndex}-${page.next_cursor}`}>
+                {page.items.map((link, linkIndex) => {
+                    const isLastItem =
+                        pageIndex === query.data!.pages.length - 1 &&
+                        linkIndex === page.items.length - 1;
+                    const CardComponent = getLinkCardComponent(link.linkType);
+                    return (
+                        <div
+                            key={`${link.link_id}-${pageIndex}`}
+                            ref={isLastItem ? lastElementRef : null}
+                        >
+                            <CardComponent link={link}/>
+                        </div>
+                    );
+                })}
+            </Fragment>
+        ))}
       </motion.div>
+      {query.isFetchingNextPage && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+              <Skeleton className="h-36 w-full" />
+              <Skeleton className="h-36 w-full" />
+          </div>
+      )}
     </div>
   );
 };
 
 const GridSkeleton = () => (
   <div className="space-y-8">
-    <Skeleton className="h-8 w-48 mb-4" />
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <Skeleton className="h-36 w-full" />
       <Skeleton className="h-36 w-full" />
