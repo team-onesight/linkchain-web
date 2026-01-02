@@ -9,16 +9,15 @@ interface LinksGroup {
 }
 
 interface LinkItem {
-  id: string // deprecated, use link_id instead
   link_id: string;
-  userId?: string;
   url: string;
   imageUrl: string;
   title: string;
   description: string;
+  views: number;
+  created_by_user_id: number;
+  created_by_username: string;
   tags: Tag[];
-  created_at: string;
-  linkType: LinkType;
 }
 
 interface MyLinksResponse {
@@ -27,16 +26,16 @@ interface MyLinksResponse {
   has_more: boolean;
 }
 
-interface SearchLinksResponse {
-  items: LinkItem[];
-  total: number;
-  page: number;
-  size: number;
-  total_pages: number;
-}
-
 interface PostLinkRequest {
   url: string;
 }
 
-export type {LinkItem, LinkType, LinksGroup, PostLinkRequest, MyLinksResponse, SearchLinksResponse};
+interface SearchLinksResponse {
+    items: LinkItem[];
+    total: number;
+    page: number;
+    size: number;
+    total_pages: number;
+}
+
+export type { LinkItem, LinkType, LinksGroup, PostLinkRequest, MyLinksResponse, SearchLinksResponse };
