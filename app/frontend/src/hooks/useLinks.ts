@@ -1,5 +1,5 @@
-import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import {fetchLink, fetchLinks, postLink, postLinkView} from "@/model/link/api";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { fetchLink, fetchLinks, postLink, postLinkView } from "@/model/link/api";
 
 interface UseLinksParams {
   q?: string | null;
@@ -20,10 +20,15 @@ export const useLink = (id: string | undefined) => {
   });
 };
 
-export const useLinks = ({ q, tag, link_id, user_id, group_name, group_by }: UseLinksParams = {}) => {
-
+export const useLinks = ({
+  q,
+  tag,
+  link_id,
+  user_id,
+  group_name,
+  group_by,
+}: UseLinksParams = {}) => {
   console.log(link_id);
-
 
   const query = useQuery({
     queryKey: ["links", { q, tag, user_id, group_name, group_by }],
@@ -39,17 +44,22 @@ export const useLinks = ({ q, tag, link_id, user_id, group_name, group_by }: Use
         (acc, group) => {
           return acc.concat(group.links);
         },
-        [] as (typeof query.data)[0]["links"],
+        [] as (typeof query.data)[0]["links"]
       );
     },
   };
 };
 
 export const useLinkView = () => {
-    return useMutation({
-        mutationFn: (id: string) => postLinkView(id),
-    });
-}
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => postLinkView(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["links", "history"] });
+    },
+  });
+};
 
 export const useCreateLink = () => {
   const queryClient = useQueryClient();
