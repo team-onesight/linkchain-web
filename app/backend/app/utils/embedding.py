@@ -1,6 +1,9 @@
+import logging
 from typing import List
 
 from sentence_transformers import SentenceTransformer
+
+logger = logging.getLogger("uvicorn")
 
 _model = None
 
@@ -14,7 +17,11 @@ def get_embedding_model():
     """
     global _model
     if _model is None:
+        logger.info("Loading SentenceTransformer model...")
         _model = SentenceTransformer("paraphrase-multilingual-mpnet-base-v2")
+        logger.info("SentenceTransformer model loaded successfully")
+    else:
+        logger.info("Using cached SentenceTransformer model")
     return _model
 
 
