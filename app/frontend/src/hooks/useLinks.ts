@@ -1,5 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchLink, fetchLinks, postLink, postLinkView } from "@/model/link/api";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 interface UseLinksParams {
   q?: string | null;
@@ -63,10 +65,27 @@ export const useLinkView = () => {
 
 export const useCreateLink = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   return useMutation({
     mutationFn: (url: string) => postLink({ url }),
-    onSuccess: () => {
+    onSuccess: (response: { link_id: string; user_id: string }) => {
       queryClient.invalidateQueries({ queryKey: ["links"] });
+      toast("is bookmarked", {
+        description: "The link has been added to your bookmarks.",
+        position: "top-center",
+        action: {
+          label: "View",
+          onClick: () => {
+            navigate(`/links/${response.link_id}`);
+          },
+        },
+      });
+    },
+    onError: (error: Error) => {
+      toast.error("Failed to bookmark", {
+        description: error.message || "Something went wrong.",
+        position: "top-center",
+      });
     },
   });
 };
