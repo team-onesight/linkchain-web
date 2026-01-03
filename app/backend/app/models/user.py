@@ -1,7 +1,7 @@
 from db.base import Base
 from sqlalchemy import Column, DateTime, Integer, String, func
 from sqlalchemy.orm import relationship
-from utils.vector import VECTOR
+from pgvector.sqlalchemy import Vector
 
 
 class User(Base):
@@ -15,7 +15,7 @@ class User(Base):
     user_id = Column(Integer, primary_key=True, index=True)
     username = Column(String, nullable=False)
     password = Column(String, nullable=False)
-    user_embedding = Column(VECTOR(768), nullable=True)  # 1536차원 vector
+    user_embedding = Column(Vector(768), nullable=True)  # 1536차원 vector
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     link_maps = relationship("LinkUserMap", back_populates="user")
