@@ -121,10 +121,11 @@ class LinkService:
             total_pages=total_pages,
         )
 
-    def get_similar_links(self, link_id: str) -> list[LinkResponse]:
+    def get_similar_links(self, link_id: str, size: int = 10) -> list[LinkResponse]:
         """
         유사한 링크를 반환합니다.
 
+        :param size: limit
         :param self:
         :param link_id: 원본 링크 ID
         :type link_id: str
@@ -135,5 +136,5 @@ class LinkService:
         if not link or link.link_embedding is None:
             return []
 
-        similar_links = self.link_repository.get_similar_links(link=link)
+        similar_links = self.link_repository.get_similar_links(link=link, limit=size)
         return [LinkResponse.from_orm(link) for link in similar_links]

@@ -12,6 +12,8 @@ class LinkResponse(BaseModel):
     title: Optional[str]
     description: Optional[str]
     tags: List[TagResponse] = []
+    created_by_user_id: int
+    created_by_username: str
 
     class Config:
         from_attributes = True

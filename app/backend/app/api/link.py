@@ -17,6 +17,7 @@ from api.session_utils import get_user_id_from_session
 
 router = APIRouter(prefix="/links")
 
+
 @router.get("/", response_model=SearchLinkResponse)
 def search_links(
     service: Annotated[LinkService, Depends(get_di_link_service)],
@@ -50,6 +51,7 @@ def search_links(
         size=size,
     )
 
+
 @router.get("/my", response_model=Page[LinkResponse])
 def get_my_links(
     request: Request,
@@ -82,6 +84,7 @@ def get_link_detail(
 @router.get("/{link_id}/similar", response_model=list[LinkResponse])
 def get_similar_links(
     link_id: str,
+    size: Annotated[int, Query(ge=1, le=100)],
     service: Annotated[LinkService, Depends(get_di_link_service)],
 ):
     """
@@ -90,7 +93,7 @@ def get_similar_links(
     if not service.get_link(link_id):
         raise HTTPException(status_code=404, detail="Link not found")
 
-    similar_links = service.get_similar_links(link_id)
+    similar_links = service.get_similar_links(link_id, size)
     return similar_links
 
 
