@@ -8,6 +8,8 @@ from schemas.user import (
     UserLinkHistoryGroup,
     UserLinkHistoryItem,
     UserLinkHistoryResponse,
+    UserResponse,
+    UserSimilarResponse
 )
 from sqlalchemy.exc import IntegrityError
 
@@ -72,6 +74,25 @@ class UserService:
             raise ValueError("invalid credentials") from e
 
         return valid_user
+
+    def get_top_similar_users(self, user_id: int, count: int = 5):
+        user_embedding = self.user_repository.get_user_embedding(user_id)
+
+        if user_embedding is None:
+            return UserSimilarResponse(similar_users=[])
+
+        raw_result = self.user_repository.get_similar_users(
+            user_embedding,
+            user_id,
+            count,
+        )
+
+        similar_users = [
+            UserResponse(user_id=row.user_id, username=row.username)
+            for row in raw_result
+        ]
+
+        return UserSimilarResponse(similar_users=similar_users)
 
 
 class UserLinkHistoryService:
