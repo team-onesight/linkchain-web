@@ -6,29 +6,6 @@ import type {
   SearchLinksResponse,
 } from "@/model/link/type";
 
-type GroupByType = "date" | "tag" | "trending";
-
-const fetchLinks = async ({
-  q,
-  tag,
-  user_id,
-  group_by,
-}: {
-  q?: string | null;
-  tag?: string | null;
-  user_id?: number | null;
-  group_by?: GroupByType;
-}): Promise<LinksGroup[]> => {
-  console.log("Fetching links v2 with groupBy:", q, tag, user_id, group_by);
-  const response = await fetch("/mocks/links.json", {
-    method: "GET",
-  });
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
-  }
-  return (await response.json()) as LinksGroup[];
-};
-
 const searchLinks = async ({
   query,
   tag,
@@ -113,4 +90,14 @@ const fetchMyLinks = async (
   return (await response.json()) as MyLinksResponse;
 };
 
-export { fetchLink, fetchLinks, postLinkView, postLink, fetchMyLinks, searchLinks };
+const fetchLinkGroups = async () => {
+  const response = await fetch("/api/v1/groups");
+
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+
+  return (await response.json()) as LinksGroup[];
+};
+
+export { fetchLink, postLinkView, postLink, fetchMyLinks, searchLinks, fetchLinkGroups };

@@ -1,4 +1,4 @@
-import { useCreateLink, useLinks } from "@/hooks/useLinks";
+import { useCreateLink, useSearchLinks } from "@/hooks/useLinks";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
@@ -9,9 +9,8 @@ interface RelatedLinksProps {
 }
 
 export const RelatedLinks = ({ currentLinkId }: RelatedLinksProps) => {
-  const { query, concat_groups } = useLinks({
-    link_id: currentLinkId,
-  });
+  console.log(currentLinkId);
+  const query = useSearchLinks({});
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
     visible: { y: 0, opacity: 1 },
@@ -26,18 +25,13 @@ export const RelatedLinks = ({ currentLinkId }: RelatedLinksProps) => {
     return <RelatedLinksSkeleton />;
   }
 
-  const relatedLinks = concat_groups()?.filter((l) => l.link_id !== currentLinkId) || [];
-  if (relatedLinks.length === 0) {
-    return null;
-  }
-
   return (
     <>
       <Separator className='my-12' />
       <div>
         <h2 className='text-2xl font-bold mb-4'>Related Links</h2>
         <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
-          {relatedLinks.map((link) => (
+          {query.data?.items.map((link) => (
             <motion.div key={link.link_id} variants={itemVariants}>
               <LinkCard link={link} onBookmark={handleBookmark} />
             </motion.div>

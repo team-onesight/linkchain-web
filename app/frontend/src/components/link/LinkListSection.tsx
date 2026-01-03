@@ -27,7 +27,7 @@ export const LinkListSection = ({ linksGroup }: { linksGroup: LinksGroup }) => {
         whileInView='visible'
         viewport={{ once: true }}
       >
-        {linksGroup.links.map((link) => {
+        {linksGroup.items.map((link) => {
           return (
             <motion.div key={link.link_id} variants={itemVariants}>
               <LinkCard link={link} />
