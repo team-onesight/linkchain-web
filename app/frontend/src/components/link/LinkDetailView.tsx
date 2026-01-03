@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Bookmark, ExternalLink } from "lucide-react";
-import * as AspectRatio from "@radix-ui/react-aspect-ratio";
+import { Bookmark, ExternalLink, Tag as TagIcon, FileText } from "lucide-react";
 import type { LinkItem } from "@/model/link/type";
 import { useCreateLink } from "@/hooks/useLinks.ts";
 
@@ -11,66 +10,90 @@ interface LinkDetailViewProps {
 
 export function LinkDetailView({ link }: LinkDetailViewProps) {
   const { mutate: createLink, isPending: isCreatingLink } = useCreateLink();
+
   const handleBookmark = () => {
     createLink(link.url);
   };
 
-  return (
-    <div className='mx-auto'>
-      <h1 className='text-3xl md:text-4xl font-bold mb-4'>{link.title || "제목을 찾는 중..."}</h1>
+  const hasTags = link.tags && link.tags.length > 0;
+  const hasDescription = link.description && link.description.length > 0;
 
-      <div className='flex items-center gap-4 mb-6 text-muted-foreground text-sm'>
+  return (
+    <div className='mx-auto w-full max-w-3xl'>
+      <h1 className='text-3xl md:text-4xl font-bold mb-6 text-gray-900 dark:text-gray-50 leading-tight'>
+        {link.title || "제목 없음"}
+      </h1>
+
+      <div className='flex flex-col sm:flex-row sm:items-center gap-4 mb-8 pb-8 border-b border-gray-100 dark:border-gray-800'>
         <a
           href={link.url}
           target='_blank'
           rel='noopener noreferrer'
-          className='truncate underline underline-offset-2 hover:text-primary'
+          className='text-sm text-muted-foreground truncate underline underline-offset-4 hover:text-primary transition-colors max-w-full sm:max-w-md'
         >
           {link.url}
         </a>
-        <div className='flex items-center gap-2 ml-auto mr-1'>
+
+        <div className='flex items-center gap-2 sm:ml-auto'>
           <Button
             variant='outline'
-            size='icon'
-            className='h-8 w-8'
+            size='sm'
+            className='gap-2'
             onClick={handleBookmark}
             disabled={isCreatingLink}
           >
             <Bookmark className='h-4 w-4' />
+            {isCreatingLink ? "저장 중..." : "북마크"}
           </Button>
           <a href={link.url} target='_blank' rel='noopener noreferrer'>
-            <Button variant='outline' size='icon' className='h-8 w-8'>
+            <Button variant='secondary' size='sm' className='gap-2'>
               <ExternalLink className='h-4 w-4' />
+              방문하기
             </Button>
           </a>
         </div>
       </div>
 
-      <p className='text-base text-gray-700 mb-6'>{link.description || "설명을 찾는 중..."}</p>
-
-      <div className='space-y-4 mb-8'>
-        <h3 className='text-sm font-semibold'>TAGs</h3>
-        <div className='flex flex-wrap gap-2'>
-          {link.tags.map((tag) => (
-            <Badge key={tag.tag_id} variant='secondary' className='pl-3 pr-1 py-1 text-sm'>
-              {tag.tag_name}
-              <button className='ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-muted-foreground/20 p-0.5'></button>
-            </Badge>
-          ))}
-        </div>
+      <div className='mb-10'>
+        <h3 className='text-lg font-semibold mb-3 flex items-center gap-2'>
+          <FileText className='w-4 h-4 text-gray-400' />
+          Description
+        </h3>
+        {hasDescription ? (
+          <p className='text-base leading-relaxed text-gray-700 dark:text-gray-300'>
+            {link.description}
+          </p>
+        ) : (
+          <div className='p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-dashed text-sm text-muted-foreground'>
+            제공된 설명이 없습니다.
+          </div>
+        )}
       </div>
 
-      <AspectRatio.Root ratio={16 / 9} className='bg-muted rounded-lg border'>
-        <iframe
-          src={link.url}
-          className='w-full h-full rounded-lg'
-          title={link.title}
-          sandbox='allow-scripts allow-same-origin'
-        />
-      </AspectRatio.Root>
-      <p className='text-xs text-center text-muted-foreground mt-2'>
-        Note: Some websites may not be available for preview.
-      </p>
+      <div className='space-y-4'>
+        <h3 className='text-lg font-semibold flex items-center gap-2'>
+          <TagIcon className='w-4 h-4 text-gray-400' />
+          Tags
+        </h3>
+
+        {hasTags ? (
+          <div className='flex flex-wrap gap-2'>
+            {link.tags.map((tag) => (
+              <Badge
+                key={tag.tag_id}
+                variant='secondary'
+                className='px-3 py-1.5 text-sm font-normal hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors'
+              >
+                #{tag.tag_name}
+              </Badge>
+            ))}
+          </div>
+        ) : (
+          <div className='text-sm text-muted-foreground flex items-center gap-2'>
+            등록된 태그가 없습니다.
+          </div>
+        )}
+      </div>
     </div>
   );
 }

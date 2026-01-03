@@ -100,4 +100,21 @@ const fetchLinkGroups = async () => {
   return (await response.json()) as LinksGroup[];
 };
 
-export { fetchLink, postLinkView, postLink, fetchMyLinks, searchLinks, fetchLinkGroups };
+const fetchSimilarLinks = async (link_id: string, size: number = 10) => {
+  const response = await fetch(`/api/v1/links/${link_id}/similar?size=${size}`);
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+
+  return (await response.json()) as LinkItem[];
+};
+
+export {
+  fetchLink,
+  postLinkView,
+  postLink,
+  fetchMyLinks,
+  searchLinks,
+  fetchLinkGroups,
+  fetchSimilarLinks,
+};

@@ -4,8 +4,8 @@ from typing import Annotated, Callable
 from db.session import SessionLocal
 from fastapi import Depends, HTTPException, Request
 from repositories.link import LinkRepository
-from repositories.link_history import LinkHistoryRepository
 from repositories.link_group import LinkGroupRepository
+from repositories.link_history import LinkHistoryRepository
 from repositories.link_user_map import LinkUserMapRepository
 from repositories.tag import TagRepository
 from repositories.user import UserRepository

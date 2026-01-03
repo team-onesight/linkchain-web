@@ -1,10 +1,9 @@
-from typing import Optional, List
-
-from sqlalchemy import select, func
-from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session
+from typing import List, Optional
 
 from models.user import User
+from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session
 
 
 class UserRepository:

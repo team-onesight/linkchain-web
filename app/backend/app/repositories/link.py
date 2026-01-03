@@ -89,12 +89,7 @@ class LinkRepository:
         total_count = query.count()
 
         offset = (page - 1) * size
-        links = (
-            query.order_by(desc(Link.created_at))
-            .offset(offset)
-            .limit(size)
-            .all()
-        )
+        links = query.order_by(desc(Link.created_at)).offset(offset).limit(size).all()
 
         return links, total_count
 
@@ -130,11 +125,29 @@ class LinkRepository:
         total_count = query.count()
 
         offset = (page - 1) * size
-        links = (
-            query.order_by(desc(Link.created_at))
-            .offset(offset)
-            .limit(size)
-            .all()
-        )
+        links = query.order_by(desc(Link.created_at)).offset(offset).limit(size).all()
 
         return links, total_count
+
+    def get_similar_links(self, link: Link, limit: int = 10):
+        """
+        주어진 링크와 유사한 링크를 반환합니다.
+
+        :param self:
+        :param link: 원본 링크
+        :type link: Link
+        :param limit: 반환할 링크 수
+        :type limit: int
+        :return: 유사한 링크 리스트
+        :rtype: list[Link]
+        """
+        if link.link_embedding is None:
+            return []
+
+        return (
+            self.db.query(Link)
+            .filter(Link.link_id != link.link_id)
+            .order_by(Link.link_embedding.cosine_distance(link.link_embedding))
+            .limit(limit)
+            .all()
+        )

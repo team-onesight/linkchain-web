@@ -1,11 +1,9 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Request
-
 from core.deps import get_di_link_group_service
+from fastapi import APIRouter, Depends
 from schemas.link_group import GroupResponse
 from services.link_group import GroupService
-
 
 router = APIRouter(prefix="/groups")
 
