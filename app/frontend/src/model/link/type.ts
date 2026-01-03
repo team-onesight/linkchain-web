@@ -27,9 +27,16 @@ interface MyLinksResponse {
   has_more: boolean;
 }
 
+interface SearchLinksResponse {
+  items: LinkItem[];
+  total: number;
+  page: number;
+  size: number;
+  total_pages: number;
+}
 
 interface PostLinkRequest {
   url: string;
 }
 
-export type {LinkItem, LinkType, LinksGroup, PostLinkRequest, MyLinksResponse};
+export type {LinkItem, LinkType, LinksGroup, PostLinkRequest, MyLinksResponse, SearchLinksResponse};
