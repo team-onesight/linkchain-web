@@ -6,6 +6,7 @@ from schemas.common import Page
 from schemas.link import (
     CreateLinkRequest,
     CreateLinkResponse,
+    LinkDetailResponse,
     LinkResponse,
     LinkViewRegisterResponse,
     SearchLinkResponse,
@@ -15,6 +16,7 @@ from services.link import LinkService
 from api.session_utils import get_user_id_from_session
 
 router = APIRouter(prefix="/links")
+
 
 @router.get("/", response_model=SearchLinkResponse)
 def search_links(
@@ -49,6 +51,7 @@ def search_links(
         size=size,
     )
 
+
 @router.get("/my", response_model=Page[LinkResponse])
 def get_my_links(
     request: Request,
@@ -62,20 +65,36 @@ def get_my_links(
     return service.get_links(user_id, cursor, size)
 
 
-@router.get("/{link_id}", response_model=LinkResponse)
-def read_link(
+@router.get("/{link_id}", response_model=LinkDetailResponse)
+def get_link_detail(
     link_id: str,
     service: Annotated[LinkService, Depends(get_di_link_service)],
 ):
     if not link_id:
         raise HTTPException(status_code=400, detail="Invalid link")
 
-    link = service.get_link(int(link_id))
+    link = service.get_link(link_id)
 
     if not link:
         raise HTTPException(status_code=404, detail="Link not found")
 
     return link
+
+
+@router.get("/{link_id}/similar", response_model=list[LinkResponse])
+def get_similar_links(
+    link_id: str,
+    size: Annotated[int, Query(ge=1, le=100)],
+    service: Annotated[LinkService, Depends(get_di_link_service)],
+):
+    """
+    주어진 링크와 유사한 링크 목록을 반환합니다.
+    """
+    if not service.get_link(link_id):
+        raise HTTPException(status_code=404, detail="Link not found")
+
+    similar_links = service.get_similar_links(link_id, size)
+    return similar_links
 
 
 @router.post("/{link_id}/view", response_model=LinkViewRegisterResponse)

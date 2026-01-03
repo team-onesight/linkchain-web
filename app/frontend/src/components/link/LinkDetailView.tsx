@@ -1,106 +1,99 @@
-import {useState} from "react";
-import {Button} from "@/components/ui/button";
-import {Badge} from "@/components/ui/badge";
-import {Bookmark, ExternalLink, X} from "lucide-react";
-import * as AspectRatio from "@radix-ui/react-aspect-ratio";
-import {Input} from "@/components/ui/input";
-import type {LinkItem} from "@/model/link/type";
-import {toast} from "sonner";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Bookmark, ExternalLink, Tag as TagIcon, FileText } from "lucide-react";
+import type { LinkItem } from "@/model/link/type";
+import { useCreateLink } from "@/hooks/useLinks.ts";
 
 interface LinkDetailViewProps {
   link: LinkItem;
 }
 
-export function LinkDetailView({link}: LinkDetailViewProps) {
-  const [currentTags, setCurrentTags] = useState<string[]>(link.tags.map((tag) => tag.tag_name));
+export function LinkDetailView({ link }: LinkDetailViewProps) {
+  const { mutate: createLink, isPending: isCreatingLink } = useCreateLink();
 
   const handleBookmark = () => {
-    toast("is bookmarked", {
-      description: "The link has been added to your bookmarks.",
-      position: "top-center",
-      action: {
-        label: "Undo",
-
-        onClick: () => console.log("Undo"),
-      },
-    });
+    createLink(link.url);
   };
 
-  const handleAddTag = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const newTag = (e.currentTarget.elements.namedItem("newTag") as HTMLInputElement).value;
-    if (newTag && !currentTags.includes(newTag)) {
-      setCurrentTags([...currentTags, newTag]);
-      e.currentTarget.reset();
-    }
-  };
-
-  const handleDeleteTag = (tagToDelete: string) => {
-    setCurrentTags(currentTags.filter((tag) => tag !== tagToDelete));
-  };
+  const hasTags = link.tags && link.tags.length > 0;
+  const hasDescription = link.description && link.description.length > 0;
 
   return (
-    <div className='mx-auto'>
-      <h1 className='text-3xl md:text-4xl font-bold mb-4'>{link.title}</h1>
+    <div className='mx-auto w-full max-w-3xl'>
+      <h1 className='text-3xl md:text-4xl font-bold mb-6 text-gray-900 dark:text-gray-50 leading-tight'>
+        {link.title || "제목 없음"}
+      </h1>
 
-      <div className='flex items-center gap-4 mb-6 text-muted-foreground text-sm'>
+      <div className='flex flex-col sm:flex-row sm:items-center gap-4 mb-8 pb-8 border-b border-gray-100 dark:border-gray-800'>
         <a
           href={link.url}
           target='_blank'
           rel='noopener noreferrer'
-          className='truncate underline underline-offset-2 hover:text-primary'
+          className='text-sm text-muted-foreground truncate underline underline-offset-4 hover:text-primary transition-colors max-w-full sm:max-w-md'
         >
           {link.url}
         </a>
-        <div className='flex items-center gap-2 ml-auto mr-1'>
-          <Button variant='outline' size='icon' className='h-8 w-8' onClick={handleBookmark}>
-            <Bookmark className='h-4 w-4'/>
+
+        <div className='flex items-center gap-2 sm:ml-auto'>
+          <Button
+            variant='outline'
+            size='sm'
+            className='gap-2'
+            onClick={handleBookmark}
+            disabled={isCreatingLink}
+          >
+            <Bookmark className='h-4 w-4' />
+            {isCreatingLink ? "저장 중..." : "북마크"}
           </Button>
           <a href={link.url} target='_blank' rel='noopener noreferrer'>
-            <Button variant='outline' size='icon' className='h-8 w-8'>
-              <ExternalLink className='h-4 w-4'/>
+            <Button variant='secondary' size='sm' className='gap-2'>
+              <ExternalLink className='h-4 w-4' />
+              방문하기
             </Button>
           </a>
         </div>
       </div>
 
-      <p className='text-base text-gray-700 mb-6'>{link.description}</p>
-
-      <div className='space-y-4 mb-8'>
-        <h3 className='text-sm font-semibold text-muted-foreground'>TAGS</h3>
-        <div className='flex flex-wrap gap-2'>
-          {currentTags.map((tag) => (
-            <Badge key={tag} variant='secondary' className='pl-3 pr-1 py-1 text-sm'>
-              {tag}
-              <button
-                onClick={() => handleDeleteTag(tag)}
-                className='ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-muted-foreground/20 p-0.5'
-              >
-                <X className='h-3 w-3'/>
-                <span className='sr-only'>Remove {tag}</span>
-              </button>
-            </Badge>
-          ))}
-        </div>
-        <form onSubmit={handleAddTag} className='flex items-center gap-2'>
-          <Input name='newTag' placeholder='Add a new tag...' className='h-8'/>
-          <Button type='submit' size='sm'>
-            Add
-          </Button>
-        </form>
+      <div className='mb-10'>
+        <h3 className='text-lg font-semibold mb-3 flex items-center gap-2'>
+          <FileText className='w-4 h-4 text-gray-400' />
+          Description
+        </h3>
+        {hasDescription ? (
+          <p className='text-base leading-relaxed text-gray-700 dark:text-gray-300'>
+            {link.description}
+          </p>
+        ) : (
+          <div className='p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-dashed text-sm text-muted-foreground'>
+            제공된 설명이 없습니다.
+          </div>
+        )}
       </div>
 
-      <AspectRatio.Root ratio={16 / 9} className='bg-muted rounded-lg border'>
-        <iframe
-          src={link.url}
-          className='w-full h-full rounded-lg'
-          title={link.title}
-          sandbox='allow-scripts allow-same-origin'
-        />
-      </AspectRatio.Root>
-      <p className='text-xs text-center text-muted-foreground mt-2'>
-        Note: Some websites may not be available for preview.
-      </p>
+      <div className='space-y-4'>
+        <h3 className='text-lg font-semibold flex items-center gap-2'>
+          <TagIcon className='w-4 h-4 text-gray-400' />
+          Tags
+        </h3>
+
+        {hasTags ? (
+          <div className='flex flex-wrap gap-2'>
+            {link.tags.map((tag) => (
+              <Badge
+                key={tag.tag_id}
+                variant='secondary'
+                className='px-3 py-1.5 text-sm font-normal hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors'
+              >
+                #{tag.tag_name}
+              </Badge>
+            ))}
+          </div>
+        ) : (
+          <div className='text-sm text-muted-foreground flex items-center gap-2'>
+            등록된 태그가 없습니다.
+          </div>
+        )}
+      </div>
     </div>
   );
 }

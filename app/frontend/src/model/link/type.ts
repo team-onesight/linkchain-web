@@ -1,24 +1,21 @@
-import type {Tag} from "../tag/type";
-
-type LinkType = "News" | "Blog" | "Video" | "Default";
+import type { Tag } from "../tag/type";
 
 interface LinksGroup {
-  name: string;
+  group_title: string;
   description?: string;
-  links: LinkItem[];
+  items: LinkItem[];
 }
 
 interface LinkItem {
-  id: string // deprecated, use link_id instead
   link_id: string;
-  userId?: string;
   url: string;
   imageUrl: string;
   title: string;
   description: string;
+  views: number;
+  created_by_user_id?: number;
+  created_by_username?: string;
   tags: Tag[];
-  created_at: string;
-  linkType: LinkType;
 }
 
 interface MyLinksResponse {
@@ -27,9 +24,16 @@ interface MyLinksResponse {
   has_more: boolean;
 }
 
-
 interface PostLinkRequest {
   url: string;
 }
 
-export type {LinkItem, LinkType, LinksGroup, PostLinkRequest, MyLinksResponse};
+interface SearchLinksResponse {
+  items: LinkItem[];
+  total: number;
+  page: number;
+  size: number;
+  total_pages: number;
+}
+
+export type { LinkItem, LinksGroup, PostLinkRequest, MyLinksResponse, SearchLinksResponse };

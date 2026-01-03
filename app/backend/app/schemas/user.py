@@ -72,3 +72,6 @@ class UserLinkHistoryResponse(BaseModel):
 
 class UsernameAvailabilityResponse(BaseModel):
     available: bool
+
+class UserSimilarResponse(BaseModel):
+    similar_users: list[UserResponse]

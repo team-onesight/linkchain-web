@@ -1,59 +1,84 @@
-import { useLinks } from "@/hooks/useLinks";
+import { useCreateLink } from "@/hooks/useLinks";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getLinkCardComponent } from "@/components/link/LinkCardFactory";
 import { motion } from "framer-motion";
+import { LinkCard } from "@components/link/card/LinkCard.tsx";
+import { useSimilarLinks } from "@/hooks/useSimilarLinks.ts";
+import { SearchX } from "lucide-react";
 
 interface RelatedLinksProps {
   currentLinkId: string;
 }
 
 export const RelatedLinks = ({ currentLinkId }: RelatedLinksProps) => {
-  const { query, concat_groups } = useLinks({
-    link_id: currentLinkId,
-  });
+  const query = useSimilarLinks(currentLinkId, 10);
+
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
     visible: { y: 0, opacity: 1 },
+  };
+
+  const { mutate: createLink } = useCreateLink();
+  const handleBookmark = (url: string) => {
+    createLink(url);
   };
 
   if (query.isLoading) {
     return <RelatedLinksSkeleton />;
   }
 
-  const relatedLinks = concat_groups()?.filter((l) => l.id !== currentLinkId) || [];
-  if (relatedLinks.length === 0) {
-    return null;
-  }
+  const hasLinks = query.data && query.data.length > 0;
 
   return (
     <>
-      <Separator className="my-12" />
-      <div>
-        <h2 className="text-2xl font-bold mb-4">Related Links</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {relatedLinks.map((link) => {
-            const CardComponent = getLinkCardComponent(link.linkType);
-            return (
-              <motion.div key={link.id} variants={itemVariants}>
-                <CardComponent link={link} />
+      <Separator className='my-12' />
+      <section>
+        <h2 className='text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100'>Related Links</h2>
+
+        {hasLinks ? (
+          <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+            {query.data?.map((link) => (
+              <motion.div
+                key={link.link_id}
+                variants={itemVariants}
+                initial='hidden'
+                whileInView='visible'
+                viewport={{ once: true }}
+              >
+                <LinkCard link={link} onBookmark={handleBookmark} />
               </motion.div>
-            );
-          })}
-        </div>
-      </div>
+            ))}
+          </div>
+        ) : (
+          <NoLinksFeedback />
+        )}
+      </section>
     </>
   );
 };
 
+const NoLinksFeedback = () => (
+  <div className='flex flex-col items-center justify-center py-16 px-4 text-center bg-gray-50/50 dark:bg-gray-900/50 border border-dashed border-gray-200 dark:border-gray-800 rounded-xl'>
+    <div className='p-3 bg-gray-100 dark:bg-gray-800 rounded-full mb-4'>
+      <SearchX className='w-6 h-6 text-gray-400' />
+    </div>
+    <h3 className='text-base font-medium text-gray-900 dark:text-gray-100'>
+      관련된 링크를 찾을 수 없어요
+    </h3>
+    <p className='text-sm text-gray-500 mt-1 max-w-xs'>
+      아직 이 링크와 유사한 콘텐츠가 수집되지 않았습니다.
+    </p>
+  </div>
+);
+
 const RelatedLinksSkeleton = () => (
   <>
-    <Separator className="my-12" />
+    <Separator className='my-12' />
     <div>
-      <Skeleton className="h-8 w-48 mb-4" />
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Skeleton className="h-36" />
-        <Skeleton className="h-36" />
+      <Skeleton className='h-8 w-48 mb-6' />
+      <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+        <Skeleton className='h-36 rounded-xl' />
+        <Skeleton className='h-36 rounded-xl' />
       </div>
     </div>
   </>

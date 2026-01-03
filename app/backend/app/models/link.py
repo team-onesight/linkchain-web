@@ -1,10 +1,10 @@
 import uuid
 
 from db.base import Base
+from pgvector.sqlalchemy import Vector
 from sqlalchemy import Column, DateTime, Integer, String, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
-from utils.vector import VECTOR
 
 
 class Link(Base):
@@ -15,10 +15,15 @@ class Link(Base):
     url = Column(String, nullable=False)
     title = Column(String, nullable=True)
     description = Column(String, nullable=True)
+    image_url = Column(String, nullable=True)
     views = Column(Integer, default=0)
-    created_by_user_id = Column(Integer, nullable=True) # user_id 기본값 입력 안됨, NULL 허용 # noqa: E501
-    created_by_username = Column(String, nullable=True) # 위와 같음. NULL 허용으로 crawler 여부 판단 # noqa: E501
-    link_embedding = Column(VECTOR(768), nullable=True)
+    created_by_user_id = Column(
+        Integer, nullable=True
+    )  # user_id 기본값 입력 안됨, NULL 허용 # noqa: E501
+    created_by_username = Column(
+        String, nullable=True
+    )  # 위와 같음. NULL 허용으로 crawler 여부 판단 # noqa: E501
+    link_embedding = Column(Vector(768), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     tags = relationship("Tag", secondary="public.link_tag_map", back_populates="links")
 

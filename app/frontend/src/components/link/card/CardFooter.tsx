@@ -4,9 +4,14 @@ import { CardFooter } from "@/components/ui/card";
 import type { LinkItem } from "@/model/link/type";
 import { Bookmark, ExternalLink } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 
-const LinkCardFooter = ({ link }: { link: LinkItem }) => {
+const LinkCardFooter = ({
+  link,
+  onBookmark,
+}: {
+  link: LinkItem;
+  onBookmark?: (url: string) => void;
+}) => {
   const navigate = useNavigate();
   const handleTagClick = (e: React.MouseEvent, tagName: string) => {
     e.stopPropagation();
@@ -15,15 +20,13 @@ const LinkCardFooter = ({ link }: { link: LinkItem }) => {
   };
   const handleBookmark = (e: React.MouseEvent) => {
     e.stopPropagation();
-    toast("is bookmarked", {
-      description: "The link has been added to your bookmarks.",
-      position: "top-center",
-      action: {
-        label: "Undo",
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    onBookmark && onBookmark(link?.url);
+  };
 
-        onClick: () => console.log("Undo"),
-      },
-    });
+  const handleUser = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/users/${link.created_by_user_id}/links`);
   };
 
   const handleExternalLinkClick = (e: React.MouseEvent) => {
@@ -46,11 +49,28 @@ const LinkCardFooter = ({ link }: { link: LinkItem }) => {
           ))}
         </div>
       )}
-      <div className='flex flex-row flex-nowrap gap-1'>
-        <Button variant='outline' size='icon' className='h-8 w-8 cursor-pointer' onClick={handleBookmark}>
-          <Bookmark className='h-5 w-5' />
-        </Button>
-        <Button variant='outline' size='icon' className='h-8 w-8 cursor-pointer' onClick={handleExternalLinkClick}>
+      <div className='flex flex-row flex-nowrap gap-1 w-full'>
+        {link.created_by_username && link.created_by_user_id && (
+          <Badge variant='outline' className='h-8 cursor-pointer mr-auto ml-2' onClick={handleUser}>
+            작성자: {link.created_by_username}
+          </Badge>
+        )}
+        {onBookmark && (
+          <Button
+            variant='outline'
+            size='icon'
+            className='h-8 w-8 cursor-pointer'
+            onClick={handleBookmark}
+          >
+            <Bookmark className='h-5 w-5' />
+          </Button>
+        )}
+        <Button
+          variant='outline'
+          size='icon'
+          className='h-8 w-8 cursor-pointer'
+          onClick={handleExternalLinkClick}
+        >
           <ExternalLink className='h-5 w-5' />
         </Button>
       </div>

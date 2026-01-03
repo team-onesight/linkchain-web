@@ -12,9 +12,26 @@ class LinkResponse(BaseModel):
     title: Optional[str]
     description: Optional[str]
     tags: List[TagResponse] = []
+    created_by_user_id: int
+    created_by_username: str
 
     class Config:
         from_attributes = True
+
+
+class LinkDetailResponse(BaseModel):
+    link_id: UUID
+    url: str
+    title: Optional[str]
+    description: Optional[str]
+    views: int
+    created_by_user_id: int
+    created_by_username: str
+    tags: List[TagResponse] = []
+
+    class Config:
+        from_attributes = True
+
 
 class LinkViewRegisterResponse(BaseModel):
     message: str
@@ -25,6 +42,7 @@ class LinkViewRegisterResponse(BaseModel):
 
 class CreateLinkRequest(BaseModel):
     url: str
+
 
 class CreateLinkResponse(BaseModel):
     link_id: str

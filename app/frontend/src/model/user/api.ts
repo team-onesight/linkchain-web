@@ -1,4 +1,9 @@
-import type { User, UserLinksResponse, UserLinkHistoryResponse } from "@/model/user/type";
+import type {
+  User,
+  UserLinksResponse,
+  UserLinkHistoryResponse,
+  UserSimilarResponse,
+} from "@/model/user/type";
 
 const usersAPI = async (): Promise<User[]> => {
   const response = await fetch("/mocks/users.json");
@@ -26,6 +31,7 @@ const fetchUserLinks = async (
 ): Promise<UserLinksResponse> => {
   const params = new URLSearchParams();
   params.append("size", size.toString());
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   cursor && params.append("cursor", cursor.toString());
 
   const response = await fetch(`/api/v1/users/${user_id}/links?${params.toString()}`);
@@ -49,4 +55,13 @@ const fetchMyLinkHistory = async () => {
   return (await response.json()) as UserLinkHistoryResponse;
 };
 
-export { usersAPI, fetchUser, fetchUserLinks, fetchMyLinkHistory };
+const fetchSimilarUsers = async (count: number = 3) => {
+  const response = await fetch(`/api/v1/users/similar?count=${count}`);
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+
+  return (await response.json()) as UserSimilarResponse;
+};
+
+export { usersAPI, fetchUser, fetchUserLinks, fetchMyLinkHistory, fetchSimilarUsers };

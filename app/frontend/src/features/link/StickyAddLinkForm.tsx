@@ -1,19 +1,19 @@
 "use client";
 
-import {Button} from "@/components/ui/button";
-import {Input} from "@/components/ui/input";
-import {useScrollDirection} from "@/hooks/use-scroll-direction";
-import {cn} from "@/lib/utils";
-import {useUiStore} from "@/store/ui-store";
-import {Link2} from "lucide-react";
-import {toast} from "sonner";
-import {useCreateLink} from "@/hooks/useLinks";
-import {useNavigate} from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useScrollDirection } from "@/hooks/use-scroll-direction";
+import { cn } from "@/lib/utils";
+import { useUiStore } from "@/store/ui-store";
+import { Link2 } from "lucide-react";
+import { toast } from "sonner";
+import { useCreateLink } from "@/hooks/useLinks";
+import { useNavigate } from "react-router-dom";
 
 export const StickyAddLinkForm = () => {
   const scrollDir = useScrollDirection();
-  const {isInputFocused, setInputFocused, setInputBlurred} = useUiStore();
-  const {mutate: createLink, isPending: isCreatingLink} = useCreateLink();
+  const { isInputFocused, setInputFocused, setInputBlurred } = useUiStore();
+  const { mutate: createLink, isPending: isCreatingLink } = useCreateLink();
   const navigate = useNavigate(); // Initialize useNavigate
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -28,14 +28,7 @@ export const StickyAddLinkForm = () => {
     }
 
     createLink(url, {
-      onSuccess: () => {
-        toast.success("Link added", {
-          description: "Your link has been successfully added.",
-          position: "top-center",
-        });
-        form.reset();
-      },
-      onError: (error: any) => {
+      onError: (error: Error) => {
         if (error.cause === 401) {
           toast.error("Login Required", {
             description: "Please log in to access feature !",
@@ -65,7 +58,7 @@ export const StickyAddLinkForm = () => {
       )}
     >
       <form onSubmit={handleSubmit} className='flex items-center gap-2'>
-        <Link2 className='h-5 w-5 text-gray-400'/>
+        <Link2 className='h-5 w-5 text-gray-400' />
         <Input
           name='url'
           placeholder='https://...'

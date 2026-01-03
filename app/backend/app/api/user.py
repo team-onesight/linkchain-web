@@ -1,6 +1,7 @@
 from typing import Annotated, Optional
 
 from core.deps import (
+    get_current_user_from_session,
     get_di_link_service,
     get_di_user_link_history_service,
     get_di_user_service,
@@ -12,6 +13,7 @@ from schemas.user import (
     UserLinkHistoryResponse,
     UsernameAvailabilityResponse,
     UserResponse,
+    UserSimilarResponse,
 )
 from services.link import LinkService
 from services.user import UserLinkHistoryService, UserService
@@ -39,6 +41,20 @@ def get_user_link_histories(
     user_link_history_response = service.get_user_link_history(user_id)
 
     return user_link_history_response
+
+
+@router.get("/similar", response_model=UserSimilarResponse)
+def get_similar_users(
+    current_user: Annotated[dict, Depends(get_current_user_from_session)],
+    service: Annotated[UserService, Depends(get_di_user_service)],
+    count: int = Query(3, ge=1, le=5),  # /similar?count=2
+):
+    current_user_id = current_user["user_id"]
+    similar_users = service.get_top_similar_users(
+        user_id=current_user_id,
+        count=count,
+    )
+    return similar_users
 
 
 @router.get("/{user_id}", response_model=UserResponse)

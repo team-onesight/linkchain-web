@@ -30,10 +30,18 @@ interface UserLinkHistoryItem {
   created_at: string;
 }
 
+interface UserSimilarResponse {
+  similar_users: {
+    user_id: number;
+    username: string;
+  }[];
+}
+
 export type {
   User,
   UserLinkHistoryGroup,
   UserLinkHistoryResponse,
   UserLinksResponse,
   UserLinkHistoryItem,
+  UserSimilarResponse,
 };

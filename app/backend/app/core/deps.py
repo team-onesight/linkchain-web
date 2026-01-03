@@ -4,11 +4,13 @@ from typing import Annotated, Callable
 from db.session import SessionLocal
 from fastapi import Depends, HTTPException, Request
 from repositories.link import LinkRepository
+from repositories.link_group import LinkGroupRepository
 from repositories.link_history import LinkHistoryRepository
 from repositories.link_user_map import LinkUserMapRepository
 from repositories.tag import TagRepository
 from repositories.user import UserRepository
 from services.link import LinkService
+from services.link_group import GroupService
 from services.tag import TagService
 from services.user import UserLinkHistoryService, UserService
 from sqlalchemy.orm import Session
@@ -57,6 +59,14 @@ def get_di_user_link_history_service(db: Annotated[Session, Depends(get_db)]) ->
     """
     link_history_repository = LinkHistoryRepository(db)
     return UserLinkHistoryService(link_history_repository)
+
+
+def get_di_link_group_service(db: Annotated[Session, Depends(get_db)]) -> GroupService:
+    """
+    GroupService 의존성 주입 메소드
+    """
+    link_group_repository = LinkGroupRepository(db)
+    return GroupService(link_group_repository)
 
 
 def get_user_session(request: Request) -> Callable:

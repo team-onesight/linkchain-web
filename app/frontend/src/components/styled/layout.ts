@@ -9,7 +9,8 @@ export const PageContainer = styled.div`
 `;
 
 export const SectionContainer = styled.section`
-  width: 100%;
+  width: 100vw;
+  max-width: 600px;
   padding: 2.5rem 1rem;
   box-sizing: border-box;
 

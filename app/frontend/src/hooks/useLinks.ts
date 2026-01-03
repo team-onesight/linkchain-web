@@ -1,14 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchLink, fetchLinks, postLink, postLinkView } from "@/model/link/api";
-
-interface UseLinksParams {
-  q?: string | null;
-  tag?: string | null;
-  link_id?: string | null;
-  group_name?: string | null;
-  group_by?: "date" | "tag" | "trending";
-  user_id?: number | null;
-}
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+import { fetchLink, postLink, postLinkView, searchLinks } from "@/model/link/api";
 
 export const useLink = (id: string | undefined) => {
   return useQuery({
@@ -18,36 +11,6 @@ export const useLink = (id: string | undefined) => {
     retry: 1,
     refetchOnWindowFocus: false,
   });
-};
-
-export const useLinks = ({
-  q,
-  tag,
-  link_id,
-  user_id,
-  group_name,
-  group_by,
-}: UseLinksParams = {}) => {
-  console.log(link_id);
-
-  const query = useQuery({
-    queryKey: ["links", { q, tag, user_id, group_name, group_by }],
-    queryFn: () => fetchLinks({ q, tag, user_id, group_by }),
-    retry: 1,
-    refetchOnWindowFocus: false,
-  });
-  return {
-    query,
-    concat_groups: () => {
-      if (!query.data) return [];
-      return query.data.reduce(
-        (acc, group) => {
-          return acc.concat(group.links);
-        },
-        [] as (typeof query.data)[0]["links"]
-      );
-    },
-  };
 };
 
 export const useLinkView = () => {
@@ -63,10 +26,44 @@ export const useLinkView = () => {
 
 export const useCreateLink = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   return useMutation({
     mutationFn: (url: string) => postLink({ url }),
-    onSuccess: () => {
+    onSuccess: (response: { link_id: string; user_id: string }) => {
       queryClient.invalidateQueries({ queryKey: ["links"] });
+      toast("is bookmarked", {
+        description: "The link has been added to your bookmarks.",
+        position: "top-center",
+        action: {
+          label: "View",
+          onClick: () => {
+            navigate(`/links/${response.link_id}`);
+          },
+        },
+      });
     },
+    onError: (error: Error) => {
+      toast.error("Failed to bookmark", {
+        description: error.message || "Something went wrong.",
+        position: "top-center",
+      });
+    },
+  });
+};
+
+interface UseSearchLinksParams {
+  query?: string | null;
+  tag?: string | null;
+  page?: number;
+  size?: number;
+}
+
+export const useSearchLinks = ({ query, tag, page = 1, size = 10 }: UseSearchLinksParams) => {
+  return useQuery({
+    queryKey: ["links", "search", { query, tag, page, size }],
+    queryFn: () => searchLinks({ query, tag, page, size }),
+    retry: 1,
+    refetchOnWindowFocus: false,
+    enabled: !!(query || tag),
   });
 };
