@@ -15,6 +15,7 @@ class Link(Base):
     url = Column(String, nullable=False)
     title = Column(String, nullable=True)
     description = Column(String, nullable=True)
+    image_url = Column(String, nullable=True)
     views = Column(Integer, default=0)
     created_by_user_id = Column(Integer, nullable=True) # user_id 기본값 입력 안됨, NULL 허용 # noqa: E501
     created_by_username = Column(String, nullable=True) # 위와 같음. NULL 허용으로 crawler 여부 판단 # noqa: E501
