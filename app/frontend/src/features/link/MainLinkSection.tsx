@@ -1,9 +1,8 @@
-import { getLinkCardComponent } from "@/components/link/LinkCardFactory";
 import { SectionContainer, SectionTitle } from "@/components/styled/layout";
-import { useLinks } from "@/hooks/useLinks";
+import { useCreateLink, useLinks } from "@/hooks/useLinks";
 import { motion } from "framer-motion";
+import { LinkCard } from "@components/link/card/LinkCard.tsx";
 
-// TODO: 명명 수정 필요
 export const MainLinkSection = () => {
   const { query } = useLinks({
     group_by: "trending",
@@ -22,27 +21,29 @@ export const MainLinkSection = () => {
     visible: { y: 0, opacity: 1 },
   };
 
+  const { mutate: createLink } = useCreateLink();
+  const handleBookmark = (url: string) => {
+    createLink(url);
+  };
+
   {
     return (
-      <div className="space-y-8">
+      <div className='space-y-8'>
         {(query.data || []).map((group) => (
           <SectionContainer key={group.name}>
             <SectionTitle>{group.description}</SectionTitle>
             <motion.div
-              className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+              className='grid grid-cols-1 sm:grid-cols-2 gap-4'
               variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
+              initial='hidden'
+              whileInView='visible'
               viewport={{ once: true }}
             >
-              {group.links.map((link) => {
-                const CardComponent = getLinkCardComponent(link.linkType);
-                return (
-                  <motion.div key={link.id} variants={itemVariants}>
-                    <CardComponent link={link} />
-                  </motion.div>
-                );
-              })}
+              {group.links.map((link) => (
+                <motion.div key={link.link_id} variants={itemVariants}>
+                  <LinkCard link={link} onBookmark={handleBookmark} />
+                </motion.div>
+              ))}
             </motion.div>
           </SectionContainer>
         ))}
