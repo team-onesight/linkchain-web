@@ -1,10 +1,10 @@
 import {motion} from "framer-motion";
 import {useSearchLinks} from "@/hooks/useLinks";
 import {Skeleton} from "@/components/ui/skeleton";
-import {getLinkCardComponent} from "@/components/link/LinkCardFactory";
 import {Button} from "@/components/ui/button";
 import {useState, useEffect} from "react";
 import {ChevronLeft, ChevronRight} from "lucide-react";
+import { LinkCard } from "@/components/link/card/LinkCard";
 
 interface SearchResultsGridProps {
   q: string | null;
@@ -114,10 +114,9 @@ export const SearchResultsGrid = ({q, tag}: SearchResultsGridProps) => {
         animate='visible'
       >
         {data.items.map((link) => {
-          const CardComponent = getLinkCardComponent(link.linkType);
           return (
             <motion.div key={link.link_id} variants={itemVariants}>
-              <CardComponent link={link}/>
+              <LinkCard link={link}/>
             </motion.div>
           );
         })}
