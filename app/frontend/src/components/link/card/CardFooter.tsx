@@ -24,6 +24,11 @@ const LinkCardFooter = ({
     onBookmark && onBookmark(link?.url);
   };
 
+  const handleUser = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/users/${link.created_by_user_id}/links`);
+  };
+
   const handleExternalLinkClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     window.open(link.url, "_blank", "noopener,noreferrer");
@@ -44,7 +49,12 @@ const LinkCardFooter = ({
           ))}
         </div>
       )}
-      <div className='flex flex-row flex-nowrap gap-1'>
+      <div className='flex flex-row flex-nowrap gap-1 w-full'>
+        {link.created_by_username && link.created_by_user_id && (
+          <Badge variant='outline' className='h-8 cursor-pointer mr-auto ml-2' onClick={handleUser}>
+            작성자: {link.created_by_username}
+          </Badge>
+        )}
         {onBookmark && (
           <Button
             variant='outline'
