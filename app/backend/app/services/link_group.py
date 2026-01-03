@@ -1,4 +1,5 @@
 from collections import defaultdict
+
 from repositories.link_group import LinkGroupRepository
 from schemas.link_group import GroupItem, GroupResponse
 
@@ -13,9 +14,7 @@ class GroupService:
         grouped: dict[str, list[GroupItem]] = defaultdict(list)
 
         for group_title, link in rows:
-            grouped[group_title].append(
-                GroupItem.model_validate(link)
-            )
+            grouped[group_title].append(GroupItem.model_validate(link))
 
         return [
             GroupResponse(group_title=group_title, items=items)
