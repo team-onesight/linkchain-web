@@ -1,10 +1,10 @@
 from typing import Annotated, Optional
 
 from core.deps import (
+    get_current_user_from_session,
     get_di_link_service,
     get_di_user_link_history_service,
     get_di_user_service,
-    get_current_user_from_session
 )
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from schemas.common import Page
@@ -13,7 +13,7 @@ from schemas.user import (
     UserLinkHistoryResponse,
     UsernameAvailabilityResponse,
     UserResponse,
-    UserSimilarResponse
+    UserSimilarResponse,
 )
 from services.link import LinkService
 from services.user import UserLinkHistoryService, UserService

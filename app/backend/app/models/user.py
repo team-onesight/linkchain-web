@@ -1,7 +1,7 @@
 from db.base import Base
+from pgvector.sqlalchemy import Vector
 from sqlalchemy import Column, DateTime, Integer, String, func
 from sqlalchemy.orm import relationship
-from pgvector.sqlalchemy import Vector
 
 
 class User(Base):

@@ -1,6 +1,6 @@
 from typing import Union
 
-from api import auth, link, tag, user, group
+from api import auth, group, link, tag, user
 from core.auth import dispatch
 from core.config import settings
 from db.base import Base

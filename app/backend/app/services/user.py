@@ -9,7 +9,7 @@ from schemas.user import (
     UserLinkHistoryItem,
     UserLinkHistoryResponse,
     UserResponse,
-    UserSimilarResponse
+    UserSimilarResponse,
 )
 from sqlalchemy.exc import IntegrityError
 

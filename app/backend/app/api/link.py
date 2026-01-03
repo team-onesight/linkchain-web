@@ -79,6 +79,21 @@ def get_link_detail(
     return link
 
 
+@router.get("/{link_id}/similar", response_model=list[LinkResponse])
+def get_similar_links(
+    link_id: str,
+    service: Annotated[LinkService, Depends(get_di_link_service)],
+):
+    """
+    주어진 링크와 유사한 링크 목록을 반환합니다.
+    """
+    if not service.get_link(link_id):
+        raise HTTPException(status_code=404, detail="Link not found")
+
+    similar_links = service.get_similar_links(link_id)
+    return similar_links
+
+
 @router.post("/{link_id}/view", response_model=LinkViewRegisterResponse)
 def register_link_view(
     link_id: str,
