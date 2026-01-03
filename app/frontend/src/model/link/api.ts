@@ -1,4 +1,4 @@
-import type {LinkItem, LinksGroup, PostLinkRequest, MyLinksResponse} from "@/model/link/type";
+import type {LinkItem, LinksGroup, PostLinkRequest, MyLinksResponse, SearchLinksResponse} from "@/model/link/type";
 
 type GroupByType = "date" | "tag" | "trending";
 
@@ -21,6 +21,36 @@ const fetchLinks = async ({
         throw new Error("Network response was not ok");
     }
     return (await response.json()) as LinksGroup[];
+};
+
+const searchLinks = async ({
+                              query,
+                              tag,
+                              page = 1,
+                              size = 10,
+                          }: {
+    query?: string | null;
+    tag?: string | null;
+    page?: number;
+    size?: number;
+}): Promise<SearchLinksResponse> => {
+    const params = new URLSearchParams();
+
+    if (query) params.append("query", query);
+    if (tag) params.append("tag", tag);
+    params.append("page", page.toString());
+    params.append("size", size.toString());
+
+    const url = `/api/v1/links/?${params.toString()}`;
+
+    const response = await fetch(url, {
+        method: "GET",
+        credentials: "include",
+    });
+    if (!response.ok) {
+        throw new Error("Network response was not ok");
+    }
+    return (await response.json()) as SearchLinksResponse;
 };
 
 const fetchLink = async (id: string): Promise<LinkItem | undefined> => {
@@ -82,4 +112,4 @@ const fetchMyLinks = async (size: number = 20, cursor: number | undefined)
 }
 
 
-export {fetchLink, fetchLinks, postLinkView, postLink, fetchMyLinks};
+export {fetchLink, fetchLinks, postLinkView, postLink, fetchMyLinks, searchLinks};

@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchLink, fetchLinks, postLink, postLinkView } from "@/model/link/api";
+import { fetchLink, fetchLinks, postLink, postLinkView, searchLinks } from "@/model/link/api";
 
 interface UseLinksParams {
   q?: string | null;
@@ -68,5 +68,27 @@ export const useCreateLink = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["links"] });
     },
+  });
+};
+
+interface UseSearchLinksParams {
+  query?: string | null;
+  tag?: string | null;
+  page?: number;
+  size?: number;
+}
+
+export const useSearchLinks = ({
+  query,
+  tag,
+  page = 1,
+  size = 10,
+}: UseSearchLinksParams) => {
+  return useQuery({
+    queryKey: ["links", "search", { query, tag, page, size }],
+    queryFn: () => searchLinks({ query, tag, page, size }),
+    retry: 1,
+    refetchOnWindowFocus: false,
+    enabled: !!(query || tag),
   });
 };
