@@ -3,7 +3,6 @@ from unittest.mock import MagicMock
 import pytest
 from core.deps import get_current_user_from_session, get_di_link_service
 from fastapi.testclient import TestClient
-from main import app
 
 
 @pytest.fixture
@@ -14,21 +13,27 @@ def mock_link_service():
 @pytest.fixture
 def client(mock_link_service):
     """
-    SessionMiddleware + dependency를 주입한 client
+    테스트용 클라이언트 - middleware 없이 dependency만 주입
     """
-
+    # 테스트용 앱 생성 (middleware 제외) -> 미들웨어 인증을 하면 401 에러 발생
+    from fastapi import FastAPI
+    from api import link
+    
+    test_app = FastAPI()
+    test_app.include_router(link.router, prefix="/api/v1", tags=["v1"])
+    
     # Service mock
-    app.dependency_overrides[get_di_link_service] = lambda: mock_link_service
-
+    test_app.dependency_overrides[get_di_link_service] = lambda: mock_link_service
+    
     # session 주입 user mock
-    app.dependency_overrides[get_current_user_from_session] = (
+    test_app.dependency_overrides[get_current_user_from_session] = (
         lambda: {"user_id": 1, "username": "test"}
     )
-
-    with TestClient(app) as client:
+    
+    with TestClient(test_app) as client:
         yield client
-
-    app.dependency_overrides.clear()
+    
+    test_app.dependency_overrides.clear()
 
 
 def test_create_link_success(client, mock_link_service):
