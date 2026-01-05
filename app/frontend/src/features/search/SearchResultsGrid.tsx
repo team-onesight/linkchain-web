@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useSearchLinks } from "@/hooks/useLinks";
+import { useCreateLink, useSearchLinks } from "@/hooks/useLinks";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
@@ -15,6 +15,11 @@ export const SearchResultsGrid = ({ q, tag, group_id }: SearchResultsGridProps) 
   const pageSize = 10;
 
   const { ref, inView } = useInView();
+  const { mutate: createLink } = useCreateLink();
+
+  const handleBookmark = (url: string) => {
+    createLink(url);
+  };
 
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useSearchLinks(
     {
@@ -59,7 +64,7 @@ export const SearchResultsGrid = ({ q, tag, group_id }: SearchResultsGridProps) 
         animate={{ opacity: 1 }}
       >
         {allLinks.map((link) => (
-          <LinkCard key={link.link_id} link={link} />
+          <LinkCard key={link.link_id} link={link} onBookmark={handleBookmark} />
         ))}
       </motion.div>
 

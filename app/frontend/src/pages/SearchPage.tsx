@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { SearchResultsGrid } from "@/features/search/SearchResultsGrid";
 import { Header } from "@/components/layout/Header";
-import { useEffect } from "react"; // useEffect 추가
+import { useEffect } from "react";
 
 const SearchPage = () => {
   const [searchParams] = useSearchParams();
@@ -13,10 +13,9 @@ const SearchPage = () => {
   const group_id = searchParams.get("group_id");
   const group_title = searchParams.get("group_title");
 
-  // 페이지 진입 시 및 검색 조건 변경 시 스크롤 최상단 이동
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [query, tag_name, group_id]); // 조건이 바뀔 때마다 실행
+  }, [query, tag_name, group_id]);
 
   const generateTitle = () => {
     // ... 기존 generateTitle 로직 동일
