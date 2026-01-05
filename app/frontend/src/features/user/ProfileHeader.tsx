@@ -18,19 +18,18 @@ export const ProfileHeader = ({ user }: { user: UseQueryResult<User | undefined,
     const isMyProfile = authUser?.user_id === user.data.user_id;
 
     return (
-      <SectionContainer className="pt-8">
-        <div className="flex flex-col items-center gap-4">
-          <Avatar className="w-24 h-24 border-4 border-white shadow-md">
+      <SectionContainer className='pt-8'>
+        <div className='flex flex-col items-center gap-4'>
+          <Avatar className='w-24 h-24 border-4 border-white'>
             <AvatarImage src={`/avatars/${avatarIndex}.png`} alt={user.data?.username} />
             <AvatarFallback>{user.data?.username.substring(0, 2)}</AvatarFallback>
           </Avatar>
-          <div className="text-center">
-            <h1 className="text-3xl font-bold">{user.data?.username}</h1>
-            {/*<p className='text-muted-foreground mt-1'>{user.data?.bio}</p>*/}
+          <div className='text-center'>
+            <h1 className='text-3xl font-bold'>{user.data?.username}</h1>
           </div>
           {isMyProfile && (
-            <Button variant="outline" onClick={logout}>
-              <LogOut className="mr-2 h-4 w-4" />
+            <Button variant='outline' onClick={logout}>
+              <LogOut className='mr-2 h-4 w-4' />
               Log Out
             </Button>
           )}
@@ -41,22 +40,22 @@ export const ProfileHeader = ({ user }: { user: UseQueryResult<User | undefined,
 };
 
 const ProfileHeaderSkeleton = () => (
-  <SectionContainer className="pt-8">
-    <div className="flex flex-col items-center gap-4">
-      <Skeleton className="w-24 h-24 rounded-full" />
-      <div className="text-center space-y-2">
-        <Skeleton className="h-8 w-32" />
-        <Skeleton className="h-5 w-48" />
+  <SectionContainer className='pt-8'>
+    <div className='flex flex-col items-center gap-4'>
+      <Skeleton className='w-24 h-24 rounded-full' />
+      <div className='text-center space-y-2'>
+        <Skeleton className='h-8 w-32' />
+        <Skeleton className='h-5 w-48' />
       </div>
-      <Skeleton className="h-10 w-32" />
+      <Skeleton className='h-10 w-32' />
     </div>
   </SectionContainer>
 );
 
 const UserNotFoundComponent = () => (
-  <SectionContainer className="pt-8">
-    <div className="flex flex-col items-center gap-4">
-      <p className="text-xl text-gray-500">사용자를 찾을 수 없습니다.</p>
+  <SectionContainer className='pt-8'>
+    <div className='flex flex-col items-center gap-4'>
+      <p className='text-xl text-gray-500'>사용자를 찾을 수 없습니다.</p>
     </div>
   </SectionContainer>
 );
