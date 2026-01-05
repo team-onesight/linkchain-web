@@ -18,40 +18,36 @@ export function LinkCard({ link, onBookmark }: LinkCardProps) {
   return (
     <Card
       onClick={() => navigate(`/links/${link_id}`)}
-      className='flex flex-row h-[170px] overflow-hidden hover:shadow-md transition-all cursor-pointer group p-2 gap-2 items-center'
+      className='flex flex-col  overflow-hidden hover:shadow-md transition-all cursor-pointer group p-3 gap-1 items-start
+      mh-[255px] h-[245px] rounded-xl
+
+      '
     >
-      <div className='relative flex-shrink-0 w30 h-30 overflow-hidden rounded-md bg-muted'>
-        <img
-          src={imageUrl || "/images/default_link_image.png"}
-          alt={title}
-          className='object-cover w-full h-full transition-transform duration-300 group-hover:scale-110'
-        />
-      </div>
-
-      <CardContent className='flex flex-col justify-between p-0 overflow-hidden grow gap-1'>
+      <CardTitle className='pt-2 pl-2 text-[14px] leading-tight line-clamp-1 font-bold group-hover:text-primary transition-colors'>
+        {title || "제목 없음"}
+      </CardTitle>
+      <span className='text-[10px] text-muted-foreground opacity-60 line-clamp-1 pl-2 underline'>
+        {url}
+      </span>
+      <CardContent className='flex flex-row justify-start p-0 overflow-hidden gap-1 items-center w-full grow'>
+        <div className='relative flex-shrink-0 w20 h-20 overflow-hidden rounded-md bg-muted'>
+          <img
+            src={imageUrl || "/images/default_link_image.png"}
+            alt={title}
+            className='object-cover w-full h-full transition-transform duration-300 group-hover:scale-110'
+          />
+        </div>
         <div className='flex flex-col gap-0.5'>
-          <CardTitle className='text-[14px] leading-tight line-clamp-1 font-bold group-hover:text-primary transition-colors'>
-            {title || "제목 없음"}
-          </CardTitle>
-
-          <CardDescription className='text-[12px] leading-snug line-clamp-1 text-muted-foreground pr-1'>
+          <CardDescription className='text-[12px] leading-snug line-clamp-4 text-muted-foreground pr-2 grow'>
             {description || "추가된 설명이 없습니다."}
           </CardDescription>
         </div>
-
-        <div
-          className='flex-row items-center justify-between mt-auto'
-          onClick={(e) => e.stopPropagation()}
-        >
-          <span className='text-[10px] text-muted-foreground opacity-60 line-clamp-1 pr-1'>
-            {url}
-          </span>
-
-          <div className='origin-right pt-2'>
-            <LinkCardFooter link={link} onBookmark={onBookmark} />
-          </div>
-        </div>
       </CardContent>
+      <div className='flex-row justify-between mt-auto w-full' onClick={(e) => e.stopPropagation()}>
+        <div className='origin-right pt-2'>
+          <LinkCardFooter link={link} onBookmark={onBookmark} />
+        </div>
+      </div>
     </Card>
   );
 }

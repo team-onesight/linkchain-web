@@ -34,7 +34,7 @@ const LinkCardFooter = ({
     window.open(link.url, "_blank", "noopener,noreferrer");
   };
   return (
-    <CardFooter className='flex flex-col items-end p-1 pt-0 gap-3 pr-2'>
+    <CardFooter className='flex grow flex-col items-end p-1 pt-0 gap-3 pr-2 w-full'>
       {link.tags && link.tags.length > 0 && (
         <div className='flex flex-wrap gap-1 mr-auto ml-2'>
           {link.tags.map((tag) => (
@@ -55,7 +55,7 @@ const LinkCardFooter = ({
             작성자: {link.created_by_username}
           </Badge>
         )}
-        {!onBookmark && (
+        {onBookmark && (
           <Button
             variant='outline'
             size='icon'
