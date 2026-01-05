@@ -1,5 +1,6 @@
 from typing import Optional
 
+from models import Link, LinkGroupLinkMap
 from models.link import Link
 from models.link_history import LinkHistory
 from models.link_tag_map import LinkTagMap
@@ -61,71 +62,44 @@ class LinkRepository:
         self.db.commit()
         return link_history
 
-    def search_links_by_query(
+    def search_links(
         self,
-        query: str,
-        page: int,
-        size: int,
+        query: Optional[str] = None,
+        tag: Optional[str] = None,
+        group_id: Optional[int] = None,
+        page: int = 1,
+        size: int = 10,
     ):
         """
-        query 기반 링크 검색을 진행합니다.
-
-        1. title, description 필드에 대해 LIKE 검색을 수행합니다.
-        2. 생성일 기준 내림차순으로 정렬하고 page와 size를 각각 offset과 limit으로 적용하여 결과를 반환합니다.
-        ( total_count 는 페이징을 위한 전체 결과 수입니다. )
-
-        :param self:
-        :param query: 검색어
-        :type query: str
-        :param page: 페이지 번호
-        :type page: int
-        :param size: 페이지 당 아이템 수
-        :type size: int
-        """  # noqa: E501
-        query = self.db.query(Link).filter(
-            (Link.title.ilike(f"%{query}%")) | (Link.description.ilike(f"%{query}%"))
-        )
-
-        total_count = query.count()
-
-        offset = (page - 1) * size
-        links = query.order_by(desc(Link.created_at)).offset(offset).limit(size).all()
-
-        return links, total_count
-
-    def search_links_by_tag(
-        self,
-        tag: str,
-        page: int,
-        size: int,
-    ):
+        검색어, 태그, 그룹 ID 기반 동적 링크 검색
         """
-        태그 기반 링크 검색을 진행합니다.
 
-        1. tag_name 으로 Tag 테이블에서 태그를 찾고, LinkTagMap을 통해 링크를 조회합니다.
-        2. 생성일 기준 내림차순으로 정렬하고 page와 size를 각각 offset과 limit으로 적용하여 결과를 반환합니다.
-        ( total_count 는 페이징을 위한 전체 결과 수입니다. )
+        db_query = self.db.query(Link).options(joinedload(Link.tags))
 
-        :param self:
-        :param tag: 검색할 태그 이름
-        :type tag: str
-        :param page: 페이지 번호
-        :type page: int
-        :param size: 페이지 당 아이템 수
-        :type size: int
-        """  # noqa: E501
-        query = (
-            self.db.query(Link)
-            .join(LinkTagMap, Link.link_id == LinkTagMap.link_id)
-            .join(Tag, LinkTagMap.tag_id == Tag.tag_id)
-            .options(joinedload(Link.tags))
-            .filter(Tag.tag_name == tag)
-        )
+        if group_id:
+            db_query = db_query.join(
+                LinkGroupLinkMap, Link.link_id == LinkGroupLinkMap.link_id
+            ).filter(LinkGroupLinkMap.group_id == group_id)
 
-        total_count = query.count()
+        if query:
+            search_filter = f"%{query}%"
+            db_query = db_query.filter(
+                (Link.title.ilike(search_filter))
+                | (Link.description.ilike(search_filter))
+            )
 
+        if tag:
+            db_query = (
+                db_query.join(LinkTagMap, Link.link_id == LinkTagMap.link_id)
+                .join(Tag, LinkTagMap.tag_id == Tag.tag_id)
+                .filter(Tag.tag_name == tag)
+            )
+
+        total_count = db_query.count()
         offset = (page - 1) * size
-        links = query.order_by(desc(Link.created_at)).offset(offset).limit(size).all()
+        links = (
+            db_query.order_by(desc(Link.created_at)).offset(offset).limit(size).all()
+        )
 
         return links, total_count
 

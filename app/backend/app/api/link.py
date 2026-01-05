@@ -23,28 +23,12 @@ def search_links(
     service: Annotated[LinkService, Depends(get_di_link_service)],
     query: Annotated[Optional[str], Query(description="Search query string")] = None,
     tag: Annotated[Optional[str], Query(description="Tag name")] = None,
-    group_id: Annotated[Optional[int], Query(description="Group ID filter")] = None,
+    group_id: Annotated[Optional[int], Query(description="Search Group ID")] = None,
     page: Annotated[int, Query(ge=1, description="Page number")] = 1,
     size: Annotated[int, Query(ge=1, le=100, description="Page size")] = 10,
-    group_by: Annotated[
-        Optional[str], Query(description="Group by field (e.g., 'date')")
-    ] = None,
 ):
-    # TODO : group_by, group_id 로직 추가 필요
-
-    if query and tag:
-        raise HTTPException(
-            status_code=400,
-            detail="Query and tag parameters are mutually exclusive. Provide only one.",
-        )
-
-    if not query and not tag:
-        raise HTTPException(
-            status_code=400,
-            detail="Either query or tag parameter must be provided.",
-        )
-
     return service.search_links(
+        group_id=group_id,
         query=query,
         tag=tag,
         page=page,
