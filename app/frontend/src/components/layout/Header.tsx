@@ -6,7 +6,7 @@ export function Header() {
   const openSearch = useUiStore((state) => state.openSearch);
 
   return (
-    <header className='w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sticky top-0 z-20'>
+    <header className='w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 z-20'>
       <div className='flex items-center justify-between h-10'>
         <Button
           variant='outline'
