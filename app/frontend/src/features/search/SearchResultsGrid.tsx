@@ -54,7 +54,7 @@ export const SearchResultsGrid = ({ q, tag, group_id }: SearchResultsGridProps) 
   return (
     <div className='space-y-6'>
       <motion.div
-        className='grid grid-cols-1 sm:grid-cols-2 gap-4'
+        className='grid grid-cols-1 gap-4'
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
       >
