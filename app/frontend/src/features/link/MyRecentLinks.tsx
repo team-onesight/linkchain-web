@@ -69,26 +69,22 @@ export const MyRecentLinks = () => {
   }, [query.isFetching, query.isFetchingNextPage, query.hasNextPage, query.data]);
 
   return (
-    <SectionContainer className='pt-0'>
-      <div className='flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4'>
-        <h2 className='text-2xl font-bold'>저장된 링크 목록</h2>
-
-        <div className='flex items-center gap-1.5 overflow-x-auto pb-2 sm:pb-0 scrollbar-hide'>
-          <Calendar size={16} className='text-muted-foreground mr-1 hidden sm:block' />
-          {DATE_OPTIONS.map((opt) => (
-            <Button
-              key={opt.value}
-              variant={filter === opt.value ? "default" : "secondary"}
-              size='sm'
-              onClick={() => setFilter(opt.value)}
-              className='rounded-full px-4 h-8 text-xs font-medium transition-all active:scale-95'
-            >
-              {opt.label}
-            </Button>
-          ))}
-        </div>
+    <SectionContainer className='pt-0 relative'>
+      <h2 className='text-2xl font-bold mb-4'>저장된 링크 목록</h2>
+      <div className='sticky top-0 z-20 flex items-center gap-1.5 overflow-x-auto py-3 mb-4 scrollbar-hide bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-transparent'>
+        <Calendar size={16} className='text-muted-foreground mr-1 hidden sm:block' />
+        {DATE_OPTIONS.map((opt) => (
+          <Button
+            key={opt.value}
+            variant={filter === opt.value ? "default" : "secondary"}
+            size='sm'
+            onClick={() => setFilter(opt.value)}
+            className='rounded-full px-4 h-8 text-xs font-medium transition-all active:scale-95 flex-shrink-0'
+          >
+            {opt.label}
+          </Button>
+        ))}
       </div>
-
       <div className='space-y-8'>
         {query.isLoading ? (
           <div className='grid grid-cols-1 gap-4'>
