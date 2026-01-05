@@ -91,14 +91,14 @@ export const MyRecentLinks = () => {
 
       <div className='space-y-8'>
         {query.isLoading ? (
-          <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+          <div className='grid grid-cols-1 gap-4'>
             {[...Array(4)].map((_, i) => (
               <Skeleton key={i} className='h-36 rounded-xl' />
             ))}
           </div>
         ) : (
           <motion.div
-            className='grid grid-cols-1 sm:grid-cols-2 gap-4'
+            className='grid grid-cols-1  gap-4'
             variants={{
               visible: { transition: { staggerChildren: 0.05 } },
             }}
@@ -143,7 +143,7 @@ export const MyRecentLinks = () => {
         )}
 
         {query.isFetchingNextPage && (
-          <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4'>
+          <div className='grid grid-cols-1  gap-4 mt-4'>
             <Skeleton className='h-36 rounded-xl' />
           </div>
         )}

@@ -22,6 +22,10 @@ const LinkDetailPage = () => {
     }
   }, [id, mutate]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [query, id]);
+
   if (query.isLoading) {
     return <DetailPageSkeleton />;
   }
