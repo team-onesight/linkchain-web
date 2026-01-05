@@ -55,7 +55,7 @@ const LinkCardFooter = ({
             작성자: {link.created_by_username}
           </Badge>
         )}
-        {onBookmark && (
+        {!onBookmark && (
           <Button
             variant='outline'
             size='icon'
