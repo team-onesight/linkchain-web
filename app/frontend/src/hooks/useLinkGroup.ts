@@ -6,5 +6,9 @@ export const useLinkGroup = () => {
     queryKey: ["links", "group"],
     queryFn: () => fetchLinkGroups(),
     retry: 1,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 };
