@@ -19,8 +19,8 @@ class GroupItem(BaseModel):
     image_url: Optional[str] = None
     views: int
     created_at: datetime
-    created_by_user_id: int
-    created_by_username: str
+    created_by_user_id: Optional[int]
+    created_by_username: Optional[str]
     tags: List[TagResponse] = []
 
     class Config:
