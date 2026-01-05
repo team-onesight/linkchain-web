@@ -7,6 +7,8 @@ from starlette.responses import JSONResponse, Response
 async def dispatch(request: Request, call_next) -> Response:
     # 인증 제외 경로
     public_paths = (
+        "/api/v1/groups",
+        "/api/v1/links",
         "/docs",
         "/openapi.json",
         "/api/v1/auth/join",

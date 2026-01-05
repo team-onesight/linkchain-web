@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useCreateLink } from "@/hooks/useLinks";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { LinkCard } from "@components/link/card/LinkCard.tsx";
 import { useLinkGroup } from "@/hooks/useLinkGroup.ts";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import type { LinkItem, LinksGroup } from "@/model/link/type.ts";
 
 export const MainLinkSection = () => {
@@ -24,7 +24,7 @@ export const MainLinkSection = () => {
     <main className='w-full flex flex-col items-center pb-20'>
       <div className='w-full max-w-[600px] px-4 sm:px-0 space-y-12'>
         {query.data?.map((group) => (
-          <GroupSection key={group.group_title} group={group} onBookmark={handleBookmark} />
+          <GroupSection key={group.group_id} group={group} onBookmark={handleBookmark} />
         ))}
       </div>
     </main>
@@ -38,83 +38,53 @@ const GroupSection = ({
   group: LinksGroup;
   onBookmark: (url: string) => void;
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  const totalCount = group.items?.length || 0;
-  const hasMore = totalCount > 4;
-
-  const visibleItems = isExpanded ? group.items : group.items?.slice(0, 4) || [];
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1 },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { type: "spring" as const, stiffness: 100, damping: 15 },
-    },
-    exit: { opacity: 0, y: -10 },
-  };
+  const navigate = useNavigate();
+  const totalCount = group.total_links || 0;
+  const hasMore = totalCount > 5;
 
   return (
-    <section className='flex flex-col gap-4'>
-      <div className='flex items-center justify-between px-1'>
-        <h2 className='text-xl font-bold tracking-tight text-gray-900 dark:text-gray-100'>
-          {group.group_title}
-        </h2>
-        {hasMore && (
-          <span className='text-xs text-gray-400'>
-            {isExpanded ? `전체 ${totalCount}개` : `${totalCount}개 중 4개`}
+    <section className='relative flex flex-col gap-4'>
+      <div className='sticky top-0 z-10 flex items-center justify-between px-0 py-3 bg-white/95 dark:bg-slate-950/95 backdrop-blur-sm transition-all'>
+        <div
+          className='flex items-baseline gap-2 justify-between w-full'
+          onClick={() =>
+            navigate(
+              `/search?group_id=${group.group_id}&group_title=${encodeURIComponent(group.group_title)}`
+            )
+          }
+        >
+          <h2 className='text-lg font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-xl'>
+            {group.group_title}
+          </h2>
+          <span className='text-[11px] text-primary font-bold uppercase tracking-wider opacity-80'>
+            {totalCount} links
           </span>
-        )}
+        </div>
       </div>
 
       <motion.div
-        className='grid grid-cols-1 gap-4'
-        variants={containerVariants}
-        initial='hidden'
-        animate='visible'
-        layout
+        className='grid grid-cols-1 gap-3'
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
       >
-        <AnimatePresence initial={false} mode='popLayout'>
-          {visibleItems.map((link: LinkItem) => (
-            <motion.div
-              key={link.link_id}
-              variants={itemVariants}
-              layout
-              initial='hidden'
-              animate='visible'
-              exit='exit'
-            >
-              <LinkCard link={link} onBookmark={onBookmark} />
-            </motion.div>
-          ))}
-        </AnimatePresence>
+        {group.items?.map((link: LinkItem) => (
+          <LinkCard key={link.link_id} link={link} onBookmark={onBookmark} />
+        ))}
       </motion.div>
 
       {hasMore && (
-        <motion.button
-          layout
-          onClick={() => setIsExpanded(!isExpanded)}
-          className='flex items-center justify-center w-full py-3 mt-2 text-sm font-medium text-gray-500 transition-all bg-gray-50/50 border border-dashed border-gray-200 rounded-xl hover:bg-gray-100 hover:text-gray-900 hover:border-gray-300 active:scale-[0.98]'
+        <button
+          onClick={() =>
+            navigate(
+              `/search?group_id=${group.group_id}&group_title=${encodeURIComponent(group.group_title)}`
+            )
+          }
+          className='flex items-center justify-center py-3.5 mt-2 text-sm font-bold text-primary transition-all bg-primary/5 rounded-xl hover:bg-primary/10 active:scale-[0.98] border border-primary/10'
         >
-          {isExpanded ? (
-            <>
-              <ChevronUp size={16} className='mr-1' /> 접기
-            </>
-          ) : (
-            <>
-              <ChevronDown size={16} className='mr-1' /> + {totalCount - 4}개 더보기
-            </>
-          )}
-        </motion.button>
+          <span className='mr-1'>{totalCount - 5}개 더보기</span>
+          <ChevronRight size={16} />
+        </button>
       )}
     </section>
   );

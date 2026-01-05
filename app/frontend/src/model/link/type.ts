@@ -1,8 +1,9 @@
 import type { Tag } from "../tag/type";
 
 interface LinksGroup {
+  group_id?: number;
+  total_links: number;
   group_title: string;
-  description?: string;
   items: LinkItem[];
 }
 

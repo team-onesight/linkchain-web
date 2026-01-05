@@ -9,11 +9,13 @@ import type {
 const searchLinks = async ({
   query,
   tag,
+  group_id,
   page = 1,
   size = 10,
 }: {
   query?: string | null;
   tag?: string | null;
+  group_id?: string | null;
   page?: number;
   size?: number;
 }): Promise<SearchLinksResponse> => {
@@ -21,6 +23,7 @@ const searchLinks = async ({
 
   if (query) params.append("query", query);
   if (tag) params.append("tag", tag);
+  if (group_id) params.append("group_id", group_id);
   params.append("page", page.toString());
   params.append("size", size.toString());
 
@@ -74,12 +77,18 @@ const postLink = async (payload: PostLinkRequest) => {
 
 const fetchMyLinks = async (
   size: number = 20,
-  cursor: number | undefined
+  start_date?: string,
+  end_date?: string,
+  cursor?: number | undefined
 ): Promise<MyLinksResponse> => {
   const params = new URLSearchParams();
   params.append("size", size.toString());
   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   cursor && params.append("cursor", cursor.toString());
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  start_date && params.append("start_date", start_date.toString());
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  end_date && params.append("end_date", end_date.toString());
 
   const response = await fetch(`/api/v1/links/my?${params.toString()}`);
 

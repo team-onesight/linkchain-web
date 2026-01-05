@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { fetchLink, postLink, postLinkView, searchLinks } from "@/model/link/api";
@@ -54,16 +54,24 @@ export const useCreateLink = () => {
 interface UseSearchLinksParams {
   query?: string | null;
   tag?: string | null;
+  group_id?: string | null;
   page?: number;
   size?: number;
 }
 
-export const useSearchLinks = ({ query, tag, page = 1, size = 10 }: UseSearchLinksParams) => {
-  return useQuery({
-    queryKey: ["links", "search", { query, tag, page, size }],
-    queryFn: () => searchLinks({ query, tag, page, size }),
+export const useSearchLinks = ({
+  query,
+  tag,
+  group_id,
+  size = 10,
+}: Omit<UseSearchLinksParams, "page">) => {
+  return useInfiniteQuery({
+    queryKey: ["links", "search", { query, tag, group_id, size }],
+    queryFn: ({ pageParam = 1 }) => searchLinks({ query, tag, group_id, page: pageParam, size }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      return allPages.length < lastPage.total_pages ? allPages.length + 1 : undefined;
+    },
     retry: 1,
-    refetchOnWindowFocus: false,
-    enabled: !!(query || tag),
   });
 };

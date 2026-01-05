@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 
 from repositories.link import LinkRepository
@@ -20,9 +21,17 @@ class LinkService:
         return self.link_repository.get_link_by_link_id(link_id)
 
     def get_links(
-        self, user_id: int, cursor: Optional[int], size: int
+        self,
+        user_id: int,
+        cursor: Optional[int],
+        size: int,
+        start_date: Optional[datetime] = None,
+        end_date: Optional[datetime] = None,
     ) -> Page[LinkResponse]:
-        raw_data = self.link_repository.get_links_by_user_id(user_id, cursor, size)
+        raw_data = self.link_repository.get_links_by_user_id(
+            user_id, cursor, size, start_date, end_date
+        )
+
         has_more = len(raw_data) > size
         sliced_data = raw_data[:size]
 
@@ -69,6 +78,7 @@ class LinkService:
     def search_links(
         self,
         query: Optional[str],
+        group_id: Optional[str],
         tag: Optional[str],
         page: int,
         size: int,
@@ -81,6 +91,7 @@ class LinkService:
         3. 검색 조건이 없는 경우, 빈 결과를 반환합니다.
         ( total_count 는 페이징을 위한 전체 결과 수입니다. )
 
+        :param group_id: Optional[str]: 그룹 ID
         :param self:
         :param query: 검색 쿼리
         :type query: Optional[str]
@@ -93,22 +104,14 @@ class LinkService:
         :return: 검색 결과
         :rtype: SearchLinkResponse
         """  # noqa: E501
-        if query:
-            links, total_count = self.link_repository.search_links_by_query(
-                query=query,
-                page=page,
-                size=size,
-            )
-        elif tag:
-            links, total_count = self.link_repository.search_links_by_tag(
-                tag=tag,
-                page=page,
-                size=size,
-            )
-        else:
-            # 검색 조건이 없는 경우 빈 결과 반환
-            links = []
-            total_count = 0
+
+        links, total_count = self.link_repository.search_links(
+            group_id=group_id,
+            query=query,
+            tag=tag,
+            page=page,
+            size=size,
+        )
 
         # 올림 연산
         total_pages = (total_count + size - 1) // size if total_count > 0 else 0

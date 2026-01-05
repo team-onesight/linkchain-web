@@ -19,7 +19,7 @@ const itemVariants = {
 export const LinkListSection = ({ linksGroup }: { linksGroup: LinksGroup }) => {
   return (
     <SectionContainer>
-      <SectionTitle>{linksGroup.description}</SectionTitle>
+      <SectionTitle>{linksGroup.group_title}</SectionTitle>
       <motion.div
         className='grid grid-cols-1 sm:grid-cols-2 gap-4'
         variants={containerVariants}

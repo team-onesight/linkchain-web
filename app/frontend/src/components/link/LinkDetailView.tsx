@@ -60,7 +60,7 @@ export function LinkDetailView({ link }: LinkDetailViewProps) {
           Description
         </h3>
         {hasDescription ? (
-          <p className='text-base leading-relaxed text-gray-700 dark:text-gray-300'>
+          <p className='text-base leading-relaxed text-gray-700 dark:text-gray-300 break-words'>
             {link.description}
           </p>
         ) : (
