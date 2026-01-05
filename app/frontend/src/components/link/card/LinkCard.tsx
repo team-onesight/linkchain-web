@@ -18,9 +18,9 @@ export function LinkCard({ link, onBookmark }: LinkCardProps) {
   return (
     <Card
       onClick={() => navigate(`/links/${link_id}`)}
-      className='flex flex-row h-[115px] overflow-hidden hover:shadow-md transition-all cursor-pointer group p-2 gap-3 items-center'
+      className='flex flex-row h-[170px] overflow-hidden hover:shadow-md transition-all cursor-pointer group p-2 gap-2 items-center'
     >
-      <div className='relative flex-shrink-0 w-20 h-25 overflow-hidden rounded-md bg-muted'>
+      <div className='relative flex-shrink-0 w30 h-30 overflow-hidden rounded-md bg-muted'>
         <img
           src={imageUrl || "/images/default_link_image.png"}
           alt={title}
@@ -28,7 +28,7 @@ export function LinkCard({ link, onBookmark }: LinkCardProps) {
         />
       </div>
 
-      <CardContent className='flex flex-col justify-between p-0 overflow-hidden grow h-25'>
+      <CardContent className='flex flex-col justify-between p-0 overflow-hidden grow gap-1'>
         <div className='flex flex-col gap-0.5'>
           <CardTitle className='text-[14px] leading-tight line-clamp-1 font-bold group-hover:text-primary transition-colors'>
             {title || "제목 없음"}
