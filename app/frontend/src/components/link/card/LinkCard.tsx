@@ -47,7 +47,7 @@ export function LinkCard({ link, onBookmark }: LinkCardProps) {
             {url}
           </span>
 
-          <div className='scale-90 origin-right pt-1'>
+          <div className='origin-right pt-2'>
             <LinkCardFooter link={link} onBookmark={onBookmark} />
           </div>
         </div>
