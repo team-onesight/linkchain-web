@@ -49,7 +49,7 @@ const LinkCardFooter = ({
           ))}
         </div>
       )}
-      <div className='flex flex-row flex-nowrap gap-1 w-full'>
+      <div className='flex flex-row flex-nowrap gap-1 w-full justify-end'>
         {link.created_by_username && link.created_by_user_id && (
           <Badge variant='outline' className='h-8 cursor-pointer mr-auto ml-2' onClick={handleUser}>
             작성자: {link.created_by_username}
