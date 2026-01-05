@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 
 from models import Link, LinkGroupLinkMap
@@ -18,13 +19,26 @@ class LinkRepository:
     def get_link_by_link_id(self, link_id: str):
         return self.db.query(Link).filter(Link.link_id == link_id).first()
 
-    def get_links_by_user_id(self, user_id: int, cursor: Optional[int], size: int):
+    def get_links_by_user_id(
+        self,
+        user_id: int,
+        cursor: Optional[int],
+        size: int,
+        start_date: Optional[datetime] = None,
+        end_date: Optional[datetime] = None,
+    ):
         query = (
             self.db.query(Link, LinkUserMap.id.label("map_id"))
             .join(LinkUserMap, Link.link_id == LinkUserMap.link_id)
             .options(joinedload(Link.tags))
             .filter(LinkUserMap.user_id == user_id)
         )
+
+        if start_date:
+            query = query.filter(Link.created_at >= start_date)
+
+        if end_date:
+            query = query.filter(Link.created_at <= end_date)
 
         if cursor:
             query = query.filter(LinkUserMap.id < cursor)

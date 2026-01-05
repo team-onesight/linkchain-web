@@ -1,75 +1,146 @@
-import { useEffect, useRef, Fragment } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef, Fragment, useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { SectionContainer } from "@/components/styled/layout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useInfiniteMyLinks } from "@/hooks/useInfiniteMyLinks.ts";
 import { LinkCard } from "@components/link/card/LinkCard.tsx";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "lucide-react";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.2 },
-  },
-};
+// 날짜 옵션 정의
+const DATE_OPTIONS = [
+  { label: "전체", value: "all" },
+  { label: "오늘", value: "today" },
+  { label: "최근 7일", value: "7d" },
+  { label: "최근 30일", value: "30d" },
+];
 
 export const MyRecentLinks = () => {
-  const { query } = useInfiniteMyLinks(20);
+  const [filter, setFilter] = useState("all");
+
+  const dateParams = useMemo(() => {
+    if (filter === "all") return { start_date: undefined, end_date: undefined };
+
+    const end = new Date();
+    const start = new Date();
+
+    end.setSeconds(0, 0);
+
+    if (filter === "today") start.setHours(0, 0, 0, 0);
+    else if (filter === "7d") start.setDate(end.getDate() - 7);
+    else if (filter === "30d") start.setDate(end.getDate() - 30);
+
+    return {
+      start_date: start.toISOString(),
+      end_date: end.toISOString(),
+    };
+  }, [filter]);
+
+  const { query } = useInfiniteMyLinks(20, dateParams.start_date, dateParams.end_date);
+
   const observer = useRef<IntersectionObserver | null>(null);
   const lastElementRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (query.isFetchingNextPage) return;
+    window.scrollTo(0, 0);
+  }, [filter]);
+
+  useEffect(() => {
+    if (query.isFetching || query.isLoading) return;
+
     if (observer.current) observer.current.disconnect();
 
-    observer.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && query.hasNextPage) {
-        void query.fetchNextPage();
+    observer.current = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && query.hasNextPage && !query.isFetchingNextPage) {
+          void query.fetchNextPage();
+        }
+      },
+      {
+        threshold: 0.1,
       }
-    });
+    );
 
     if (lastElementRef.current) {
       observer.current.observe(lastElementRef.current);
     }
 
     return () => observer.current?.disconnect();
-  }, [query.isFetchingNextPage, query.hasNextPage, query.data]);
-
-  if (query.isLoading) return <MyRecentLinksSkeleton />;
+  }, [query.isFetching, query.isFetchingNextPage, query.hasNextPage, query.data]);
 
   return (
     <SectionContainer className='pt-0'>
-      <h2 className='text-2xl font-bold mb-4'>저장된 링크 목록</h2>
-      <div className='space-y-8'>
-        <motion.div
-          className='grid grid-cols-1 sm:grid-cols-2 gap-4'
-          variants={containerVariants}
-          initial='hidden'
-          animate='visible'
-        >
-          {query.data && query.data.pages[0].items.length === 0 ? (
-            <p className='text-muted-foreground'>등록된 링크가 없습니다.</p>
-          ) : (
-            query.data?.pages.map((page, pageIndex) => (
-              <Fragment key={`page-${pageIndex}-${page.next_cursor}`}>
-                {page.items.map((link, linkIndex) => {
-                  const isLastItem =
-                    pageIndex === query.data!.pages.length - 1 &&
-                    linkIndex === page.items.length - 1;
+      <div className='flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4'>
+        <h2 className='text-2xl font-bold'>저장된 링크 목록</h2>
 
-                  return (
-                    <div
-                      key={`${link.link_id}-${pageIndex}`}
-                      ref={isLastItem ? lastElementRef : null}
-                    >
-                      <LinkCard link={link} />
-                    </div>
-                  );
-                })}
-              </Fragment>
-            ))
-          )}
-        </motion.div>
+        <div className='flex items-center gap-1.5 overflow-x-auto pb-2 sm:pb-0 scrollbar-hide'>
+          <Calendar size={16} className='text-muted-foreground mr-1 hidden sm:block' />
+          {DATE_OPTIONS.map((opt) => (
+            <Button
+              key={opt.value}
+              variant={filter === opt.value ? "default" : "secondary"}
+              size='sm'
+              onClick={() => setFilter(opt.value)}
+              className='rounded-full px-4 h-8 text-xs font-medium transition-all active:scale-95'
+            >
+              {opt.label}
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      <div className='space-y-8'>
+        {query.isLoading ? (
+          <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+            {[...Array(4)].map((_, i) => (
+              <Skeleton key={i} className='h-36 rounded-xl' />
+            ))}
+          </div>
+        ) : (
+          <motion.div
+            className='grid grid-cols-1 sm:grid-cols-2 gap-4'
+            variants={{
+              visible: { transition: { staggerChildren: 0.05 } },
+            }}
+            initial='hidden'
+            animate='visible'
+          >
+            <AnimatePresence mode='popLayout'>
+              {query.data?.pages[0].items.length === 0 ? (
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className='text-muted-foreground py-10 text-center col-span-full'
+                >
+                  해당 기간에 등록된 링크가 없습니다.
+                </motion.p>
+              ) : (
+                query.data?.pages.map((page, pageIndex) => (
+                  <Fragment key={`page-${pageIndex}`}>
+                    {page.items.map((link, linkIndex) => {
+                      const isLastItem =
+                        pageIndex === query.data!.pages.length - 1 &&
+                        linkIndex === page.items.length - 1;
+
+                      return (
+                        <motion.div
+                          layout
+                          initial={{ opacity: 0, scale: 0.95 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.95 }}
+                          key={`${link.link_id}`}
+                          ref={isLastItem ? lastElementRef : null}
+                        >
+                          <LinkCard link={link} />
+                        </motion.div>
+                      );
+                    })}
+                  </Fragment>
+                ))
+              )}
+            </AnimatePresence>
+          </motion.div>
+        )}
 
         {query.isFetchingNextPage && (
           <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4'>
@@ -80,13 +151,3 @@ export const MyRecentLinks = () => {
     </SectionContainer>
   );
 };
-
-const MyRecentLinksSkeleton = () => (
-  <SectionContainer className='pt-0'>
-    <Skeleton className='h-8 w-48 mb-4' />
-    <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
-      <Skeleton className='h-36 rounded-xl' />
-      <Skeleton className='h-36 rounded-xl' />
-    </div>
-  </SectionContainer>
-);

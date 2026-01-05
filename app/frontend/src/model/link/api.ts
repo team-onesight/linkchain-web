@@ -77,12 +77,18 @@ const postLink = async (payload: PostLinkRequest) => {
 
 const fetchMyLinks = async (
   size: number = 20,
-  cursor: number | undefined
+  start_date?: string,
+  end_date?: string,
+  cursor?: number | undefined
 ): Promise<MyLinksResponse> => {
   const params = new URLSearchParams();
   params.append("size", size.toString());
   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   cursor && params.append("cursor", cursor.toString());
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  start_date && params.append("start_date", start_date.toString());
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  end_date && params.append("end_date", end_date.toString());
 
   const response = await fetch(`/api/v1/links/my?${params.toString()}`);
 

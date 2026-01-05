@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 
 from repositories.link import LinkRepository
@@ -20,9 +21,17 @@ class LinkService:
         return self.link_repository.get_link_by_link_id(link_id)
 
     def get_links(
-        self, user_id: int, cursor: Optional[int], size: int
+        self,
+        user_id: int,
+        cursor: Optional[int],
+        size: int,
+        start_date: Optional[datetime] = None,
+        end_date: Optional[datetime] = None,
     ) -> Page[LinkResponse]:
-        raw_data = self.link_repository.get_links_by_user_id(user_id, cursor, size)
+        raw_data = self.link_repository.get_links_by_user_id(
+            user_id, cursor, size, start_date, end_date
+        )
+
         has_more = len(raw_data) > size
         sliced_data = raw_data[:size]
 

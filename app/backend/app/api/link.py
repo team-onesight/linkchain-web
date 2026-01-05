@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Annotated, Optional
 
 from core.deps import get_current_user_from_session, get_di_link_service
@@ -40,13 +41,15 @@ def search_links(
 def get_my_links(
     request: Request,
     service: Annotated[LinkService, Depends(get_di_link_service)],
+    start_date: Annotated[Optional[datetime], Query()] = None,
+    end_date: Annotated[Optional[datetime], Query()] = None,
     cursor: Annotated[
         Optional[int], Query(description="마지막으로 받은 map_id")
     ] = None,
     size: Annotated[int, Query(ge=1, le=100)] = 20,
 ):
     user_id = get_user_id_from_session(request)
-    return service.get_links(user_id, cursor, size)
+    return service.get_links(user_id, cursor, size, start_date, end_date)
 
 
 @router.get("/{link_id}", response_model=LinkDetailResponse)
