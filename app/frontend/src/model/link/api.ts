@@ -9,11 +9,13 @@ import type {
 const searchLinks = async ({
   query,
   tag,
+  group_id,
   page = 1,
   size = 10,
 }: {
   query?: string | null;
   tag?: string | null;
+  group_id?: string | null;
   page?: number;
   size?: number;
 }): Promise<SearchLinksResponse> => {
@@ -21,6 +23,7 @@ const searchLinks = async ({
 
   if (query) params.append("query", query);
   if (tag) params.append("tag", tag);
+  if (group_id) params.append("group_id", group_id);
   params.append("page", page.toString());
   params.append("size", size.toString());
 
