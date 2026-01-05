@@ -9,14 +9,29 @@ class GroupService:
         self.repo = link_group_repository
 
     def get_groups(self) -> list[GroupResponse]:
-        rows = self.repo.get_group_link_rows()
+        group_meta = self.repo.get_groups_with_link_count()
+        meta_cache = {
+            row.group_id: {"title": row.group_title, "total": row.total_links}
+            for row in group_meta
+        }
 
-        grouped: dict[str, list[GroupItem]] = defaultdict(list)
+        rows = self.repo.get_top_5_links_per_group()
 
-        for group_title, link in rows:
-            grouped[group_title].append(GroupItem.model_validate(link))
+        grouped_data = defaultdict(list)
+        for row in rows:
+            item = GroupItem.model_validate(row)
+            grouped_data[row.group_id].append(item)
 
-        return [
-            GroupResponse(group_title=group_title, items=items)
-            for group_title, items in grouped.items()
-        ]
+        result = []
+        for g_id, items in grouped_data.items():
+            if g_id in meta_cache:
+                result.append(
+                    GroupResponse(
+                        group_id=g_id,
+                        group_title=meta_cache[g_id]["title"],
+                        total_links=meta_cache[g_id]["total"],
+                        items=items,
+                    )
+                )
+
+        return sorted(result, key=lambda x: x.group_id)

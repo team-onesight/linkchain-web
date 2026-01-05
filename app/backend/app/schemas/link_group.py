@@ -9,7 +9,7 @@ from schemas.tag import TagResponse
 
 class GroupItem(BaseModel):
     """
-    Group에 들어갈 link item 정의
+    Group에 들어갈 개별 link item 정의
     """
 
     link_id: UUID
@@ -29,8 +29,13 @@ class GroupItem(BaseModel):
 
 class GroupResponse(BaseModel):
     """
-    Date별 user link history 그룹 정의
+    그룹별 링크 목록 및 메타데이터 응답 모델
     """
 
+    group_id: int
     group_title: str
-    items: list[GroupItem]
+    total_links: int
+    items: List[GroupItem]
+
+    class Config:
+        from_attributes = True
