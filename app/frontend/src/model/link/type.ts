@@ -10,7 +10,7 @@ interface LinksGroup {
 interface LinkItem {
   link_id: string;
   url: string;
-  imageUrl: string;
+  image_url: string;
   title: string;
   description: string;
   views: number;
