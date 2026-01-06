@@ -66,7 +66,10 @@ def get_di_link_group_service(db: Annotated[Session, Depends(get_db)]) -> GroupS
     GroupService 의존성 주입 메소드
     """
     link_group_repository = LinkGroupRepository(db)
-    return GroupService(link_group_repository)
+    tag_repository = TagRepository(db)
+    return GroupService(
+        link_group_repository=link_group_repository, tag_repository=tag_repository
+    )
 
 
 def get_user_session(request: Request) -> Callable:

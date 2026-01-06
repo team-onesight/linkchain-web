@@ -4,19 +4,21 @@ import { Bookmark, ExternalLink, Tag as TagIcon, FileText } from "lucide-react";
 import type { LinkItem } from "@/model/link/type";
 import { useCreateLink } from "@/hooks/useLinks.ts";
 
+// 1. onTagClick 프롭 추가
 interface LinkDetailViewProps {
   link: LinkItem;
+  onTagClick?: (tagName: string) => void;
 }
 
-export function LinkDetailView({ link }: LinkDetailViewProps) {
+export function LinkDetailView({ link, onTagClick }: LinkDetailViewProps) {
   const { mutate: createLink, isPending: isCreatingLink } = useCreateLink();
 
   const handleBookmark = () => {
     createLink(link.url);
   };
 
-  const hasTags = link.tags && link.tags.length > 0;
-  const hasDescription = link.description && link.description.length > 0;
+  const hasTags = Boolean(link.tags && link.tags.length > 0);
+  const hasDescription = Boolean(link.description && link.description.length > 0);
 
   return (
     <div className='mx-auto w-full max-w-3xl'>
@@ -82,7 +84,8 @@ export function LinkDetailView({ link }: LinkDetailViewProps) {
               <Badge
                 key={tag.tag_id}
                 variant='secondary'
-                className='px-3 py-1.5 text-sm font-normal hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors'
+                className='px-3 py-1.5 text-sm font-normal cursor-pointer hover:bg-primary hover:text-primary-foreground transition-all'
+                onClick={() => onTagClick?.(tag.tag_name)}
               >
                 #{tag.tag_name}
               </Badge>

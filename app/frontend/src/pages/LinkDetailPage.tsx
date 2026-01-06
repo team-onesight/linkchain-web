@@ -1,4 +1,3 @@
-import { useNavigate, useParams } from "react-router-dom";
 import { PageContainer, SectionContainer } from "@/components/styled/layout";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
@@ -6,15 +5,33 @@ import * as AspectRatio from "@radix-ui/react-aspect-ratio";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LinkDetailView } from "@/components/link/LinkDetailView";
 import { RelatedLinks } from "@/features/link/RelatedLinks";
-import { useLink, useLinkView } from "@/hooks/useLinks";
 import { Header } from "@/components/layout/Header";
-import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useLink, useLinkView } from "@/hooks/useLinks.ts";
+import { useEffect, useMemo } from "react";
 
 const LinkDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const query = useLink(id);
   const { mutate } = useLinkView();
+
+  const processedData = useMemo(() => {
+    if (!query.data) return null;
+
+    const uniqueTags = Array.from(
+      new Map(query.data.tags?.map((tag) => [tag.tag_name, tag])).values()
+    );
+
+    return {
+      ...query.data,
+      tags: uniqueTags,
+    };
+  }, [query.data]);
+
+  const handleTagClick = (tagName: string) => {
+    navigate(`/search?tag_name=${encodeURIComponent(tagName)}`);
+  };
 
   useEffect(() => {
     if (id) {
@@ -24,14 +41,13 @@ const LinkDetailPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [query, id]);
+  }, [query.data, id]);
 
   if (query.isLoading) {
     return <DetailPageSkeleton />;
   }
 
-  if (!query.data) {
-    console.log(query.data);
+  if (!processedData) {
     return (
       <PageContainer>
         <Header />
@@ -55,8 +71,8 @@ const LinkDetailPage = () => {
             Back
           </Button>
         </div>
-        <LinkDetailView link={query.data} />
-        <RelatedLinks currentLinkId={query.data.link_id} />
+        <LinkDetailView link={processedData} onTagClick={handleTagClick} />
+        <RelatedLinks currentLinkId={processedData.link_id} />
       </SectionContainer>
     </PageContainer>
   );

@@ -109,6 +109,7 @@ class LinkRepository:
                 .filter(Tag.tag_name == tag)
             )
 
+        db_query = db_query.distinct()
         total_count = db_query.count()
         offset = (page - 1) * size
         links = (
