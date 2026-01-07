@@ -11,6 +11,7 @@ class LinkResponse(BaseModel):
     url: str
     title: Optional[str]
     description: Optional[str]
+    image_url: Optional[str]
     tags: List[TagResponse] = []
     created_by_user_id: Optional[int]
     created_by_username: Optional[str]
@@ -24,6 +25,7 @@ class LinkDetailResponse(BaseModel):
     url: str
     title: Optional[str]
     description: Optional[str]
+    image_url: Optional[str]
     views: int
     created_by_user_id: Optional[int]
     created_by_username: Optional[str]

@@ -13,7 +13,7 @@ export function LinkCard({ link, onBookmark }: LinkCardProps) {
 
   if (!link) return null;
 
-  const { link_id, title, description, imageUrl, url } = link;
+  const { link_id, title, description, image_url, url } = link;
 
   return (
     <Card
@@ -32,7 +32,7 @@ export function LinkCard({ link, onBookmark }: LinkCardProps) {
       <CardContent className='flex flex-row justify-start p-0 overflow-hidden gap-3 items-center w-full grow mt-2'>
         <div className='relative flex-shrink-0 w-20 h-20 min-w-[80px] max-w-[80px] overflow-hidden rounded-md bg-muted'>
           <img
-            src={imageUrl || "/images/default_link_image.png"}
+            src={image_url || "/images/default_link_image.png"}
             alt={title}
             className='object-cover w-full h-full transition-transform duration-300 group-hover:scale-110'
           />
